@@ -1,4 +1,7 @@
-import pygame
+import pygame, sys, multiprocessing
+# sys.path.insert(0, '../memory_game')
+# sys.path.append('..')
+# from memory_game import memory_game
 
 canvas = pygame.display.set_mode((1000, 600))
 text = [1, 50, 0, 100, 100, 100, 4, 100, 0] # text[8] = num of screw
@@ -11,15 +14,15 @@ class Robot():
     def __init__(self):
         super().__init__()
         # Robot image
-        self.status1_img = pygame.image.load(r"main_page\character\status1.png")
+        self.status1_img = pygame.image.load(r"character/status1.png")
         self.status1_img = pygame.transform.scale(self.status1_img, (200, 200))
-        self.status2_img = pygame.image.load(r"main_page\character\status2.png")
+        self.status2_img = pygame.image.load(r"character/status2.png")
         self.status2_img = pygame.transform.scale(self.status2_img, (200, 200))
-        self.status3_img = pygame.image.load(r"main_page\character\status3.png")
+        self.status3_img = pygame.image.load(r"character/status3.png")
         self.status3_img = pygame.transform.scale(self.status3_img, (160, 300))
-        self.iron_img = pygame.image.load(r"main_page\character\scrap_iron.png")
+        self.iron_img = pygame.image.load(r"character/scrap_iron.png")
         self.iron_img = pygame.transform.scale(self.iron_img, (300, 300))
-        self.broken_img = pygame.image.load(r"main_page\character\broken.png")
+        self.broken_img = pygame.image.load(r"character/broken.png")
         self.broken_img = pygame.transform.scale(self.broken_img, (200, 200))
         self.index_x = 0
         self.dir_x = 0
@@ -27,43 +30,43 @@ class Robot():
         self.dir_y = 0
 
         # furniture image
-        self.store_img = pygame.image.load(r"main_page\furniture\store.png")
+        self.store_img = pygame.image.load(r"furniture/store.png")
         self.store_img = pygame.transform.scale(self.store_img, (100, 100))
-        self.background_img = pygame.image.load(r"main_page\furniture\background.png")
+        self.background_img = pygame.image.load(r"furniture/background.png")
         self.background_img = pygame.transform.scale(self.background_img, (1000, 600))
-        self.ac_img = pygame.image.load(r"main_page\furniture\ac.png")
+        self.ac_img = pygame.image.load(r"furniture/ac.png")
         self.ac_img = pygame.transform.scale(self.ac_img, (200, 200))
         self.ac_img_rect = (600, 0)
-        self.carpet_img = pygame.image.load(r"main_page\furniture\carpet.png")
+        self.carpet_img = pygame.image.load(r"furniture/carpet.png")
         self.carpet_img = pygame.transform.scale(self.carpet_img, (800, 600))
         self.carpet_img_rect = (100, 200)
-        self.chair_img = pygame.image.load(r"main_page\furniture\chair.png")
+        self.chair_img = pygame.image.load(r"furniture/chair.png")
         self.chair_img = pygame.transform.scale(self.chair_img, (200, 200))
         self.chair_img_rect = (150, 300)
-        self.tvChannel_img = pygame.image.load(r"main_page\furniture\tvChannel.png")
+        self.tvChannel_img = pygame.image.load(r"furniture/tvChannel.png")
         self.tvChannel_img = pygame.transform.scale(self.tvChannel_img, (200, 200))
         self.tv_img_rect = (250, 80)
-        self.tv_img = pygame.image.load(r"main_page\furniture\tv.png")
+        self.tv_img = pygame.image.load(r"furniture/tv.png")
         self.tv_img = pygame.transform.scale(self.tv_img, (200, 200))
         self.tvChannel_img_rect = (250, 80)
 
         # tool image
-        self.oil_img = pygame.image.load(r"main_page\tool\oil.png")
+        self.oil_img = pygame.image.load(r"tool/oil.png")
         self.oil_img = pygame.transform.scale(self.oil_img, (100, 100))
-        self.oilEngine_img = pygame.image.load(r"main_page\tool\oilEngine.png")
+        self.oilEngine_img = pygame.image.load(r"tool/oilEngine.png")
         self.oilEngine_img = pygame.transform.scale(self.oilEngine_img, (100, 100))
-        self.screw_img = pygame.image.load(r"main_page\tool\screw.png")
+        self.screw_img = pygame.image.load(r"tool/screw.png")
         self.crew_img = pygame.transform.scale(self.screw_img, (100, 100))
-        self.oil92_img = pygame.image.load(r"main_page\tool\92.png")
+        self.oil92_img = pygame.image.load(r"tool/92.png")
         self.oil92_img = pygame.transform.scale(self.oil92_img, (30, 30))
-        self.oil95_img = pygame.image.load(r"main_page\tool\95.png")
+        self.oil95_img = pygame.image.load(r"tool/95.png")
         self.oil95_img = pygame.transform.scale(self.oil95_img, (30, 30))
-        self.oil98_img = pygame.image.load(r"main_page\tool\98.png")
+        self.oil98_img = pygame.image.load(r"tool/98.png")
         self.oil98_img = pygame.transform.scale(self.oil98_img, (30, 30))
 
         # left text
         # self.font = pygame.font.SysFont("jfopen粉圓11", 20)
-        self.font = pygame.font.Font(r"main_page\fonts\jf-openhuninn-2.0.ttf", 20)
+        self.font = pygame.font.Font(r"fonts/jf-openhuninn-2.0.ttf", 20)
         self.text_energy = self.font.render("能量", True, (0, 0, 0))
         self.text_energy_rect = (20, 45)
         self.text_status = self.font.render("等級", True, (0, 0, 0))
@@ -204,13 +207,13 @@ class Button:
         self.rect_y = y
         self.clicked = False
 
-    def drawButton(self, canvas):
+    def drawButton(self, canvas: pygame.Surface):
         canvas.blit(self.img, (self.rect_x, self.rect_y))
 
 class Store:
     def __init__(self):
         # self.font = pygame.font.SysFont("jfopen粉圓11", 20)
-        self.font = pygame.font.Font(r"main_page\fonts\jf-openhuninn-2.0.ttf", 20)
+        self.font = pygame.font.Font(r"fonts/jf-openhuninn-2.0.ttf", 20)
         self.text_ac = self.font.render("冷氣", True, (0, 0, 0))
         self.text_ac_rect = (20, 45)
         self.text_carpet = self.font.render("地毯", True, (0, 0, 0))
@@ -376,6 +379,12 @@ class Game():
 
                 elif self.screw.rect_x <= event.pos[0] <= self.screw.rect_x + 100 and self.screw.rect_y <= event.pos[1] <= self.screw.rect_y + 100 and WINDOW == 1:
                     print("reduce screw")
+                    # manager = multiprocessing.Manager()
+                    # return_dict = manager.dict()
+                    # p = multiprocessing.Process(target=memory_game.main, args=(return_dict,))
+                    # p.start()
+                    # p.join()
+                    # print(return_dict.values(), return_dict.keys())
                     if text[7] > 0 and text[8] < 5:
                         text[7] -= 1
                         text[8] += 1
