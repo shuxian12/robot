@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="en" class="h-100" data-bs-theme="auto">
+<head>
+    <script src="../color-modes.js"></script>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title%}{% endblock title%}</title>
+    <link href="{{ url_for('static', filename='bootstrap.min.css') }}" rel="stylesheet">
+
+    <meta name="theme-color" content="#712cf9">
+
+    <style>
+      .bd-placeholder-img {
+        font-size: 1.125rem;
+        text-anchor: middle;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        user-select: none;
+      }
+
+      @media (min-width: 768px) {
+        .bd-placeholder-img-lg {
+          font-size: 3.5rem;
+        }
+      }
+
+      .b-example-divider {
+        width: 100%;
+        height: 3rem;
+        background-color: rgba(0, 0, 0, .1);
+        border: solid rgba(0, 0, 0, .15);
+        border-width: 1px 0;
+        box-shadow: inset 0 .5em 1.5em rgba(0, 0, 0, .1), inset 0 .125em .5em rgba(0, 0, 0, .15);
+      }
+
+      .b-example-vr {
+        flex-shrink: 0;
+        width: 1.5rem;
+        height: 100vh;
+      }
+
+      .bi {
+        vertical-align: -.125em;
+        fill: currentColor;
+      }
+
+      .nav-scroller {
+        position: relative;
+        z-index: 2;
+        height: 2.75rem;
+        overflow-y: hidden;
+      }
+
+      .nav-scroller .nav {
+        display: flex;
+        flex-wrap: nowrap;
+        padding-bottom: 1rem;
+        margin-top: -1px;
+        overflow-x: auto;
+        text-align: center;
+        white-space: nowrap;
+        -webkit-overflow-scrolling: touch;
+      }
+
+      .btn-bd-primary {
+        --bd-violet-bg: #ffc107;
+        --bd-violet-rgb: 112.520718, 44.062154, 249.437846;
+
+        --bs-btn-font-weight: 600;
+        --bs-btn-color: var(--bs-white);
+        --bs-btn-bg: var(--bd-violet-bg);
+        --bs-btn-border-color: var(--bd-violet-bg);
+        --bs-btn-hover-color: var(--bs-white);
+        --bs-btn-hover-bg: #6528e0;
+        --bs-btn-hover-border-color: #6528e0;
+        --bs-btn-focus-shadow-rgb: var(--bd-violet-rgb);
+        --bs-btn-active-color: var(--bs-btn-hover-color);
+        --bs-btn-active-bg: #ffc107;
+        --bs-btn-active-border-color: #5a23c8;
+      }
+      .bd-mode-toggle {
+        z-index: 1500;
+      }
+      .box {
+            display: flex;
+            justify-content: space-between;
+      }
+    </style>
+
+    <!-- Custom styles for this template -->
+    <link href="../cover.css" rel="stylesheet">
+  </head>
+  <body class="d-flex h-100 text-center text-bg-dark">
+    <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+      <symbol id="check2" viewBox="0 0 16 16">
+        <path d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0z"/>
+      </symbol>
+      <symbol id="circle-half" viewBox="0 0 16 16">
+        <path d="M8 15A7 7 0 1 0 8 1v14zm0 1A8 8 0 1 1 8 0a8 8 0 0 1 0 16z"/>
+      </symbol>
+      <symbol id="moon-stars-fill" viewBox="0 0 16 16">
+        <path d="M6 .278a.768.768 0 0 1 .08.858 7.208 7.208 0 0 0-.878 3.46c0 4.021 3.278 7.277 7.318 7.277.527 0 1.04-.055 1.533-.16a.787.787 0 0 1 .81.316.733.733 0 0 1-.031.893A8.349 8.349 0 0 1 8.344 16C3.734 16 0 12.286 0 7.71 0 4.266 2.114 1.312 5.124.06A.752.752 0 0 1 6 .278z"/>
+        <path d="M10.794 3.148a.217.217 0 0 1 .412 0l.387 1.162c.173.518.579.924 1.097 1.097l1.162.387a.217.217 0 0 1 0 .412l-1.162.387a1.734 1.734 0 0 0-1.097 1.097l-.387 1.162a.217.217 0 0 1-.412 0l-.387-1.162A1.734 1.734 0 0 0 9.31 6.593l-1.162-.387a.217.217 0 0 1 0-.412l1.162-.387a1.734 1.734 0 0 0 1.097-1.097l.387-1.162zM13.863.099a.145.145 0 0 1 .274 0l.258.774c.115.346.386.617.732.732l.774.258a.145.145 0 0 1 0 .274l-.774.258a1.156 1.156 0 0 0-.732.732l-.258.774a.145.145 0 0 1-.274 0l-.258-.774a1.156 1.156 0 0 0-.732-.732l-.774-.258a.145.145 0 0 1 0-.274l.774-.258c.346-.115.617-.386.732-.732L13.863.1z"/>
+      </symbol>
+      <symbol id="sun-fill" viewBox="0 0 16 16">
+        <path d="M8 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM8 0a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 0zm0 13a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 13zm8-5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2a.5.5 0 0 1 .5.5zM3 8a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2A.5.5 0 0 1 3 8zm10.657-5.657a.5.5 0 0 1 0 .707l-1.414 1.415a.5.5 0 1 1-.707-.708l1.414-1.414a.5.5 0 0 1 .707 0zm-9.193 9.193a.5.5 0 0 1 0 .707L3.05 13.657a.5.5 0 0 1-.707-.707l1.414-1.414a.5.5 0 0 1 .707 0zm9.193 2.121a.5.5 0 0 1-.707 0l-1.414-1.414a.5.5 0 0 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .707zM4.464 4.465a.5.5 0 0 1-.707 0L2.343 3.05a.5.5 0 1 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .708z"/>
+      </symbol>
+      <symbol id="pig" viewBox="0 0 5 16", fill="#fff3cd">
+        <path d="M7.964 1.527c-2.977 0-5.571 1.704-6.32 4.125h-.55A1 1 0 0 0 .11 6.824l.254 1.46a1.5 1.5 0 0 0 1.478 1.243h.263c.3.513.688.978 1.145 1.382l-.729 2.477a.5.5 0 0 0 .48.641h2a.5.5 0 0 0 .471-.332l.482-1.351c.635.173 1.31.267 2.011.267.707 0 1.388-.095 2.028-.272l.543 1.372a.5.5 0 0 0 .465.316h2a.5.5 0 0 0 .478-.645l-.761-2.506C13.81 9.895 14.5 8.559 14.5 7.069c0-.145-.007-.29-.02-.431.261-.11.508-.266.705-.444.315.306.815.306.815-.417 0 .223-.5.223-.461-.026a.95.95 0 0 0 .09-.255.7.7 0 0 0-.202-.645.58.58 0 0 0-.707-.098.735.735 0 0 0-.375.562c-.024.243.082.48.32.654a2.112 2.112 0 0 1-.259.153c-.534-2.664-3.284-4.595-6.442-4.595Zm7.173 3.876a.565.565 0 0 1-.098.21.704.704 0 0 1-.044-.025c-.146-.09-.157-.175-.152-.223a.236.236 0 0 1 .117-.173c.049-.027.08-.021.113.012a.202.202 0 0 1 .064.199Zm-8.999-.65a.5.5 0 1 1-.276-.96A7.613 7.613 0 0 1 7.964 3.5c.763 0 1.497.11 2.18.315a.5.5 0 1 1-.287.958A6.602 6.602 0 0 0 7.964 4.5c-.64 0-1.255.09-1.826.254ZM5 6.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z"/>
+      </symbol>
+      <symbol id="pig2" viewBox="5 0 16 16" fill="pink">
+        <path d="M7.964 1.527c-2.977 0-5.571 1.704-6.32 4.125h-.55A1 1 0 0 0 .11 6.824l.254 1.46a1.5 1.5 0 0 0 1.478 1.243h.263c.3.513.688.978 1.145 1.382l-.729 2.477a.5.5 0 0 0 .48.641h2a.5.5 0 0 0 .471-.332l.482-1.351c.635.173 1.31.267 2.011.267.707 0 1.388-.095 2.028-.272l.543 1.372a.5.5 0 0 0 .465.316h2a.5.5 0 0 0 .478-.645l-.761-2.506C13.81 9.895 14.5 8.559 14.5 7.069c0-.145-.007-.29-.02-.431.261-.11.508-.266.705-.444.315.306.815.306.815-.417 0 .223-.5.223-.461-.026a.95.95 0 0 0 .09-.255.7.7 0 0 0-.202-.645.58.58 0 0 0-.707-.098.735.735 0 0 0-.375.562c-.024.243.082.48.32.654a2.112 2.112 0 0 1-.259.153c-.534-2.664-3.284-4.595-6.442-4.595Zm7.173 3.876a.565.565 0 0 1-.098.21.704.704 0 0 1-.044-.025c-.146-.09-.157-.175-.152-.223a.236.236 0 0 1 .117-.173c.049-.027.08-.021.113.012a.202.202 0 0 1 .064.199Zm-8.999-.65a.5.5 0 1 1-.276-.96A7.613 7.613 0 0 1 7.964 3.5c.763 0 1.497.11 2.18.315a.5.5 0 1 1-.287.958A6.602 6.602 0 0 0 7.964 4.5c-.64 0-1.255.09-1.826.254ZM5 6.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z"/>
+      </symbol>
+    </svg>
+
+  <div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column">
+    <header class="mb-auto">
+      <div>
+        <h3 class="float-md-start mb-0" style="color:#ffc107;">Money is LIFE</h3>
+        <svg class="float-md-start bi my-0 theme-icon-active" width="35" height="35"><use href="#pig2"></use></svg>
+        <svg class="float-md-start bi my-0 theme-icon-active" width="35" height="35"><use href="#pig"></use></svg>
+        <svg class="float-md-start bi my-0 theme-icon-active" width="35" height="35"><use href="#pig2"></use></svg>
+        <svg class="float-md-start bi my-0 theme-icon-active" width="35" height="35"><use href="#pig"></use></svg>
+        <svg class="float-md-start bi my-0 theme-icon-active" width="35" height="35"><use href="#pig2"></use></svg>
+        <svg class="float-md-start bi my-0 theme-icon-active" width="35" height="35"><use href="#pig"></use></svg>
+
+        <nav class="nav nav-masthead justify-content-center float-md-end">
+          <a class="nav-link fw-bold py-1 px-2 active" aria-current="page" href="#">我</a>
+          <a class="nav-link fw-bold py-1 px-2" href="#">什麼</a>
+          <a class="nav-link fw-bold py-1 px-0" href="#">都不會</a>
+        </nav>
+
+      </div>
+    </header>
+    <div style="display: flex;" class="px-0">
+      <img style="width: 50vw;" src="{{url_for('static', filename='img/bf989dc89406451dc448bf92f91efa40.gif')}}" alt="美好世界" class="figure">
+      <img style="width: 50vw;" src="{{url_for('static', filename='img/1682566294_6449ec96112c6.gif')}}" alt="ddos" class="figure">
+    </div>
+
+    <main class="px-0 box">
+      <div style="text-align: left; display: flex; height: auto; max-height: 50vh; width: auto; max-width: 30vw;">
+        <img  style="width: auto; height: auto; max-width: 100%; max-height: 100%;" src="{{url_for('static', filename='img/9bf82cfa0af1f1c9dfa5ab2f1d1lpjk5.PNG')}}" alt="西遊封測遊戲">
+      </div>
+
+      <div style="display:flex; align-items: center;">
+        <div style="align-content: center;justify-content: center;width: 50vw">
+          <h1>歡迎來到 課金天堂</h1>
+          <p class="lead">請匯款到以下戶頭，我們會親自幫您對帳，工人智慧，是您寶貝</p>
+          <p class="lead">帳號：148787878787 3008</p>
+
+          <form action="#" method="post">
+            <div class="form-group" style="display:inlin;">
+              <p class="lead" style="float:left">匯入帳號：</p>
+              <input id="username" class="form-control" type="text" name="account"/>
+            </div>
+
+            <div class="form-group" style="display:inlin;">
+              <p class="lead" style="float:left">匯款金額：</p>
+              <input id="username" class="form-control" type="text" name="money"/>
+            </div>
+
+            <div class="form-group">
+              <button type="submit" class="btn btn-bd-primary">Submit</button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <div style="display: flex; height: auto; max-height: 50vh; width: auto; max-width: 20vw;">
+        <img style="width: auto; height: auto; max-width: 100%; max-height: 100%;" src="{{url_for('static', filename='img/eeccec3def8c19c34d2598aaab1lnqr5.png')}}" alt="命運狙擊">
+      </div>
+    </main>
+    
+    
+    <div class="px-0 box" style="align-items: end; height: auto; width: auto;max-height: 40vh; max-width: 100vw;">
+      <img style="width: auto; height: auto; max-width: 30%; max-height: 100%;" src="{{url_for('static', filename='img/0dbfeadad1f6bd015d891968ae1lrdm5.png')}}" alt="戰利品">
+
+      <div style="width: auto; height: auto; max-width: 100%; max-height: 100%;">
+        <img style="width: auto;height: auto;max-width: 100%;max-height: 100%;" src="{{url_for('static', filename='img/529c1d6e301ca28c41b434a5a7209340.jpg')}}" alt="會員專屬">
+
+        <footer class="mt-auto text-white-50">
+          <p>課金天堂股分有限公司出品.</p>
+        </footer>
+      </div>
+
+      <img style="width: auto; height: auto; max-width: 20%; max-height: 100%;" src="{{url_for('static', filename='img/2177728120333714025.png')}}" alt="darius">
+      <img style="width: auto; height: auto; max-width: 20%; max-height: 100%;" src="{{url_for('static', filename='img/13516998545120245553.png')}}" alt="darius">
+    </div>
+  </div>
+
+
+    
+  </body>
+</html>
