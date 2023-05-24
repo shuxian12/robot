@@ -2,7 +2,7 @@ import pygame
 
 canvas = pygame.display.set_mode((1000, 600))
 text = [1, 50, 0, 100, 100, 100, 4, 100, 0] # text[8] = num of screw
-furniture = [0, 0, 0, 0, 0]
+furniture = [1, 2, 3, 4, 5]
 pre_status = 1
 WINDOW = 1
 FPS = 60
@@ -11,50 +11,59 @@ class Robot():
     def __init__(self):
         super().__init__()
         # Robot image
-        self.status1_img = pygame.image.load(r"character/status1.png")
+        self.status1_img = pygame.image.load(r"main_page\character\status1.png")
         self.status1_img = pygame.transform.scale(self.status1_img, (200, 200))
-        self.status2_img = pygame.image.load(r"character/status2.png")
+        self.status2_img = pygame.image.load(r"main_page\character\status2.png")
         self.status2_img = pygame.transform.scale(self.status2_img, (200, 200))
-        self.status3_img = pygame.image.load(r"character/status3.png")
+        self.status3_img = pygame.image.load(r"main_page\character\status3.png")
         self.status3_img = pygame.transform.scale(self.status3_img, (160, 300))
-        self.iron_img = pygame.image.load(r"character/scrap_iron.png")
+        self.iron_img = pygame.image.load(r"main_page\character\scrap_iron.png")
         self.iron_img = pygame.transform.scale(self.iron_img, (300, 300))
-        self.broken_img = pygame.image.load(r"character/broken.png")
+        self.broken_img = pygame.image.load(r"main_page\character\broken.png")
         self.broken_img = pygame.transform.scale(self.broken_img, (200, 200))
+        self.index_x = 0
+        self.dir_x = 0
+        self.index_y = 0
+        self.dir_y = 0
 
         # furniture image
-        self.store_img = pygame.image.load(r"furniture/store.png")
+        self.store_img = pygame.image.load(r"main_page\furniture\store.png")
         self.store_img = pygame.transform.scale(self.store_img, (100, 100))
-        self.background_img = pygame.image.load(r"furniture/background.png")
+        self.background_img = pygame.image.load(r"main_page\furniture\background.png")
         self.background_img = pygame.transform.scale(self.background_img, (1000, 600))
-        self.ac_img = pygame.image.load(r"furniture/ac.png")
+        self.ac_img = pygame.image.load(r"main_page\furniture\ac.png")
         self.ac_img = pygame.transform.scale(self.ac_img, (200, 200))
-        self.carpet_img = pygame.image.load(r"furniture/carpet.png")
+        self.ac_img_rect = (600, 0)
+        self.carpet_img = pygame.image.load(r"main_page\furniture\carpet.png")
         self.carpet_img = pygame.transform.scale(self.carpet_img, (800, 600))
-        self.chair_img = pygame.image.load(r"furniture/chair.png")
+        self.carpet_img_rect = (100, 200)
+        self.chair_img = pygame.image.load(r"main_page\furniture\chair.png")
         self.chair_img = pygame.transform.scale(self.chair_img, (200, 200))
-        self.tvChannel_img = pygame.image.load(r"furniture/tvChannel.png")
+        self.chair_img_rect = (150, 300)
+        self.tvChannel_img = pygame.image.load(r"main_page\furniture\tvChannel.png")
         self.tvChannel_img = pygame.transform.scale(self.tvChannel_img, (200, 200))
-        self.tv_img = pygame.image.load(r"furniture/tv.png")
+        self.tv_img_rect = (250, 80)
+        self.tv_img = pygame.image.load(r"main_page\furniture\tv.png")
         self.tv_img = pygame.transform.scale(self.tv_img, (200, 200))
+        self.tvChannel_img_rect = (250, 80)
 
         # tool image
-        self.oil_img = pygame.image.load(r"tool/oil.png")
+        self.oil_img = pygame.image.load(r"main_page\tool\oil.png")
         self.oil_img = pygame.transform.scale(self.oil_img, (100, 100))
-        self.oilEngine_img = pygame.image.load(r"tool/oilEngine.png")
+        self.oilEngine_img = pygame.image.load(r"main_page\tool\oilEngine.png")
         self.oilEngine_img = pygame.transform.scale(self.oilEngine_img, (100, 100))
-        self.screw_img = pygame.image.load(r"tool/screw.png")
+        self.screw_img = pygame.image.load(r"main_page\tool\screw.png")
         self.crew_img = pygame.transform.scale(self.screw_img, (100, 100))
-        self.oil92_img = pygame.image.load(r"tool/92.png")
+        self.oil92_img = pygame.image.load(r"main_page\tool\92.png")
         self.oil92_img = pygame.transform.scale(self.oil92_img, (30, 30))
-        self.oil95_img = pygame.image.load(r"tool/95.png")
+        self.oil95_img = pygame.image.load(r"main_page\tool\95.png")
         self.oil95_img = pygame.transform.scale(self.oil95_img, (30, 30))
-        self.oil98_img = pygame.image.load(r"tool/98.png")
+        self.oil98_img = pygame.image.load(r"main_page\tool\98.png")
         self.oil98_img = pygame.transform.scale(self.oil98_img, (30, 30))
 
         # left text
         # self.font = pygame.font.SysFont("jfopen粉圓11", 20)
-        self.font = pygame.font.Font('fonts/jf-openhuninn-2.0.ttf', 20)
+        self.font = pygame.font.Font(r"main_page\fonts\jf-openhuninn-2.0.ttf", 20)
         self.text_energy = self.font.render("能量", True, (0, 0, 0))
         self.text_energy_rect = (20, 45)
         self.text_status = self.font.render("等級", True, (0, 0, 0))
@@ -69,6 +78,7 @@ class Robot():
         self.num_bug_rect = (80, 70)
         self.left_texts = [self.text_energy, self.text_status, self.text_bug, self.num_energy, self.num_status, self.num_bug]
         self.left_texts_rect = [self.text_energy_rect, self.text_status_rect, self.text_bug_rect, self.num_energy_rect, self.num_status_rect, self.num_bug_rect]
+        self.status = ["0", "1", "2", "3", "game over", "broken"]
 
         # right text
         self.text_oil92 = self.font.render("92", True, (0, 0, 0))
@@ -93,14 +103,39 @@ class Robot():
         self.num_screw_rect = (950, 120)
         self.right_texts = [self.text_oil92, self.text_oil95, self.text_oil98, self.text_oilEngine, self.text_screw, self.num_oil92, self.num_oil95, self.num_oil98, self.num_oilEngine, self.num_screw]
         self.right_texts_rect = [self.tetx_oil92_rect, self.text_oil95_rect, self.text_oil98_rect, self.text_oilEngine_rect, self.text_screw_rect, self.num_oil92_rect, self.num_oil95_rect, self.num_oil98_rect, self.num_oilEngine_rect, self.num_screw_rect]
+        
+        # textbox
+        self.textbox_rect = (300, 560)
+        self.rect_rect = (295, 558, 300, 28)
+        self.textbox_send = self.font.render("Send", True, (0, 0, 0))
+        self.textbox_send_rect = (620, 563)
 
     def drawRobot(self, status):
+        # index x
+        if self.dir_x == 0:
+            self.index_x += 1
+        elif self.dir_x == 1:
+            self.index_x -= 1
+        if self.index_x == 100:
+            self.dir_x = 1
+        elif self.index_x == 0:
+            self.dir_x = 0
+        # index y
+        if self.dir_y == 0:
+            self.index_y += 1
+        elif self.dir_y == 1:
+            self.index_y -= 1
+        if self.index_y == 100:
+            self.dir_y = 1
+        elif self.index_y == 0:
+            self.dir_y = 0
+        
         if status == 1:
-            canvas.blit(self.status1_img, (550, 300))
+            canvas.blit(self.status1_img, (550 + self.index_x, 300 + self.index_y))
         elif status == 2:
-            canvas.blit(self.status2_img, (550, 300))
+            canvas.blit(self.status2_img, (550 + self.index_x, 300 + self.index_y))
         elif status == 3:
-            canvas.blit(self.status3_img, (550, 200))
+            canvas.blit(self.status3_img, (550 + self.index_x, 200 + self.index_y))
         elif status == 4:
             canvas.blit(self.iron_img, (550, 300))
         elif status == 5:
@@ -108,21 +143,21 @@ class Robot():
 
     def drawFurniture(self, n):
         if n == 1:
-            canvas.blit(self.ac_img, (600, 0))
+            canvas.blit(self.ac_img, self.ac_img_rect)
         elif n == 2:
-            canvas.blit(self.carpet_img, (100, 200))
+            canvas.blit(self.carpet_img, self.carpet_img_rect)
         elif n == 3:
-            canvas.blit(self.chair_img, (150, 300))
+            canvas.blit(self.chair_img, self.chair_img_rect)
         elif n == 4:
-            canvas.blit(self.tv_img, (250, 80))
+            canvas.blit(self.tv_img, self.tv_img_rect)
         elif n == 5:
-            canvas.blit(self.tvChannel_img, (250, 80))
+            canvas.blit(self.tvChannel_img, self.tvChannel_img_rect)
 
     def updateText(self):
         global text
         # for i in text:
         #     print(i)
-        self.num_status = self.font.render(str(text[0]), True, (0, 0, 0))
+        self.num_status = self.font.render(self.status[int(text[0])], True, (0, 0, 0))
         self.num_energy = self.font.render(str(text[1]), True, (0, 0, 0))
         self.num_bug = self.font.render(str(text[2]), True, (0, 0, 0))
         self.num_oil92 = self.font.render(str(text[3]), True, (0, 0, 0))
@@ -175,7 +210,7 @@ class Button:
 class Store:
     def __init__(self):
         # self.font = pygame.font.SysFont("jfopen粉圓11", 20)
-        self.font = pygame.font.Font('fonts/jf-openhuninn-2.0.ttf', 20)
+        self.font = pygame.font.Font(r"main_page\fonts\jf-openhuninn-2.0.ttf", 20)
         self.text_ac = self.font.render("冷氣", True, (0, 0, 0))
         self.text_ac_rect = (20, 45)
         self.text_carpet = self.font.render("地毯", True, (0, 0, 0))
@@ -227,7 +262,7 @@ class Store:
 class Game():
     def __init__(self) -> None:
         self.robot = Robot()
-        self.store = Store()
+        # self.store = Store()
         self.oil = Button(self.robot.oil_img, 880, 170)
         self.oilEngine = Button(self.robot.oilEngine_img, 880, 270)
         self.screw = Button(self.robot.screw_img, 880, 370)
@@ -235,6 +270,9 @@ class Game():
         self.oil95 = Button(self.robot.oil95_img, 855, 205)
         self.oil98 = Button(self.robot.oil98_img, 855, 240)
         self.storeBtn = Button(self.robot.store_img, 20, 370)
+        # init textbox
+        self.user_input = "type..."
+        self.textbox_active = False
         # self.button_list = [self.oil, self.oilEngine, self.screw, self.oil92, self.oil95, self.oil98, self.storeBtn]
 
     def draw_button(self):
@@ -279,6 +317,16 @@ class Game():
             # canvas.blit(self.robot.num_screw, self.robot.num_screw_rect)
             '''
 
+            # textbox
+            if self.textbox_active == False:
+                color = pygame.Color('gray81')
+            elif self.textbox_active == True:
+                color = pygame.Color('lightskyblue3')
+            pygame.draw.rect(canvas, color, self.robot.rect_rect)
+            textbox_input = self.robot.font.render(self.user_input, True, (0, 0, 0))
+            canvas.blit(textbox_input, (self.robot.textbox_rect[0], self.robot.textbox_rect[1]))
+            canvas.blit(self.robot.textbox_send, self.robot.textbox_send_rect)
+
             # tool button
             self.draw_button()
 
@@ -291,69 +339,127 @@ class Game():
         global WINDOW, text
         for event in event_list:
             if event.type == pygame.MOUSEBUTTONDOWN:
-                    # press oil button
-                    if self.oil92.rect_x <= event.pos[0] <= self.oil92.rect_x + 30 and self.oil92.rect_y <= event.pos[1] <= self.oil92.rect_y + 30 and WINDOW == 1:
-                        print("reduce oil 92")
-                        if text[3] > 0 and text[1] <= 95:
-                            text[3] -= 1
-                            text[1] += 5
-                            text[6] += 1
-                    elif self.oil95.rect_x <= event.pos[0] <= self.oil95.rect_x + 30 and self.oil95.rect_y <= event.pos[1] <= self.oil95.rect_y + 30 and WINDOW == 1:
-                        print("reduce oil 95")
-                        if text[4] > 0 and text[1] <= 90:
-                            text[4] -= 1
-                            text[1] += 10
-                    elif self.oil98.rect_x <= event.pos[0] <= self.oil98.rect_x + 30 and self.oil98.rect_y <= event.pos[1] <= self.oil98.rect_y + 30 and WINDOW == 1:
-                        print("reduce oil 98")
-                        if text[5] > 0 and text[1] <= 85:
-                            text[5] -= 1
-                            text[1] += 15
-                    elif self.oilEngine.rect_x <= event.pos[0] <= self.oilEngine.rect_x + 100 and self.oilEngine.rect_y <= event.pos[1] <= self.oilEngine.rect_y + 100 and WINDOW == 1:
-                        print("reduce oil Engine")
-                        if text[6] > 0:
-                            text[6] -= 1
-                            text[1] -= 10
-                    elif self.screw.rect_x <= event.pos[0] <= self.screw.rect_x + 100 and self.screw.rect_y <= event.pos[1] <= self.screw.rect_y + 100 and WINDOW == 1:
-                        print("reduce screw")
-                        if text[7] > 0 and text[8] < 5:
-                            text[7] -= 1
-                            text[8] += 1
-                        if text[8] == 5:
-                            pre_status = text[0]
-                            text[0] = 5
-
-                    # store button
-                    elif self.storeBtn.rect_x <= event.pos[0] <= self.storeBtn.rect_x + 100 and self.storeBtn.rect_y <= event.pos[1] <= self.storeBtn.rect_y + 100 and WINDOW == 1:
-                        print("click store")
-                        WINDOW = 2
-                    elif self.store.text_acBuy_rect[0] <= event.pos[0] <= self.store.text_acBuy_rect[0] + 100 and self.store.text_acBuy_rect[1] <= event.pos[1] <= self.store.text_acBuy_rect[1] + 20 and WINDOW == 2:
-                        furniture[0] = 1
-                        self.store.text_acBuy = self.store.font.render("Buy", True, (255, 0, 0))
-                    elif self.store.text_carpetBuy_rect[0] <= event.pos[0] <= self.store.text_carpetBuy_rect[0] + 100 and self.store.text_carpetBuy_rect[1] <= event.pos[1] <= self.store.text_carpetBuy_rect[1] + 20 and WINDOW == 2:
-                        furniture[1] = 2
-                        self.store.text_carpetBuy = self.store.font.render("Buy", True, (255, 0, 0))
-                    elif self.store.text_chairBuy_rect[0] <= event.pos[0] <= self.store.text_chairBuy_rect[0] + 100 and self.store.text_chairBuy_rect[1] <= event.pos[1] <= self.store.text_chairBuy_rect[1] + 20 and WINDOW == 2:
-                        furniture[2] = 3
-                        self.store.text_chairBuy = self.store.font.render("Buy", True, (255, 0, 0))
-                    elif self.store.text_tvBuy_rect[0] <= event.pos[0] <= self.store.text_tvBuy_rect[0] + 100 and self.store.text_tvBuy_rect[1] <= event.pos[1] <= self.store.text_tvBuy_rect[1] + 20 and WINDOW == 2:
-                        furniture[3] = 4
-                        self.store.text_ctvBuy = self.store.font.render("Buy", True, (255, 0, 0))
-                    elif self.store.text_tvChannelBuy_rect[0] <= event.pos[0] <= self.store.text_tvChannelBuy_rect[0] + 100 and self.store.text_tvChannelBuy_rect[1] <= event.pos[1] <= self.store.text_tvChannelBuy_rect[1] + 20 and WINDOW == 2:
-                        furniture[4] = 5
-                        self.store.text_tvChannelBuy = self.store.font.render("Buy", True, (255, 0, 0))
-                    elif self.store.text_leave_rect[0] <= event.pos[0] <= self.store.text_leave_rect[0] + 100 and self.store.text_leave_rect[1] <= event.pos[1] <= self.store.text_leave_rect[1] + 20 and WINDOW == 2:
-                        WINDOW = 1
-                            
-                    # game button
+                # press oil button
+                if self.oil92.rect_x <= event.pos[0] <= self.oil92.rect_x + 30 and self.oil92.rect_y <= event.pos[1] <= self.oil92.rect_y + 30 and WINDOW == 1:
+                    print("reduce oil 92")
+                    if text[3] > 0 and text[1] <= 95:
+                        text[3] -= 1
+                        text[1] += 5
+                        text[6] += 1
+                    elif text[3] > 0 and text[1] < 100:
+                        text[3] -= 1
+                        text[1] = 100
                     
-                    # check status
-                    if text[7] >= 100 and text[6] >= 5:
-                        print("upgrade")
-                        if text[0] <= 3:
-                            text[0] += 1
-                            text[7] -= 100
-                            text[6] -= 5
+                elif self.oil95.rect_x <= event.pos[0] <= self.oil95.rect_x + 30 and self.oil95.rect_y <= event.pos[1] <= self.oil95.rect_y + 30 and WINDOW == 1:
+                    print("reduce oil 95")
+                    if text[4] > 0 and text[1] <= 90:
+                        text[4] -= 1
+                        text[1] += 10
+                    elif text[4] > 0 and text[1] < 100:
+                        text[4] -= 1
+                        text[1] = 100
 
+                elif self.oil98.rect_x <= event.pos[0] <= self.oil98.rect_x + 30 and self.oil98.rect_y <= event.pos[1] <= self.oil98.rect_y + 30 and WINDOW == 1:
+                    print("reduce oil 98")
+                    if text[5] > 0 and text[1] <= 85:
+                        text[5] -= 1
+                        text[1] += 15
+                    elif text[5] > 0 and text[1] < 100:
+                        text[5] -= 1
+                        text[1] = 100
+
+                elif self.oilEngine.rect_x <= event.pos[0] <= self.oilEngine.rect_x + 100 and self.oilEngine.rect_y <= event.pos[1] <= self.oilEngine.rect_y + 100 and WINDOW == 1:
+                    print("reduce oil Engine")
+                    if text[6] > 0:
+                        text[6] -= 1
+                        text[1] -= 10
+
+                elif self.screw.rect_x <= event.pos[0] <= self.screw.rect_x + 100 and self.screw.rect_y <= event.pos[1] <= self.screw.rect_y + 100 and WINDOW == 1:
+                    print("reduce screw")
+                    if text[7] > 0 and text[8] < 5:
+                        text[7] -= 1
+                        text[8] += 1
+                    if text[8] == 5:
+                        pre_status = text[0]
+                        text[0] = 5
+
+                # store button
+                # elif self.storeBtn.rect_x <= event.pos[0] <= self.storeBtn.rect_x + 100 and self.storeBtn.rect_y <= event.pos[1] <= self.storeBtn.rect_y + 100 and WINDOW == 1:
+                #     print("click store")
+                #     WINDOW = 2
+                # elif self.store.text_acBuy_rect[0] <= event.pos[0] <= self.store.text_acBuy_rect[0] + 100 and self.store.text_acBuy_rect[1] <= event.pos[1] <= self.store.text_acBuy_rect[1] + 20 and WINDOW == 2:
+                #     furniture[0] = 1
+                #     self.store.text_acBuy = self.store.font.render("Buy", True, (255, 0, 0))
+                # elif self.store.text_carpetBuy_rect[0] <= event.pos[0] <= self.store.text_carpetBuy_rect[0] + 100 and self.store.text_carpetBuy_rect[1] <= event.pos[1] <= self.store.text_carpetBuy_rect[1] + 20 and WINDOW == 2:
+                #     furniture[1] = 2
+                #     self.store.text_carpetBuy = self.store.font.render("Buy", True, (255, 0, 0))
+                # elif self.store.text_chairBuy_rect[0] <= event.pos[0] <= self.store.text_chairBuy_rect[0] + 100 and self.store.text_chairBuy_rect[1] <= event.pos[1] <= self.store.text_chairBuy_rect[1] + 20 and WINDOW == 2:
+                #     furniture[2] = 3
+                #     self.store.text_chairBuy = self.store.font.render("Buy", True, (255, 0, 0))
+                # elif self.store.text_tvBuy_rect[0] <= event.pos[0] <= self.store.text_tvBuy_rect[0] + 100 and self.store.text_tvBuy_rect[1] <= event.pos[1] <= self.store.text_tvBuy_rect[1] + 20 and WINDOW == 2:
+                #     furniture[3] = 4
+                #     self.store.text_ctvBuy = self.store.font.render("Buy", True, (255, 0, 0))
+                # elif self.store.text_tvChannelBuy_rect[0] <= event.pos[0] <= self.store.text_tvChannelBuy_rect[0] + 100 and self.store.text_tvChannelBuy_rect[1] <= event.pos[1] <= self.store.text_tvChannelBuy_rect[1] + 20 and WINDOW == 2:
+                #     furniture[4] = 5
+                #     self.store.text_tvChannelBuy = self.store.font.render("Buy", True, (255, 0, 0))
+                # elif self.store.text_leave_rect[0] <= event.pos[0] <= self.store.text_leave_rect[0] + 100 and self.store.text_leave_rect[1] <= event.pos[1] <= self.store.text_leave_rect[1] + 20 and WINDOW == 2:
+                #     WINDOW = 1
+                        
+                # game button
+                elif self.robot.ac_img_rect[0] <= event.pos[0] <= self.robot.ac_img_rect[0] + 200 and self.robot.ac_img_rect[1] + 50 <= event.pos[1] <= self.robot.ac_img_rect[1] + 170 and furniture[0] == 1:
+                    print("click ac")
+                    text[6] += 4
+                elif self.robot.carpet_img_rect[0] + 300 <= event.pos[0] <= self.robot.carpet_img_rect[0] + 800 and self.robot.carpet_img_rect[1] + 130 <= event.pos[1] <= self.robot.carpet_img_rect[1] + 350 and furniture[1] == 2:
+                    print("click carpet")
+                    text[7] += 50
+                elif self.robot.chair_img_rect[0] <= event.pos[0] <= self.robot.chair_img_rect[0] + 200 and self.robot.chair_img_rect[1] <= event.pos[1] <= self.robot.chair_img_rect[1] + 200 and furniture[2] == 3:
+                        print("click chair")
+                elif self.robot.tv_img_rect[0] <= event.pos[0] <= self.robot.tv_img_rect[0] + 200 and self.robot.tv_img_rect[1] + 20 <= event.pos[1] <= self.robot.tv_img_rect[1] + 150 and furniture[3] == 4:
+                    print("click tv")
+                    text[1] -= 50
+
+                # textbox
+                elif self.robot.textbox_send_rect[0] <= event.pos[0] <= self.robot.textbox_send_rect[0] + 85 and self.robot.textbox_send_rect[1] <= event.pos[1] <= self.robot.textbox_send_rect[1] + 20:
+                    print("send msg")
+                    if self.user_input[:9] == "GiftCode ":
+                        print("Input Gift Code")
+                        if self.user_input[9:] == "vip666":
+                            print("Gift Code Correct", self.user_input[9:])
+                            text[3] += 10
+                            text[4] += 10
+                            text[5] += 10
+                            text[6] += 15
+                            text[7] += 300
+                        elif self.user_input[9:] == "newuser":
+                            print("Gift Code Correct", self.user_input[9:])
+                            text[7] += 10
+                        
+                    self.user_input = ""
+
+                if self.robot.textbox_rect[0] <= event.pos[0] <= self.robot.textbox_rect[0] + 300 and self.robot.textbox_rect[1] <= event.pos[1] <= self.robot.textbox_rect[1] + 28:
+                    self.textbox_active = True
+                else:
+                    self.textbox_active = False
+
+            if event.type == pygame.KEYDOWN:
+                if self.textbox_active == True:
+                    if event.key == pygame.K_BACKSPACE:
+                        self.user_input = self.user_input[:-1]
+                    else:
+                        if len(self.user_input) <= 20:
+                            self.user_input += event.unicode
+            
+            # check status
+            if text[7] >= 100 and text[6] >= 5 and text[0] <= 3:
+                print("upgrade")
+                if text[0] < 3:
+                    text[0] += 1
+                    text[7] -= 100
+                    text[6] -= 5
+            elif text[1] == 0:          # energy == 0 -> game over
+                pre_status = text[0]
+                text[0] = 4
+                # end
 
 
 def main():
@@ -383,9 +489,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-'''
-BUG
-1. 商店閃爍
-
-'''
