@@ -13,7 +13,7 @@ my_symbol_posi_y = 200
 card_images = []
 for n in number:
     for c in color:
-        image = pygame.transform.scale(pygame.image.load(f'./cards/{n}_of_{c}.png'),(150,219))
+        image = pygame.transform.scale(pygame.image.load(f'./game/cards/{n}_of_{c}.png'),(150,219))
         card_images.append(image)
 
 
@@ -53,18 +53,18 @@ while True:
         # print(pygame.mouse.get_pos())
         if event.type == pygame.QUIT:
             exit()
-        window.blit(pygame.transform.scale(pygame.image.load('./cards/background.png'),(800,600)),(0,0))
+        window.blit(pygame.transform.scale(pygame.image.load('./game/cards/background.png'),(800,600)),(0,0))
         pygame.draw.rect(window,(36,132,58),pygame.Rect(16,6,112,151))
         pygame.draw.rect(window,(40,149,66),pygame.Rect(16,157,760,230))
-        window.blit(pygame.transform.scale(pygame.image.load(f'./cards/back.jpg'),(150,219)),(60,60))
-        window.blit(pygame.transform.scale(pygame.image.load(f'./cards/back.jpg'),(150,219)),(320,60))
-        window.blit(pygame.transform.scale(pygame.image.load(f'./cards/back.jpg'),(150,219)),(580,60))
+        window.blit(pygame.transform.scale(pygame.image.load(f'./game/cards/back.jpg'),(150,219)),(60,60))
+        window.blit(pygame.transform.scale(pygame.image.load(f'./game/cards/back.jpg'),(150,219)),(320,60))
+        window.blit(pygame.transform.scale(pygame.image.load(f'./game/cards/back.jpg'),(150,219)),(580,60))
         pygame.draw.rect(window,(200,20,20),pygame.Rect(320,500,150,50))
         window.blit(pygame.font.Font('./fonts/corbel.ttf',35).render('Start',True,(20,20,20)),(358,510))
         window.blit(pygame.font.Font('./fonts/corbel.ttf',35).render(f'{bid}',True,(255,255,255)),(320,400))
-        window.blit(pygame.transform.scale(pygame.image.load(f'./cards/minus.png'),(40,40)),(260,400))
-        window.blit(pygame.transform.scale(pygame.image.load(f'./cards/plus.png'),(40,40)),(500,400))
-        window.blit(pygame.transform.scale(pygame.image.load(f'./cards/screw.png'),(60,60)),(560,395))
+        window.blit(pygame.transform.scale(pygame.image.load(f'./game/cards/minus.png'),(40,40)),(260,400))
+        window.blit(pygame.transform.scale(pygame.image.load(f'./game/cards/plus.png'),(40,40)),(500,400))
+        window.blit(pygame.transform.scale(pygame.image.load(f'./game/cards/screw.png'),(60,60)),(560,395))
         # 按下start
         if not start and event.type == pygame.MOUSEBUTTONDOWN and pygame.mouse.get_pressed()[0]:
             posi = pygame.mouse.get_pos()

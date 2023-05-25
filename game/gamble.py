@@ -9,10 +9,10 @@ window_height = 600
 # 創建視窗
 window = pygame.display.set_mode((window_width, window_height))
 pygame.display.set_caption("十八仔")
-bg = pygame.transform.scale(pygame.image.load('./骰子/view.png'),(800,600))
+bg = pygame.transform.scale(pygame.image.load('./game/骰子/view.png'),(800,600))
 dice = []
 for i in range(6):
-    dice.append(pygame.transform.scale(pygame.image.load(f'./骰子/{i+1}.jpg'),(40,40)))
+    dice.append(pygame.transform.scale(pygame.image.load(f'./game/骰子/{i+1}.jpg'),(40,40)))
 
 clock = pygame.time.Clock()
 # 圖像參數
@@ -20,7 +20,7 @@ symbol_width = 100
 symbol_height = 100
 
 # 載入圖像
-screw = pygame.transform.scale(pygame.image.load('./骰子/screw.png'),(38,38))
+screw = pygame.transform.scale(pygame.image.load('./game/骰子/screw.png'),(38,38))
 
 def cal(r1,r2,r3):
     number = [0 for i in range(6)]
@@ -174,8 +174,8 @@ while True:
     if not show_dice:
         rand1, rand2, rand3 = 0, 0, 0
     window.blit(bg,(0,0))
-    window.blit(pygame.transform.scale(pygame.image.load(f'./骰子/check.png'),(249,51)),(550,503))
-    window.blit(pygame.transform.scale(pygame.image.load(f'./骰子/clear.png'),(198,51)),(351,503))
+    window.blit(pygame.transform.scale(pygame.image.load(f'./game/骰子/check.png'),(249,51)),(550,503))
+    window.blit(pygame.transform.scale(pygame.image.load(f'./game/骰子/clear.png'),(198,51)),(351,503))
     pygame.draw.rect(window,(0,150,0),pygame.Rect(145,97,75,77))
     pygame.draw.rect(window,(0,75,0),pygame.Rect(0,496,347,70))
     if show_dice:
@@ -183,8 +183,8 @@ while True:
         window.blit(dice[rand2-1],(340,110))
         window.blit(dice[rand3-1],(420,110))
         if (rand1+rand2+rand3)>=10:
-            window.blit(pygame.transform.scale(pygame.image.load(f'./骰子/1.png'),(35,50)),(147,110))
-        window.blit(pygame.transform.scale(pygame.image.load(f'./骰子/{(rand1+rand2+rand3)%10}.png'),(35,50)),(182,110))
+            window.blit(pygame.transform.scale(pygame.image.load(f'./game/骰子/1.png'),(35,50)),(147,110))
+        window.blit(pygame.transform.scale(pygame.image.load(f'./game/骰子/{(rand1+rand2+rand3)%10}.png'),(35,50)),(182,110))
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             exit()
@@ -196,9 +196,9 @@ while True:
             if x>=550 and x<=799 and y>=503 and y<=554:
                 for i in range(16):
                     window.blit(bg,(0,0))
-                    window.blit(pygame.transform.scale(pygame.image.load(f'./骰子/check.png'),(249,51)),(550,503))
-                    window.blit(pygame.transform.scale(pygame.image.load(f'./骰子/clear.png'),(198,51)),(351,503))
-                    window.blit(pygame.transform.scale(pygame.image.load(f'./骰子/row{i%4+1}.png'),(334,208)),(230,0))
+                    window.blit(pygame.transform.scale(pygame.image.load(f'./game/骰子/check.png'),(249,51)),(550,503))
+                    window.blit(pygame.transform.scale(pygame.image.load(f'./game/骰子/clear.png'),(198,51)),(351,503))
+                    window.blit(pygame.transform.scale(pygame.image.load(f'./game/骰子/row{i%4+1}.png'),(334,208)),(230,0))
                     pygame.draw.rect(window,(0,150,0),pygame.Rect(145,97,75,77))
                     pygame.draw.rect(window,(0,75,0),pygame.Rect(0,496,347,70))
                     pygame.display.update()
@@ -209,17 +209,17 @@ while True:
                 window.blit(dice[rand3-1],(420,110))
                 earn = cal(rand1,rand2,rand3)
                 if (rand1+rand2+rand3)>=10:
-                    window.blit(pygame.transform.scale(pygame.image.load(f'./骰子/1.png'),(35,50)),(147,110))
-                window.blit(pygame.transform.scale(pygame.image.load(f'./骰子/{(rand1+rand2+rand3)%10}.png'),(35,50)),(182,110))
+                    window.blit(pygame.transform.scale(pygame.image.load(f'./game/骰子/1.png'),(35,50)),(147,110))
+                window.blit(pygame.transform.scale(pygame.image.load(f'./game/骰子/{(rand1+rand2+rand3)%10}.png'),(35,50)),(182,110))
                 print("earn:",earn)
                 show_dice = True
             # 清除押注
             if x>=351 and x<=549 and y>=503 and y<=554:
                 bit = [False for i in range(50)]
-                bg = pygame.transform.scale(pygame.image.load('./骰子/view.png'),(800,600))
+                bg = pygame.transform.scale(pygame.image.load('./game/骰子/view.png'),(800,600))
                 window.blit(bg,(0,0))
-                window.blit(pygame.transform.scale(pygame.image.load(f'./骰子/check.png'),(249,51)),(550,503))
-                window.blit(pygame.transform.scale(pygame.image.load(f'./骰子/clear.png'),(198,51)),(351,503))
+                window.blit(pygame.transform.scale(pygame.image.load(f'./game/骰子/check.png'),(249,51)),(550,503))
+                window.blit(pygame.transform.scale(pygame.image.load(f'./game/骰子/clear.png'),(198,51)),(351,503))
                 pygame.draw.rect(window,(0,150,0),pygame.Rect(145,97,75,77))
                 pygame.draw.rect(window,(0,75,0),pygame.Rect(0,496,347,70))
                 pygame.display.update()

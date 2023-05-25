@@ -16,10 +16,10 @@ number = random.randint(1,500000)
 number = np.round(number/100,2)
 
 def setup():
-    window.blit(pygame.transform.scale(pygame.image.load('./medicine/background.jpg'),(800,600)),(0,0))
-    window.blit(pygame.transform.scale(pygame.image.load('./medicine/scale.png'),(300,300)),(140,250))
-    window.blit(pygame.transform.scale(pygame.image.load('./medicine/pull.png'),(176,71)),(500,500))
-    window.blit(pygame.transform.scale(pygame.image.load('./medicine/clear.png'),(176,71)),(100,500))
+    window.blit(pygame.transform.scale(pygame.image.load('./game/medicine/background.jpg'),(800,600)),(0,0))
+    window.blit(pygame.transform.scale(pygame.image.load('./game/medicine/scale.png'),(300,300)),(140,250))
+    window.blit(pygame.transform.scale(pygame.image.load('./game/medicine/pull.png'),(176,71)),(500,500))
+    window.blit(pygame.transform.scale(pygame.image.load('./game/medicine/clear.png'),(176,71)),(100,500))
     pygame.draw.rect(window,(255,255,255),pygame.Rect(465,463,244,40))
     window.blit(pygame.font.Font('./fonts/corbel.ttf',24).render(f'Need number: {number}',True,(0,0,0)),(475,470))
 
@@ -34,38 +34,38 @@ weight = 0
 while True:
     stop = False
     setup()
-    window.blit(pygame.transform.scale(pygame.image.load('./medicine/1.png'),(282,156)),(380,100))
+    window.blit(pygame.transform.scale(pygame.image.load('./game/medicine/1.png'),(282,156)),(380,100))
     
     # 磅秤上放藥
     if int(weight) >= num_medicine[0]:
-        window.blit(pygame.transform.scale(pygame.image.load('./medicine/medicine.png'),(250,30)),(170,320))
+        window.blit(pygame.transform.scale(pygame.image.load('./game/medicine/medicine.png'),(250,30)),(170,320))
     if int(weight) >= num_medicine[1]:
-        window.blit(pygame.transform.scale(pygame.image.load('./medicine/medicine.png'),(250,30)),(170,310))
+        window.blit(pygame.transform.scale(pygame.image.load('./game/medicine/medicine.png'),(250,30)),(170,310))
     if int(weight) >= num_medicine[2]:
-        window.blit(pygame.transform.scale(pygame.image.load('./medicine/medicine.png'),(250,30)),(170,300))
+        window.blit(pygame.transform.scale(pygame.image.load('./game/medicine/medicine.png'),(250,30)),(170,300))
     if int(weight) >= num_medicine[3]:
-        window.blit(pygame.transform.scale(pygame.image.load('./medicine/medicine.png'),(250,30)),(170,290))
+        window.blit(pygame.transform.scale(pygame.image.load('./game/medicine/medicine.png'),(250,30)),(170,290))
     
 
     pygame.draw.rect(window,(240,240,240),pygame.Rect(270,391,70,28))
     pygame.draw.rect(window,(0,0,0),pygame.Rect(305,412,3,3))
     if weight <= 0.01:
-        window.blit(pygame.transform.scale(pygame.image.load('./medicine/num0.png'),(14,23)),(285,393))
-        window.blit(pygame.transform.scale(pygame.image.load('./medicine/num0.png'),(14,23)),(310,393))
-        window.blit(pygame.transform.scale(pygame.image.load('./medicine/num0.png'),(14,23)),(325,393))
+        window.blit(pygame.transform.scale(pygame.image.load('./game/medicine/num0.png'),(14,23)),(285,393))
+        window.blit(pygame.transform.scale(pygame.image.load('./game/medicine/num0.png'),(14,23)),(310,393))
+        window.blit(pygame.transform.scale(pygame.image.load('./game/medicine/num0.png'),(14,23)),(325,393))
     else:
         tmp = weight*100
         index = 0
         while int(tmp) != 0:
-            window.blit(pygame.transform.scale(pygame.image.load(f'./medicine/num{int(tmp%10)}.png'),(14,23)),num_posi[index])
+            window.blit(pygame.transform.scale(pygame.image.load(f'./game/medicine/num{int(tmp%10)}.png'),(14,23)),num_posi[index])
             index += 1
             tmp//=10
         if weight < 0.01:
-            window.blit(pygame.transform.scale(pygame.image.load('./medicine/num0.png'),(14,23)),(325,393))
+            window.blit(pygame.transform.scale(pygame.image.load('./game/medicine/num0.png'),(14,23)),(325,393))
         if weight < 0.1:
-            window.blit(pygame.transform.scale(pygame.image.load('./medicine/num0.png'),(14,23)),(310,393))
+            window.blit(pygame.transform.scale(pygame.image.load('./game/medicine/num0.png'),(14,23)),(310,393))
         if weight < 1:
-            window.blit(pygame.transform.scale(pygame.image.load('./medicine/num0.png'),(14,23)),(285,393))
+            window.blit(pygame.transform.scale(pygame.image.load('./game/medicine/num0.png'),(14,23)),(285,393))
 
     for event in pygame.event.get():
         # print(pygame.mouse.get_pos())
@@ -81,18 +81,18 @@ while True:
                         if event.type == pygame.MOUSEBUTTONUP:
                             stop = True
                     setup()
-                    window.blit(pygame.transform.scale(pygame.image.load(f'./medicine/{i+1}.png'),size[i]),posi[i])
+                    window.blit(pygame.transform.scale(pygame.image.load(f'./game/medicine/{i+1}.png'),size[i]),posi[i])
                     pygame.draw.rect(window,(240,240,240),pygame.Rect(270,391,70,28))
                     pygame.draw.rect(window,(0,0,0),pygame.Rect(305,412,3,3))
 
                     if int(weight) >= num_medicine[0]:
-                        window.blit(pygame.transform.scale(pygame.image.load('./medicine/medicine.png'),(250,30)),(170,320))
+                        window.blit(pygame.transform.scale(pygame.image.load('./game/medicine/medicine.png'),(250,30)),(170,320))
                     if int(weight) >= num_medicine[1]:
-                        window.blit(pygame.transform.scale(pygame.image.load('./medicine/medicine.png'),(250,30)),(170,310))
+                        window.blit(pygame.transform.scale(pygame.image.load('./game/medicine/medicine.png'),(250,30)),(170,310))
                     if int(weight) >= num_medicine[2]:
-                        window.blit(pygame.transform.scale(pygame.image.load('./medicine/medicine.png'),(250,30)),(170,300))
+                        window.blit(pygame.transform.scale(pygame.image.load('./game/medicine/medicine.png'),(250,30)),(170,300))
                     if int(weight) >= num_medicine[3]:
-                        window.blit(pygame.transform.scale(pygame.image.load('./medicine/medicine.png'),(250,30)),(170,290))
+                        window.blit(pygame.transform.scale(pygame.image.load('./game/medicine/medicine.png'),(250,30)),(170,290))
 
                     weight += flow[i]
                     weight = np.round(weight,2)
@@ -100,32 +100,32 @@ while True:
                     tmp = weight*100
                     index = 0
                     while int(tmp) != 0:
-                        window.blit(pygame.transform.scale(pygame.image.load(f'./medicine/num{int(tmp%10)}.png'),(14,23)),num_posi[index])
+                        window.blit(pygame.transform.scale(pygame.image.load(f'./game/medicine/num{int(tmp%10)}.png'),(14,23)),num_posi[index])
                         index += 1
                         tmp//=10
                     if weight < 0.01:
-                        window.blit(pygame.transform.scale(pygame.image.load('./medicine/num0.png'),(14,23)),(325,393))
+                        window.blit(pygame.transform.scale(pygame.image.load('./game/medicine/num0.png'),(14,23)),(325,393))
                     if weight < 0.1:
-                        window.blit(pygame.transform.scale(pygame.image.load('./medicine/num0.png'),(14,23)),(310,393))
+                        window.blit(pygame.transform.scale(pygame.image.load('./game/medicine/num0.png'),(14,23)),(310,393))
                     if weight < 1:
-                        window.blit(pygame.transform.scale(pygame.image.load('./medicine/num0.png'),(14,23)),(285,393))
+                        window.blit(pygame.transform.scale(pygame.image.load('./game/medicine/num0.png'),(14,23)),(285,393))
                     clock.tick(20)
                     pygame.display.flip()
                     i = i+1 if i<14 else 14
                 while i >= 0:
                     setup()
-                    window.blit(pygame.transform.scale(pygame.image.load(f'./medicine/{i+1}.png'),size[i]),posi[i])
+                    window.blit(pygame.transform.scale(pygame.image.load(f'./game/medicine/{i+1}.png'),size[i]),posi[i])
                     pygame.draw.rect(window,(240,240,240),pygame.Rect(270,391,70,28))
                     pygame.draw.rect(window,(0,0,0),pygame.Rect(305,412,3,3))
 
                     if int(weight) >= num_medicine[0]:
-                        window.blit(pygame.transform.scale(pygame.image.load('./medicine/medicine.png'),(250,30)),(170,320))
+                        window.blit(pygame.transform.scale(pygame.image.load('./game/medicine/medicine.png'),(250,30)),(170,320))
                     if int(weight) >= num_medicine[1]:
-                        window.blit(pygame.transform.scale(pygame.image.load('./medicine/medicine.png'),(250,30)),(170,310))
+                        window.blit(pygame.transform.scale(pygame.image.load('./game/medicine/medicine.png'),(250,30)),(170,310))
                     if int(weight) >= num_medicine[2]:
-                        window.blit(pygame.transform.scale(pygame.image.load('./medicine/medicine.png'),(250,30)),(170,300))
+                        window.blit(pygame.transform.scale(pygame.image.load('./game/medicine/medicine.png'),(250,30)),(170,300))
                     if int(weight) >= num_medicine[3]:
-                        window.blit(pygame.transform.scale(pygame.image.load('./medicine/medicine.png'),(250,30)),(170,290))
+                        window.blit(pygame.transform.scale(pygame.image.load('./game/medicine/medicine.png'),(250,30)),(170,290))
 
                     weight += flow[i]
                     weight = np.round(weight,2)
@@ -133,15 +133,15 @@ while True:
                     tmp = weight*100
                     index = 0
                     while int(tmp) != 0:
-                        window.blit(pygame.transform.scale(pygame.image.load(f'./medicine/num{int(tmp%10)}.png'),(14,23)),num_posi[index])
+                        window.blit(pygame.transform.scale(pygame.image.load(f'./game/medicine/num{int(tmp%10)}.png'),(14,23)),num_posi[index])
                         index += 1
                         tmp//=10
                     if weight < 0.01:
-                        window.blit(pygame.transform.scale(pygame.image.load('./medicine/num0.png'),(14,23)),(325,393))
+                        window.blit(pygame.transform.scale(pygame.image.load('./game/medicine/num0.png'),(14,23)),(325,393))
                     if weight < 0.1:
-                        window.blit(pygame.transform.scale(pygame.image.load('./medicine/num0.png'),(14,23)),(310,393))
+                        window.blit(pygame.transform.scale(pygame.image.load('./game/medicine/num0.png'),(14,23)),(310,393))
                     if weight < 1:
-                        window.blit(pygame.transform.scale(pygame.image.load('./medicine/num0.png'),(14,23)),(285,393))
+                        window.blit(pygame.transform.scale(pygame.image.load('./game/medicine/num0.png'),(14,23)),(285,393))
                     clock.tick(20)
                     pygame.display.flip()
                     i-=1
