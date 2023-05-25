@@ -13,7 +13,7 @@ my_symbol_posi_y = 200
 card_images = []
 for n in number:
     for c in color:
-        image = pygame.transform.scale(pygame.image.load(f'./game/cards/{n}_of_{c}.png'),(150,219))
+        image = pygame.transform.scale(pygame.image.load(f'../game/cards/{n}_of_{c}.png'),(150,219))
         card_images.append(image)
 
 
@@ -53,18 +53,18 @@ while True:
         # print(pygame.mouse.get_pos())
         if event.type == pygame.QUIT:
             exit()
-        window.blit(pygame.transform.scale(pygame.image.load('./game/cards/background.png'),(800,600)),(0,0))
+        window.blit(pygame.transform.scale(pygame.image.load('../game/cards/background.png'),(800,600)),(0,0))
         pygame.draw.rect(window,(36,132,58),pygame.Rect(16,6,112,151))
         pygame.draw.rect(window,(40,149,66),pygame.Rect(16,157,760,230))
-        window.blit(pygame.transform.scale(pygame.image.load(f'./game/cards/back.jpg'),(150,219)),(60,60))
-        window.blit(pygame.transform.scale(pygame.image.load(f'./game/cards/back.jpg'),(150,219)),(320,60))
-        window.blit(pygame.transform.scale(pygame.image.load(f'./game/cards/back.jpg'),(150,219)),(580,60))
+        window.blit(pygame.transform.scale(pygame.image.load(f'../game/cards/back.jpg'),(150,219)),(60,60))
+        window.blit(pygame.transform.scale(pygame.image.load(f'../game/cards/back.jpg'),(150,219)),(320,60))
+        window.blit(pygame.transform.scale(pygame.image.load(f'../game/cards/back.jpg'),(150,219)),(580,60))
         pygame.draw.rect(window,(200,20,20),pygame.Rect(320,500,150,50))
-        window.blit(pygame.font.Font('./fonts/corbel.ttf',35).render('Start',True,(20,20,20)),(358,510))
-        window.blit(pygame.font.Font('./fonts/corbel.ttf',35).render(f'{bid}',True,(255,255,255)),(320,400))
-        window.blit(pygame.transform.scale(pygame.image.load(f'./game/cards/minus.png'),(40,40)),(260,400))
-        window.blit(pygame.transform.scale(pygame.image.load(f'./game/cards/plus.png'),(40,40)),(500,400))
-        window.blit(pygame.transform.scale(pygame.image.load(f'./game/cards/screw.png'),(60,60)),(560,395))
+        window.blit(pygame.font.Font('../game/fonts/corbel.ttf',35).render('Start',True,(20,20,20)),(358,510))
+        window.blit(pygame.font.Font('../game/fonts/corbel.ttf',35).render(f'{bid}',True,(255,255,255)),(320,400))
+        window.blit(pygame.transform.scale(pygame.image.load(f'../game/cards/minus.png'),(40,40)),(260,400))
+        window.blit(pygame.transform.scale(pygame.image.load(f'../game/cards/plus.png'),(40,40)),(500,400))
+        window.blit(pygame.transform.scale(pygame.image.load(f'../game/cards/screw.png'),(60,60)),(560,395))
         # 按下start
         if not start and event.type == pygame.MOUSEBUTTONDOWN and pygame.mouse.get_pressed()[0]:
             posi = pygame.mouse.get_pos()
@@ -81,20 +81,20 @@ while True:
         if not start and event.type == pygame.MOUSEBUTTONDOWN and pygame.mouse.get_pressed()[0]:
             posi = pygame.mouse.get_pos()
             if math.sqrt(math.pow(posi[0]-280,2)+math.pow(posi[1]-420,2)) <= 19:
-                bid = 0 if bid == 0 else bid-100
+                bid = 0 if bid == 0 else bid-1
             if math.sqrt(math.pow(posi[0]-520,2)+math.pow(posi[1]-420,2)) <= 19:
-                bid = 1000000 if bid == 1000000 else bid+100
+                bid = 1000000 if bid == 1000000 else bid+1
         # 按我的牌
         if start and event.type == pygame.MOUSEBUTTONDOWN and pygame.mouse.get_pressed()[0]:
             posi = pygame.mouse.get_pos()
             if posi[0]<=470 and posi[0]>=320 and posi[1]<=279 and posi[1]>=60:
                 show_my_card = True
                 if judge(rand1, my_rand, rand2) == 'Win':
-                    print("Win")
+                    print(bid*2)
                 elif judge(rand1, my_rand, rand2) == 'Lose':
-                    print("Lose")
+                    print(0)
                 else:
-                    print("Hit")
+                    print(-bid*2)
 
         if start:
             window.blit(card_images[rand1],(60,60))
@@ -102,7 +102,7 @@ while True:
         if show_my_card:
             window.blit(card_images[my_rand],(320,60))
             pygame.draw.rect(window,(200,20,20),pygame.Rect(320,500,150,50))
-            window.blit(pygame.font.Font('./fonts/corbel.ttf',35).render('Restart',True,(20,20,20)),(340,510))
+            window.blit(pygame.font.Font('../game/fonts/corbel.ttf',35).render('Restart',True,(20,20,20)),(340,510))
         clock.tick(60)
         pygame.display.flip()
 pygame.quit()
