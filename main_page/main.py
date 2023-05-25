@@ -1,4 +1,5 @@
 import pygame, sys, multiprocessing
+# import subprocess
 # sys.path.insert(0, '../memory_game')
 # sys.path.append('..')
 # from memory_game import memory_game
@@ -422,7 +423,11 @@ class Game():
                     print("click carpet")
                     text[7] += 50
                 elif self.robot.chair_img_rect[0] <= event.pos[0] <= self.robot.chair_img_rect[0] + 200 and self.robot.chair_img_rect[1] <= event.pos[1] <= self.robot.chair_img_rect[1] + 200 and furniture[2] == 3:
-                        print("click chair")
+                    print("click chair")
+                    # proc = subprocess.Popen(['python','../game/shoot.py'],stdout=subprocess.PIPE)
+                    # print(proc.stdout.readlines())
+                    # for line in proc.stdout.readlines():
+                    #     print(line.decode('utf-8'))
                 elif self.robot.tv_img_rect[0] <= event.pos[0] <= self.robot.tv_img_rect[0] + 200 and self.robot.tv_img_rect[1] + 20 <= event.pos[1] <= self.robot.tv_img_rect[1] + 150 and furniture[3] == 4:
                     print("click tv")
                     text[1] -= 50
