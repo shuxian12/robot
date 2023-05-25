@@ -1,5 +1,6 @@
 import pygame, sys, multiprocessing
-# import subprocess
+import subprocess
+import random
 # sys.path.insert(0, '../memory_game')
 # sys.path.append('..')
 # from memory_game import memory_game
@@ -114,6 +115,24 @@ class Robot():
         self.textbox_send = self.font.render("Send", True, (0, 0, 0))
         self.textbox_send_rect = (620, 563)
 
+    def sick(self):
+        heal = 0
+        canvas.fill((0,0,0),(0,0,1000,600))
+        canvas.blit(self.broken_img, (550, 300))
+        event_list = pygame.event.get()
+        for event in event_list:
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if 719 >= event.pos[0] >= 571 and 450 >= event.pos[1] >= 352:
+                    with subprocess.Popen(['python','../game/pull_medicine.py'],stdout=subprocess.PIPE) as proc:
+                        if len(proc.stdout.readlines()) == 3:
+                            heal = random.randint(1,3)
+                    if heal == 2:
+                        return False
+                else:
+                    return True
+                
+
+
     def drawRobot(self, status):
         # index x
         if self.dir_x == 0:
@@ -143,7 +162,9 @@ class Robot():
         elif status == 4:
             canvas.blit(self.iron_img, (550, 300))
         elif status == 5:
-            canvas.blit(self.broken_img, (550, 300))
+            if self.sick() == False:
+                text[0] = pre_status+1
+            
 
     def drawFurniture(self, n):
         if n == 1:
@@ -340,7 +361,7 @@ class Game():
         #     self.store.drawStore(canvas)
     
     def update(self, event_list):
-        global WINDOW, text
+        global WINDOW, text, pre_status
         for event in event_list:
             if event.type == pygame.MOUSEBUTTONDOWN:
                 # press oil button
@@ -424,10 +445,12 @@ class Game():
                     text[7] += 50
                 elif self.robot.chair_img_rect[0] <= event.pos[0] <= self.robot.chair_img_rect[0] + 200 and self.robot.chair_img_rect[1] <= event.pos[1] <= self.robot.chair_img_rect[1] + 200 and furniture[2] == 3:
                     print("click chair")
+                    # with subprocess.Popen(['python','../game/shoot.py'],stdout=subprocess.PIPE) as proc:
+                    #     print(proc.stdout.read().decode('utf-8'),end='')
                     # proc = subprocess.Popen(['python','../game/shoot.py'],stdout=subprocess.PIPE)
                     # print(proc.stdout.readlines())
                     # for line in proc.stdout.readlines():
-                    #     print(line.decode('utf-8'))
+                    #     print(line.decode('utf-8'),end='')
                 elif self.robot.tv_img_rect[0] <= event.pos[0] <= self.robot.tv_img_rect[0] + 200 and self.robot.tv_img_rect[1] + 20 <= event.pos[1] <= self.robot.tv_img_rect[1] + 150 and furniture[3] == 4:
                     print("click tv")
                     text[1] -= 50

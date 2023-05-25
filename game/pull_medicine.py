@@ -146,6 +146,7 @@ while True:
                     pygame.display.flip()
                     i-=1
                 if abs(weight-number) <= 10:
+                    print("success")
                     exit()
 
             if x>=107 and x<=270 and y>=503 and y<=564:
