@@ -1,2 +1,23 @@
 /memory_game/__pycache__
 /pacman/__pycache__
+/website/static/css
+/website/static/js
+/flask_example_code
+memory_game/fonts/.DS_Store
+memory_game/images/hololive/.DS_Store
+memory_game/images/hololive/card/.DS_Store
+memory_game/images/hololive/vtuber/.DS_Store
+memory_game/.DS_Store
+memory_game/images/.DS_Store
+memory_game/sounds/.DS_Store
+pacman/__init__.py
+website/static/img/.DS_Store
+website/static/.DS_Store
+website/static/giphy.gif
+website/templates/cover copy.html
+website/templates/index.html
+website/templates/user.html
+website/.DS_Store
+website/manifest.json
+.DS_Store
+__init__.py
