@@ -21,8 +21,7 @@ class Shopping_mall():
         self.square_color = (254, 250, 224)
         self.square_width_color=(212,163,115)
         self.list_img=["ac.png","carpet.png","oil.png",
-                "chair.png","tv.png","oilEngine.jpg","tvChannel.png","screw.png","bg_4.jpg"
-                ]
+                "chair.png","tv.png","oilEngine.jpg","tvChannel.png","screw.png","bg_4.jpg"]
         self.list_button=["按鈕_廣告.png","按鈕_螺絲1.png","按鈕_儲值.png",
                           "按鈕_更新商品.png","exit.png","ok.png"]
         
@@ -174,7 +173,7 @@ class Shopping_mall():
         self.draw_notice(str_good)
         for i in self.list_img:
             if self.list_img[self.goods1]==i:
-                 print(self.list_img[self.goods1])
+                print(self.list_img[self.goods1])
         #bug買東西
          #看要return 甚麼參數給家具
         
@@ -182,13 +181,13 @@ class Shopping_mall():
     def click_event3_buy(self):
         str_good =self.list_img[self.goods2]
         if str_good.find(".png")!=-1:
-             str_good=str_good.replace(".png","")
+            str_good=str_good.replace(".png","")
         elif str_good.find(".jpg")!=-1:
-             str_good=str_good.replace(".jpg","")
+            str_good=str_good.replace(".jpg","")
         self.draw_notice(str_good)
         for i in self.list_img:
             if self.list_img[self.goods2]==i:
-                 print(self.list_img[self.goods2])
+                print(self.list_img[self.goods2])
                  
         
         #bug買東西 #看要return 甚麼參數給家具
@@ -196,7 +195,7 @@ class Shopping_mall():
         self.draw_notice()
         for i in self.list_img:
             if self.list_img[self.goods3]==i:
-                 print(self.list_img[self.goods3])
+                print(self.list_img[self.goods3])
                  
         #儲值
         pass
@@ -310,10 +309,10 @@ def main():
                 #如果有跳出通知
                 if shopping_mall.notice_flag==1:
                     if 330<= mouse_x <= 330+140 and 320<= mouse_y <= 320+80:
-                         print(221)
-                         shopping_mall.update_img=0
-                         shopping_mall.update_notice=0
-                         shopping_mall.update(shopping_mall.update_img,shopping_mall.update_notice,"")
+                        print(221)
+                        shopping_mall.update_img=0
+                        shopping_mall.update_notice=0
+                        shopping_mall.update(shopping_mall.update_img,shopping_mall.update_notice,"")
                        
             #播影片結束
             if event.type == pygame.USEREVENT:

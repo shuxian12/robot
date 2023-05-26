@@ -19,3 +19,7 @@ website/templates/user.html
 website/.DS_Store
 website/manifest.json
 .DS_Store
+game_done/__pycache__/__init__.cpython-310.pyc
+game_done/__pycache__/game_done_screen.cpython-310.pyc
+website/__pycache__/__init__.cpython-310.pyc
+website/__pycache__/app.cpython-310.pyc

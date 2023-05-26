@@ -8,6 +8,11 @@ from typing import List
 sys.path.append('..')
 from memory_game import memory_game
 from pacman import pacman
+from game_done import game_done_screen
+
+# from website import app
+# import webbrowser
+# webbrowser.open('http://127.0.0.1:5000')
 
 canvas = pygame.display.set_mode((1000, 600))
 text = [1, 50, 0, 100, 100, 100, 4, 100, 0]# text[8] = 被吃掉的螺絲數量??
@@ -254,28 +259,31 @@ class Store:
 
         with subprocess.Popen(['python','../shopping_mall/shopping_class.py'],stdout=subprocess.PIPE) as proc:
             self.output=proc.stdout.readlines()
+            for out in self.output:
+                print(out)
             self.output.pop(0)
             self.output.pop(0)
             for out in self.output:
-                if out == b'ac.png\r\n':
+                # if out == b'ac.png\r\n':
+                if 'ac' in out.decode():
                     have_ac = True
-                   
-                elif out == b'carpet.png\r\n':
+                elif 'carpet' in out.decode():
+                # elif out == b'carpet.png\r\n':
                     have_carpet=True
-                    
-                elif out == b'oil.png\r\n':
+                elif 'oil' in out.decode():
+                # elif out == b'oil.png\r\n':
                     have_oil=True
-                   
-                elif out == b'chair.png\r\n':
+                elif 'chair' in out.decode():
+                # elif out == b'chair.png\r\n':
                     have_chair=True
-                   
-                elif out == b'tv.png\r\n':
+                elif 'tv' in out.decode():
+                # elif out == b'tv.png\r\n':
                     have_tv=True
-                   
-                elif out == b'oilEngine.jpg\r\n':
+                elif 'oilEngine' in out.decode():
+                # elif out == b'oilEngine.jpg\r\n':
                     have_oilEngine=True
-                    
-                elif out == b'tvChannel.png\r\n':
+                elif 'tvChannel' in out.decode():
+                # elif out == b'tvChannel.png\r\n':
                     have_tvChannel=True
 """
 class Store:
@@ -330,6 +338,7 @@ class Store:
 
         # canvas.blit(self.text_leave, self.text_leave_rect)
 """
+
 class Game():
     def __init__(self) -> None:
         self.robot = Robot()
@@ -469,13 +478,18 @@ class Game():
                 else:
                     random_98 = 0
                 return random_92, random_95, random_98
-           
-            oilEngine += add_oilEngine()
-            screw += add_screw()
+            oil, screws = add_oilEngine(), add_screw()
+            oilEngine += oil
+            screw += screws
             add_oil92, add_oil95, add_oil98 = add_oil()
             oil92 += add_oil92
             oil95 += add_oil95
             oil98 += add_oil98
+            manager = multiprocessing.Manager()
+            p = multiprocessing.Process(target=game_done_screen.main, args=(oil92, oil95, oil98, oilEngine, screw))
+            p.start()
+            p.join()
+            # game_done_screen.main(oil92, oil95, oil98, oilEngine, screw)
             return oil92, oil95, oil98, oilEngine, screw
         
         global WINDOW, text, pre_status, garbageAD_num, garbageAD_watch
