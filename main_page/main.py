@@ -129,10 +129,10 @@ class Robot():
         self.right_texts_rect = [self.tetx_oil92_rect, self.text_oil95_rect, self.text_oil98_rect, self.text_oilEngine_rect, self.text_screw_rect, self.num_oil92_rect, self.num_oil95_rect, self.num_oil98_rect, self.num_oilEngine_rect, self.num_screw_rect]
         
         # textbox
-        self.textbox_rect = (300, 560)
-        self.rect_rect = (295, 558, 300, 28)
+        self.textbox_rect = (200, 560)
+        self.rect_rect = (195, 558, 550, 28)
         self.textbox_send = self.font.render("Send", True, (0, 0, 0))
-        self.textbox_send_rect = (620, 563)
+        self.textbox_send_rect = (770, 563)
 
         # garbage
         self.background_ad_img = pygame.image.load(r"garbage/background_ad.png")
@@ -154,7 +154,7 @@ class Robot():
         for event in event_list:
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if 719 >= event.pos[0] >= 571 and 450 >= event.pos[1] >= 352:
-                    with subprocess.Popen(['python','../game/pull_medicine.py'],stdout=subprocess.PIPE) as proc:
+                    with subprocess.Popen(['python','..\game\pull_medicine.py'],stdout=subprocess.PIPE) as proc:
                         if len(proc.stdout.readlines()) == 3:
                             heal = random.randint(1,3)
                     if heal == 2:
@@ -660,7 +660,7 @@ class Game():
                         print(ai_msg)
                     self.user_input = ""
 
-                if self.robot.textbox_rect[0] <= event.pos[0] <= self.robot.textbox_rect[0] + 300 and self.robot.textbox_rect[1] <= event.pos[1] <= self.robot.textbox_rect[1] + 28 and WINDOW == 1:
+                if self.robot.textbox_rect[0] <= event.pos[0] <= self.robot.textbox_rect[0] + 550 and self.robot.textbox_rect[1] <= event.pos[1] <= self.robot.textbox_rect[1] + 28 and WINDOW == 1:
                     self.textbox_active = True
                 else:
                     self.textbox_active = False
@@ -670,7 +670,7 @@ class Game():
                     if event.key == pygame.K_BACKSPACE:
                         self.user_input = self.user_input[:-1]
                     else:
-                        if len(self.user_input) <= 20:
+                        if len(self.user_input) <= 36:
                             self.user_input += event.unicode
 
             # check status. # text[0] is status, text[6] is oilEngine, text[7] is screw
