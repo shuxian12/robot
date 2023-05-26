@@ -252,7 +252,7 @@ class Store:
     def show_store(self):
         global have_ac,have_carpet,have_oil,have_chair,have_tv,have_oilEngine,have_tvChannel
 
-        with subprocess.Popen(['python','./shopping_mall/shopping_class.py'],stdout=subprocess.PIPE) as proc:
+        with subprocess.Popen(['python','../shopping_mall/shopping_class.py'],stdout=subprocess.PIPE) as proc:
             self.output=proc.stdout.readlines()
             self.output.pop(0)
             self.output.pop(0)

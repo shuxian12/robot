@@ -42,7 +42,7 @@ class Shopping_mall():
         self.goods2=0
         self.goods3=0
         #背景
-        image = pygame.image.load('./shopping_mall/picture/'+self.list_img[8]).convert_alpha()
+        image = pygame.image.load('../shopping_mall/picture/'+self.list_img[8]).convert_alpha()
         image.set_alpha(128)
         image = pygame.transform.scale(image, (WINDOW_WIDTH, WINDOW_HEIGHT))
         window_surface.blit(image, (0, 0))
@@ -91,7 +91,7 @@ class Shopping_mall():
         pygame.draw.rect(window_surface, self.square_color, (center_x ,center_y, self.img_w, self.img_h))
 
     def draw_img(self,flag_update):
-        filepath_head="./shopping_mall/picture/"
+        filepath_head="../shopping_mall/picture/"
         if flag_update==0: #不需要更新的時候
            
             self.draw_img_1(filepath_head+self.list_img[7],self.img_x_left,self.img_y_up)
@@ -130,7 +130,7 @@ class Shopping_mall():
         window_surface.blit(image, (center_x, center_y))
 
     def draw_button(self):
-        filepath_head="./shopping_mall/picture/"
+        filepath_head="../shopping_mall/picture/"
         self.draw_button_1(filepath_head+self.list_button[0],self.button_x_left,self.button_y_up,self.button_w,self.button_h)
         self.draw_button_1(filepath_head+self.list_button[1],self.button_x_right,self.button_y_up,self.button_w,self.button_h)
         self.draw_button_1(filepath_head+self.list_button[1],self.button_x_left,self.button_y_down,self.button_w,self.button_h)
@@ -143,11 +143,11 @@ class Shopping_mall():
         
         pygame.draw.rect(window_surface, (255,175,204), (195 ,195, 410, 210))
         pygame.draw.rect(window_surface, WHITE, (200 ,200, 400, 200))
-        image = pygame.image.load('./shopping_mall/picture/'+self.list_button[5])
+        image = pygame.image.load('../shopping_mall/picture/'+self.list_button[5])
         image = pygame.transform.scale(image, (140, 80))
         window_surface.blit(image, (330, 320))
 
-        font = pygame.font.Font("./shopping_mall/font/kaiu.ttf", 25)
+        font = pygame.font.Font("../shopping_mall/font/kaiu.ttf", 25)
         text = "你已獲得"+goods
         text_surface = font.render(text, True,(255,175,204))
         text_rect = text_surface.get_rect()
@@ -213,12 +213,12 @@ class Shopping_mall():
          pass
          
     def get_video(self):
-        self.cap = cv2.VideoCapture('./shopping_mall/video/ads.mp4')
+        self.cap = cv2.VideoCapture('../shopping_mall/video/ads.mp4')
         self.success, self.img = self.cap.read()
         self.shape = self.img.shape[1::-1]
 
     def get_sound(self):
-        audio_path = "./shopping_mall/sounds/ads1_sound.mp3"
+        audio_path = "../shopping_mall/sounds/ads1_sound.mp3"
         pygame.mixer.music.load(audio_path)
         pygame.mixer.music.set_volume(.3)
         pygame.mixer.music.play()
@@ -231,7 +231,7 @@ class Shopping_mall():
                 window_surface.blit(pygame.image.frombuffer(self.img.tobytes(), self.shape, 'BGR'), (0, 50))
         else:
             window_surface.fill(BG)
-            image = pygame.image.load('./shopping_mall/picture/'+self.list_img[8]).convert_alpha()
+            image = pygame.image.load('../shopping_mall/picture/'+self.list_img[8]).convert_alpha()
             image.set_alpha(128)
             image = pygame.transform.scale(image, (WINDOW_WIDTH, WINDOW_HEIGHT))
             window_surface.blit(image, (0, 0))
