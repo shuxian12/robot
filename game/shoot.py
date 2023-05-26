@@ -92,7 +92,7 @@ while True:
                 if judge(rand1, my_rand, rand2) == 'Win':
                     print(bid*2)
                 elif judge(rand1, my_rand, rand2) == 'Lose':
-                    print(0)
+                    print(-bid)
                 else:
                     print(-bid*2)
 

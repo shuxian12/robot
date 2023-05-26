@@ -1,7 +1,6 @@
 import pygame
 import numpy as np
 import random
-import math
 
 pygame.init()
 window_width = 800

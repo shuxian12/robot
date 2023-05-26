@@ -1,5 +1,6 @@
 import pygame
 import random
+import numpy as np
 pygame.init()
 
 # 視窗大小
@@ -160,8 +161,8 @@ def cal(r1,r2,r3):
         s+=12
     if bit[49] and number[5]==3:
         s+=12
-    print(number)
-    print(sum(bit))
+    # print(number)
+    # print(sum(bit))
     return s-sum(bit)
 
 power = [1.035,12.37,12.37,12.37,215,215,215,35,215,215,215,12.37,12.37,12.37,1.035,\
@@ -211,7 +212,7 @@ while True:
                 if (rand1+rand2+rand3)>=10:
                     window.blit(pygame.transform.scale(pygame.image.load(f'../game/骰子/1.png'),(35,50)),(147,110))
                 window.blit(pygame.transform.scale(pygame.image.load(f'../game/骰子/{(rand1+rand2+rand3)%10}.png'),(35,50)),(182,110))
-                print("earn:",earn)
+                print(int(np.floor(earn)))
                 show_dice = True
             # 清除押注
             if x>=351 and x<=549 and y>=503 and y<=554:

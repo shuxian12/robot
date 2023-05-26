@@ -1,6 +1,7 @@
 import pygame, sys, multiprocessing
 import subprocess
 import random, cv2
+import numpy as np
 # sys.path.insert(0, '../memory_game')
 # sys.path.append('..')
 # from memory_game import memory_game
@@ -459,18 +460,25 @@ class Game():
                 # click game button
                 elif self.robot.ac_img_rect[0] <= event.pos[0] <= self.robot.ac_img_rect[0] + 200 and self.robot.ac_img_rect[1] + 50 <= event.pos[1] <= self.robot.ac_img_rect[1] + 170 and furniture[0] == 1 and WINDOW == 1:
                     print("click ac")
-                    text[6] += 4
-                elif self.robot.carpet_img_rect[0] + 300 <= event.pos[0] <= self.robot.carpet_img_rect[0] + 800 and self.robot.carpet_img_rect[1] + 130 <= event.pos[1] <= self.robot.carpet_img_rect[1] + 350 and furniture[1] == 2 and WINDOW == 1:
+                    lines = []
+                    with subprocess.Popen(['python','../game/gamble.py'],stdout=subprocess.PIPE) as proc:
+                        lines = proc.stdout.readlines()
+                    if len(lines) >= 3:
+                        for i in range(2,len(lines)):
+                            print(int(np.floor(int(lines[i].decode('utf-8').strip('\r\n')))))
+                            text[8] += int(np.floor(int(lines[i].decode('utf-8').strip('\r\n'))))
+                    # text[6] += 4
+                elif self.robot.carpet_img_rect[0] + 300 <= event.pos[0] <= self.robot.carpet_img_rect[0] + 800 and self.robot.carpet_img_rect[1] + 130 <= event.pos[1] <= self.robot.carpet_img_rect[1] + 350 and furniture[1] == 2:
                     print("click carpet")
                     text[7] += 50
                 elif self.robot.chair_img_rect[0] <= event.pos[0] <= self.robot.chair_img_rect[0] + 200 and self.robot.chair_img_rect[1] <= event.pos[1] <= self.robot.chair_img_rect[1] + 200 and furniture[2] == 3 and WINDOW == 1:
                     print("click chair")
-                    # with subprocess.Popen(['python','../game/shoot.py'],stdout=subprocess.PIPE) as proc:
-                    #     print(proc.stdout.read().decode('utf-8'),end='')
-                    # proc = subprocess.Popen(['python','../game/shoot.py'],stdout=subprocess.PIPE)
-                    # print(proc.stdout.readlines())
-                    # for line in proc.stdout.readlines():
-                    #     print(line.decode('utf-8'),end='')
+                    lines = []
+                    with subprocess.Popen(['python','../game/shoot.py'],stdout=subprocess.PIPE) as proc:
+                        lines = proc.stdout.readlines()
+                    if len(lines) >= 3:
+                        for i in range(2,len(lines)):
+                            text[8] += int(lines[i].decode('utf-8').strip('\r\n'))
                 elif self.robot.tv_img_rect[0] <= event.pos[0] <= self.robot.tv_img_rect[0] + 200 and self.robot.tv_img_rect[1] + 20 <= event.pos[1] <= self.robot.tv_img_rect[1] + 150 and furniture[3] == 4 and WINDOW == 1:
                     print("click tv")
                     text[1] -= 50
