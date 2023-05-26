@@ -84,7 +84,7 @@ class Game():
         pygame.mixer.music.play()
 
         # initialize timer
-        self.time_limit = 70.0
+        self.time_limit = 5.0
         self.timer = pygame.time.get_ticks()
         self.timer_font = pygame.font.Font(DIR+'/fonts/Comic Sans MS Bold.ttf', 24)
         self.timer_text = self.timer_font.render('Time: {:04.1f}'.format(self.time_limit), True, WHITE)
@@ -271,7 +271,7 @@ def main(return_dict={'you_win': False}):
 
     pygame.quit()
     print(running if running else 'Game Over')
-    if not return_dict: return_dict['running'] = running
+    if not return_dict: return_dict['running'] = True#running
     return running
 
 if __name__ == '__main__':

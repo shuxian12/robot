@@ -21,8 +21,7 @@ class Shopping_mall():
         self.square_color = (254, 250, 224)
         self.square_width_color=(212,163,115)
         self.list_img=["ac.png","carpet.png","oil.png",
-                "chair.png","tv.png","oilEngine.jpg","tvChannel.png","screw.png","bg_4.jpg"
-                ]
+                "chair.png","tv.png","oilEngine.jpg","tvChannel.png","screw.png","bg_4.jpg"]
         self.list_button=["按鈕_廣告.png","按鈕_螺絲1.png","按鈕_儲值.png",
                           "按鈕_更新商品.png","exit.png","ok.png"]
         
@@ -42,7 +41,7 @@ class Shopping_mall():
         self.goods2=0
         self.goods3=0
         #背景
-        image = pygame.image.load('./shopping_mall/picture/'+self.list_img[8]).convert_alpha()
+        image = pygame.image.load('../shopping_mall/picture/'+self.list_img[8]).convert_alpha()
         image.set_alpha(128)
         image = pygame.transform.scale(image, (WINDOW_WIDTH, WINDOW_HEIGHT))
         window_surface.blit(image, (0, 0))
@@ -91,7 +90,7 @@ class Shopping_mall():
         pygame.draw.rect(window_surface, self.square_color, (center_x ,center_y, self.img_w, self.img_h))
 
     def draw_img(self,flag_update):
-        filepath_head="./shopping_mall/picture/"
+        filepath_head="../shopping_mall/picture/"
         if flag_update==0: #不需要更新的時候
            
             self.draw_img_1(filepath_head+self.list_img[7],self.img_x_left,self.img_y_up)
@@ -130,7 +129,7 @@ class Shopping_mall():
         window_surface.blit(image, (center_x, center_y))
 
     def draw_button(self):
-        filepath_head="./shopping_mall/picture/"
+        filepath_head="../shopping_mall/picture/"
         self.draw_button_1(filepath_head+self.list_button[0],self.button_x_left,self.button_y_up,self.button_w,self.button_h)
         self.draw_button_1(filepath_head+self.list_button[1],self.button_x_right,self.button_y_up,self.button_w,self.button_h)
         self.draw_button_1(filepath_head+self.list_button[1],self.button_x_left,self.button_y_down,self.button_w,self.button_h)
@@ -143,11 +142,11 @@ class Shopping_mall():
         
         pygame.draw.rect(window_surface, (255,175,204), (195 ,195, 410, 210))
         pygame.draw.rect(window_surface, WHITE, (200 ,200, 400, 200))
-        image = pygame.image.load('./shopping_mall/picture/'+self.list_button[5])
+        image = pygame.image.load('../shopping_mall/picture/'+self.list_button[5])
         image = pygame.transform.scale(image, (140, 80))
         window_surface.blit(image, (330, 320))
 
-        font = pygame.font.Font("./shopping_mall/font/kaiu.ttf", 25)
+        font = pygame.font.Font("../shopping_mall/font/kaiu.ttf", 25)
         text = "你已獲得"+goods
         text_surface = font.render(text, True,(255,175,204))
         text_rect = text_surface.get_rect()
@@ -174,7 +173,7 @@ class Shopping_mall():
         self.draw_notice(str_good)
         for i in self.list_img:
             if self.list_img[self.goods1]==i:
-                 print(self.list_img[self.goods1])
+                print(self.list_img[self.goods1])
         #bug買東西
          #看要return 甚麼參數給家具
         
@@ -182,13 +181,13 @@ class Shopping_mall():
     def click_event3_buy(self):
         str_good =self.list_img[self.goods2]
         if str_good.find(".png")!=-1:
-             str_good=str_good.replace(".png","")
+            str_good=str_good.replace(".png","")
         elif str_good.find(".jpg")!=-1:
-             str_good=str_good.replace(".jpg","")
+            str_good=str_good.replace(".jpg","")
         self.draw_notice(str_good)
         for i in self.list_img:
             if self.list_img[self.goods2]==i:
-                 print(self.list_img[self.goods2])
+                print(self.list_img[self.goods2])
                  
         
         #bug買東西 #看要return 甚麼參數給家具
@@ -196,7 +195,7 @@ class Shopping_mall():
         self.draw_notice()
         for i in self.list_img:
             if self.list_img[self.goods3]==i:
-                 print(self.list_img[self.goods3])
+                print(self.list_img[self.goods3])
                  
         #儲值
         pass
@@ -213,12 +212,12 @@ class Shopping_mall():
          pass
          
     def get_video(self):
-        self.cap = cv2.VideoCapture('./shopping_mall/video/ads.mp4')
+        self.cap = cv2.VideoCapture('../shopping_mall/video/ads.mp4')
         self.success, self.img = self.cap.read()
         self.shape = self.img.shape[1::-1]
 
     def get_sound(self):
-        audio_path = "./shopping_mall/sounds/ads1_sound.mp3"
+        audio_path = "../shopping_mall/sounds/ads1_sound.mp3"
         pygame.mixer.music.load(audio_path)
         pygame.mixer.music.set_volume(.3)
         pygame.mixer.music.play()
@@ -231,7 +230,7 @@ class Shopping_mall():
                 window_surface.blit(pygame.image.frombuffer(self.img.tobytes(), self.shape, 'BGR'), (0, 50))
         else:
             window_surface.fill(BG)
-            image = pygame.image.load('./shopping_mall/picture/'+self.list_img[8]).convert_alpha()
+            image = pygame.image.load('../shopping_mall/picture/'+self.list_img[8]).convert_alpha()
             image.set_alpha(128)
             image = pygame.transform.scale(image, (WINDOW_WIDTH, WINDOW_HEIGHT))
             window_surface.blit(image, (0, 0))
@@ -310,10 +309,10 @@ def main():
                 #如果有跳出通知
                 if shopping_mall.notice_flag==1:
                     if 330<= mouse_x <= 330+140 and 320<= mouse_y <= 320+80:
-                         print(221)
-                         shopping_mall.update_img=0
-                         shopping_mall.update_notice=0
-                         shopping_mall.update(shopping_mall.update_img,shopping_mall.update_notice,"")
+                        print(221)
+                        shopping_mall.update_img=0
+                        shopping_mall.update_notice=0
+                        shopping_mall.update(shopping_mall.update_img,shopping_mall.update_notice,"")
                        
             #播影片結束
             if event.type == pygame.USEREVENT:
