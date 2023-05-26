@@ -22,6 +22,14 @@ garbageAD_num = 0
 garbageAD_watch = -1
 FPS = 60
 
+have_ac=False
+have_carpet=False
+have_oil=False
+have_chair=False
+have_tv=False
+have_oilEngine=False
+have_tvChannel=False
+
 class Robot():
     def __init__(self):
         super().__init__()
@@ -187,15 +195,16 @@ class Robot():
             
 
     def drawFurniture(self, n):
-        if n == 1:
+        global have_ac,have_carpet,have_oil,have_chair,have_tv,have_oilEngine,have_tvChannel
+        if n == 1 and have_ac==True:
             canvas.blit(self.ac_img, self.ac_img_rect)
-        elif n == 2:
+        elif n == 2 and have_carpet==True:
             canvas.blit(self.carpet_img, self.carpet_img_rect)
-        elif n == 3:
+        elif n == 3 and have_chair==True:
             canvas.blit(self.chair_img, self.chair_img_rect)
-        elif n == 4:
+        elif n == 4 and have_tv==True:
             canvas.blit(self.tv_img, self.tv_img_rect)
-        elif n == 5:
+        elif n == 5 and have_tvChannel==True:
             canvas.blit(self.tvChannel_img, self.tvChannel_img_rect)
 
     def updateText(self):
@@ -238,6 +247,38 @@ class Button:
 
 class Store:
     def __init__(self):
+        pass
+    def show_store(self):
+        global have_ac,have_carpet,have_oil,have_chair,have_tv,have_oilEngine,have_tvChannel
+
+        with subprocess.Popen(['python','./shopping_mall/shopping_class.py'],stdout=subprocess.PIPE) as proc:
+            self.output=proc.stdout.readlines()
+            self.output.pop(0)
+            self.output.pop(0)
+            for out in self.output:
+                if out == b'ac.png\r\n':
+                    have_ac = True
+                   
+                elif out == b'carpet.png\r\n':
+                    have_carpet=True
+                    
+                elif out == b'oil.png\r\n':
+                    have_oil=True
+                   
+                elif out == b'chair.png\r\n':
+                    have_chair=True
+                   
+                elif out == b'tv.png\r\n':
+                    have_tv=True
+                   
+                elif out == b'oilEngine.jpg\r\n':
+                    have_oilEngine=True
+                    
+                elif out == b'tvChannel.png\r\n':
+                    have_tvChannel=True
+"""
+class Store:
+    def __init__(self):
         # self.font = pygame.font.SysFont("jfopen粉圓11", 20)
         self.font = pygame.font.Font(r"fonts/jf-openhuninn-2.0.ttf", 20)
         self.text_ac = self.font.render("冷氣", True, (0, 0, 0))
@@ -274,7 +315,20 @@ class Store:
         canvas.fill((255, 255, 255))
         for (txt, rect) in zip(self.store_list, self.store_list_rect):
             canvas.blit(txt, rect)
+        # canvas.blit(self.text_ac, self.text_ac_rect)
+        # canvas.blit(self.text_carpet, self.text_carpet_rect)
+        # canvas.blit(self.text_chair, self.text_chair_rect)
+        # canvas.blit(self.text_tv, self.text_tv_rect)
+        # canvas.blit(self.text_tvChannel, self.text_tvChannel_rect)
+        
+        # canvas.blit(self.text_acBuy, self.text_acBuy_rect)
+        # canvas.blit(self.text_carpetBuy, self.text_carpetBuy_rect)
+        # canvas.blit(self.text_chairBuy, self.text_chairBuy_rect)
+        # canvas.blit(self.text_tvBuy, self.text_tvBuy_rect)
+        # canvas.blit(self.text_tvChannelBuy, self.text_tvChannelBuy_rect)
 
+        # canvas.blit(self.text_leave, self.text_leave_rect)
+"""
 class Game():
     def __init__(self) -> None:
         self.robot = Robot()
@@ -470,6 +524,11 @@ class Game():
                         pre_status = text[0]
                         text[0] = 5
 
+                #store button
+                elif self.storeBtn.rect_x <= event.pos[0] <= self.storeBtn.rect_x + 100 and self.storeBtn.rect_y <= event.pos[1] <= self.storeBtn.rect_y + 100 and WINDOW == 1:
+                    print("click store")
+                    Store().show_store()
+                # click game button
                 # click ac for gamble game
                 elif self.robot.ac_img_rect[0] <= event.pos[0] <= self.robot.ac_img_rect[0] + 200 and self.robot.ac_img_rect[1] + 50 <= event.pos[1] <= self.robot.ac_img_rect[1] + 170 and furniture[0] == 1 and WINDOW == 1:
                     print("click ac")
