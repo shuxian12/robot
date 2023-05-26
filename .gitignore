@@ -10,7 +10,6 @@ memory_game/images/hololive/vtuber/.DS_Store
 memory_game/.DS_Store
 memory_game/images/.DS_Store
 memory_game/sounds/.DS_Store
-pacman/__init__.py
 website/static/img/.DS_Store
 website/static/.DS_Store
 website/static/giphy.gif
@@ -20,4 +19,3 @@ website/templates/user.html
 website/.DS_Store
 website/manifest.json
 .DS_Store
-__init__.py
