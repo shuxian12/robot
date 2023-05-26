@@ -2,12 +2,16 @@ import pygame, sys, multiprocessing
 import subprocess
 import random, cv2
 import numpy as np
+from typing import List
 # sys.path.insert(0, '../memory_game')
-# sys.path.append('..')
-# from memory_game import memory_game
+sys.path.append('..')
+from memory_game import memory_game
+from pacman import pacman
 
 canvas = pygame.display.set_mode((1000, 600))
-text = [1, 50, 0, 100, 100, 100, 4, 100, 0] # text[8] = num of screw
+text = [1, 50, 0, 100, 100, 100, 4, 100, 0]# text[8] = 被吃掉的螺絲數量??
+# text[0] is status, text[1] is energy, text[2] is bug, text[3] is oil92, 
+# text[4] is oil95, text[5] is oil98, text[6] is oilEngine, text[7] is screw
 furniture = [1, 2, 3, 4, 5]
 garbage = [0, 0, 0, 0]
 pre_status = 1
@@ -22,15 +26,15 @@ class Robot():
     def __init__(self):
         super().__init__()
         # Robot image
-        self.status1_img = pygame.image.load(r"main_page/character/status1.png")
+        self.status1_img = pygame.image.load(r"character/status1.png")
         self.status1_img = pygame.transform.scale(self.status1_img, (200, 200))
-        self.status2_img = pygame.image.load(r"main_page/character/status2.png")
+        self.status2_img = pygame.image.load(r"character/status2.png")
         self.status2_img = pygame.transform.scale(self.status2_img, (200, 200))
-        self.status3_img = pygame.image.load(r"main_page/character/status3.png")
+        self.status3_img = pygame.image.load(r"character/status3.png")
         self.status3_img = pygame.transform.scale(self.status3_img, (160, 300))
-        self.iron_img = pygame.image.load(r"main_page/character/scrap_iron.png")
+        self.iron_img = pygame.image.load(r"character/scrap_iron.png")
         self.iron_img = pygame.transform.scale(self.iron_img, (300, 300))
-        self.broken_img = pygame.image.load(r"main_page/character/broken.png")
+        self.broken_img = pygame.image.load(r"character/broken.png")
         self.broken_img = pygame.transform.scale(self.broken_img, (200, 200))
         self.index_x = 0
         self.dir_x = 0
@@ -38,43 +42,43 @@ class Robot():
         self.dir_y = 0
 
         # furniture image
-        self.store_img = pygame.image.load(r"main_page/furniture/store.png")
+        self.store_img = pygame.image.load(r"furniture/store.png")
         self.store_img = pygame.transform.scale(self.store_img, (100, 100))
-        self.background_img = pygame.image.load(r"main_page/furniture/background.png")
+        self.background_img = pygame.image.load(r"furniture/background.png")
         self.background_img = pygame.transform.scale(self.background_img, (1000, 600))
-        self.ac_img = pygame.image.load(r"main_page/furniture/ac.png")
+        self.ac_img = pygame.image.load(r"furniture/ac.png")
         self.ac_img = pygame.transform.scale(self.ac_img, (200, 200))
         self.ac_img_rect = (600, 0)
-        self.carpet_img = pygame.image.load(r"main_page/furniture/carpet.png")
+        self.carpet_img = pygame.image.load(r"furniture/carpet.png")
         self.carpet_img = pygame.transform.scale(self.carpet_img, (800, 600))
         self.carpet_img_rect = (100, 200)
-        self.chair_img = pygame.image.load(r"main_page/furniture/chair.png")
+        self.chair_img = pygame.image.load(r"furniture/chair.png")
         self.chair_img = pygame.transform.scale(self.chair_img, (200, 200))
         self.chair_img_rect = (150, 300)
-        self.tvChannel_img = pygame.image.load(r"main_page/furniture/tvChannel.png")
+        self.tvChannel_img = pygame.image.load(r"furniture/tvChannel.png")
         self.tvChannel_img = pygame.transform.scale(self.tvChannel_img, (200, 200))
         self.tv_img_rect = (250, 80)
-        self.tv_img = pygame.image.load(r"main_page/furniture/tv.png")
+        self.tv_img = pygame.image.load(r"furniture/tv.png")
         self.tv_img = pygame.transform.scale(self.tv_img, (200, 200))
         self.tvChannel_img_rect = (250, 80)
 
         # tool image
-        self.oil_img = pygame.image.load(r"main_page/tool/oil.png")
+        self.oil_img = pygame.image.load(r"tool/oil.png")
         self.oil_img = pygame.transform.scale(self.oil_img, (100, 100))
-        self.oilEngine_img = pygame.image.load(r"main_page/tool/oilEngine.png")
+        self.oilEngine_img = pygame.image.load(r"tool/oilEngine.png")
         self.oilEngine_img = pygame.transform.scale(self.oilEngine_img, (100, 100))
-        self.screw_img = pygame.image.load(r"main_page/tool/screw.png")
+        self.screw_img = pygame.image.load(r"tool/screw.png")
         self.crew_img = pygame.transform.scale(self.screw_img, (100, 100))
-        self.oil92_img = pygame.image.load(r"main_page/tool/92.png")
+        self.oil92_img = pygame.image.load(r"tool/92.png")
         self.oil92_img = pygame.transform.scale(self.oil92_img, (30, 30))
-        self.oil95_img = pygame.image.load(r"main_page/tool/95.png")
+        self.oil95_img = pygame.image.load(r"tool/95.png")
         self.oil95_img = pygame.transform.scale(self.oil95_img, (30, 30))
-        self.oil98_img = pygame.image.load(r"main_page/tool/98.png")
+        self.oil98_img = pygame.image.load(r"tool/98.png")
         self.oil98_img = pygame.transform.scale(self.oil98_img, (30, 30))
 
         # left text
         # self.font = pygame.font.SysFont("jfopen粉圓11", 20)
-        self.font = pygame.font.Font(r"main_page/fonts/jf-openhuninn-2.0.ttf", 20)
+        self.font = pygame.font.Font(r"fonts/jf-openhuninn-2.0.ttf", 20)
         self.text_energy = self.font.render("能量", True, (0, 0, 0))
         self.text_energy_rect = (20, 45)
         self.text_status = self.font.render("等級", True, (0, 0, 0))
@@ -122,11 +126,11 @@ class Robot():
         self.textbox_send_rect = (620, 563)
 
         # garbage
-        self.background_ad_img = pygame.image.load(r"main_page/garbage/background_ad.png")
+        self.background_ad_img = pygame.image.load(r"garbage/background_ad.png")
         self.background_ad_img = pygame.transform.scale(self.background_ad_img, (1000, 600))
-        self.garbage1_img = pygame.image.load(r"main_page/garbage/garbage1.png")
+        self.garbage1_img = pygame.image.load(r"garbage/garbage1.png")
         self.garbage1_img = pygame.transform.scale(self.garbage1_img, (80, 80))
-        self.garbage2_img = pygame.image.load(r"main_page/garbage/garbage2.png")
+        self.garbage2_img = pygame.image.load(r"garbage/garbage2.png")
         self.garbage2_img = pygame.transform.scale(self.garbage2_img, (90, 60))
         self.garbage1_img_rect = (20, 230)
         self.garbage2_img_rect = (170, 150)
@@ -148,8 +152,6 @@ class Robot():
                         return False
                 else:
                     return True
-                
-
 
     def drawRobot(self, status):
         # index x
@@ -210,7 +212,7 @@ class Robot():
         self.num_screw = self.font.render(str(text[7]), True, (0, 0, 0))
         self.left_texts = [self.text_energy, self.text_status, self.text_bug, self.num_energy, self.num_status, self.num_bug]
         self.right_texts = [self.text_oil92, self.text_oil95, self.text_oil98, self.text_oilEngine, self.text_screw, self.num_oil92, self.num_oil95, self.num_oil98, self.num_oilEngine, self.num_screw]
-
+        # text[0] is status, text[1] is energy, text[2] is bug, text[3] is oil92, text[4] is oil95, text[5] is oil98, text[6] is oilEngine, text[7] is screw
     def updateRobot(self, furnitures):
         for furni in furnitures:
             self.drawFurniture(furni)
@@ -219,26 +221,10 @@ class Robot():
         # left text
         for (txt, rect) in zip(self.left_texts, self.left_texts_rect):
             canvas.blit(txt, rect)
-        # canvas.blit(self.text_energy, self.text_energy_rect)
-        # canvas.blit(self.text_status,  self.text_status_rect)
-        # canvas.blit(self.num_energy,  self.num_energy_rect)
-        # canvas.blit(self.num_status,  self.num_status_rect)
-        # canvas.blit(self.text_bug,  self.text_bug_rect)
-        # canvas.blit(self.num_bug, self.num_bug_rect)
 
         # right text
         for (txt, rect) in zip(self.right_texts, self.right_texts_rect):
             canvas.blit(txt, rect)
-        # canvas.blit(self.text_oil92, self.tetx_oil92_rect)
-        # canvas.blit(self.text_oil95, self.text_oil95_rect)
-        # canvas.blit(self.text_oil98, self.text_oil98_rect)
-        # canvas.blit(self.text_oilEngine, self.text_oilEngine_rect)
-        # canvas.blit(self.text_screw, self.text_screw_rect)
-        # canvas.blit(self.num_oil92, self.num_oil92_rect)
-        # canvas.blit(self.num_oil95, self.num_oil95_rect)
-        # canvas.blit(self.num_oil98, self.num_oil98_rect)
-        # canvas.blit(self.num_oilEngine, self.num_oilEngine_rect)
-        # canvas.blit(self.num_screw, self.num_screw_rect)
 
 class Button:
     def __init__(self, img, x, y):
@@ -253,7 +239,7 @@ class Button:
 class Store:
     def __init__(self):
         # self.font = pygame.font.SysFont("jfopen粉圓11", 20)
-        self.font = pygame.font.Font(r"main_page/fonts/jf-openhuninn-2.0.ttf", 20)
+        self.font = pygame.font.Font(r"fonts/jf-openhuninn-2.0.ttf", 20)
         self.text_ac = self.font.render("冷氣", True, (0, 0, 0))
         self.text_ac_rect = (20, 45)
         self.text_carpet = self.font.render("地毯", True, (0, 0, 0))
@@ -288,19 +274,6 @@ class Store:
         canvas.fill((255, 255, 255))
         for (txt, rect) in zip(self.store_list, self.store_list_rect):
             canvas.blit(txt, rect)
-        # canvas.blit(self.text_ac, self.text_ac_rect)
-        # canvas.blit(self.text_carpet, self.text_carpet_rect)
-        # canvas.blit(self.text_chair, self.text_chair_rect)
-        # canvas.blit(self.text_tv, self.text_tv_rect)
-        # canvas.blit(self.text_tvChannel, self.text_tvChannel_rect)
-        
-        # canvas.blit(self.text_acBuy, self.text_acBuy_rect)
-        # canvas.blit(self.text_carpetBuy, self.text_carpetBuy_rect)
-        # canvas.blit(self.text_chairBuy, self.text_chairBuy_rect)
-        # canvas.blit(self.text_tvBuy, self.text_tvBuy_rect)
-        # canvas.blit(self.text_tvChannelBuy, self.text_tvChannelBuy_rect)
-
-        # canvas.blit(self.text_leave, self.text_leave_rect)
 
 class Game():
     def __init__(self) -> None:
@@ -322,10 +295,9 @@ class Game():
         # init textbox
         self.user_input = "type..."
         self.textbox_active = False
-        # self.button_list = [self.oil, self.oilEngine, self.screw, self.oil92, self.oil95, self.oil98, self.storeBtn]
 
         # init garbage
-        self.font = pygame.font.Font(r"main_page/fonts/jf-openhuninn-2.0.ttf", 50)
+        self.font = pygame.font.Font(r"fonts/jf-openhuninn-2.0.ttf", 50)
         self.garbageAD_yes = self.font.render("YES", True, (0, 0, 0))
         self.garbageAD_yes_rect = (350, 300)
         self.garbageAD_no = self.font.render("NO", True, (0, 0, 0))
@@ -403,7 +375,54 @@ class Game():
                 garbageAD_num = -1
             
 
-    def update(self, event_list):
+    def update(self, event_list: List[pygame.event.Event]):
+        def add_score(oil92, oil95, oil98, oilEngine, screw):
+            def add_oilEngine(): # randomly add oilEngine
+                random_num = random.randint(0,10)
+                if random_num == 0:
+                    return 2
+                elif 0 < random_num < 4:
+                    return 1
+                else:
+                    return 0
+                
+            def add_screw(): # randomly add screw
+                random_num = random.randint(0,10)
+                if random_num == 0:
+                    return 50
+                elif 1 <= random_num <= 2:
+                    return 30
+                elif 3 <= random_num <= 5:
+                    return 20
+                else:
+                    return 10
+                
+            def add_oil(): # randomly add oil
+                random_92, random_95, random_98 = random.randint(0,10), random.randint(0,1), random.randint(1,10)
+                if 0 <= random_92 <= 2:     random_92 = 50
+                elif 3 <= random_92 <= 6:   random_92 = 30
+                else:                       random_92 = 20
+
+                if random_95 == 1:
+                    random_95 = random.randint(0, 10)
+                    if 0 <= random_95 <= 2:     random_95 = 30
+                    elif 3 <= random_95 <= 6:   random_95 = 20
+                    else:                       random_95 = 10
+                
+                if 1 <= random_98 <= 3:
+                    random_98 = random.randint(1, 2) * 10
+                else:
+                    random_98 = 0
+                return random_92, random_95, random_98
+           
+            oilEngine += add_oilEngine()
+            screw += add_screw()
+            add_oil92, add_oil95, add_oil98 = add_oil()
+            oil92 += add_oil92
+            oil95 += add_oil95
+            oil98 += add_oil98
+            return oil92, oil95, oil98, oilEngine, screw
+        
         global WINDOW, text, pre_status, garbageAD_num, garbageAD_watch
         for event in event_list:
             if event.type == pygame.MOUSEBUTTONDOWN:
@@ -444,22 +463,17 @@ class Game():
 
                 elif self.screw.rect_x <= event.pos[0] <= self.screw.rect_x + 100 and self.screw.rect_y <= event.pos[1] <= self.screw.rect_y + 100 and WINDOW == 1:
                     print("reduce screw")
-                    # manager = multiprocessing.Manager()
-                    # return_dict = manager.dict()
-                    # p = multiprocessing.Process(target=memory_game.main, args=(return_dict,))
-                    # p.start()
-                    # p.join()
-                    # print(return_dict.values(), return_dict.keys())
                     if text[7] > 0 and text[8] < 5:
                         text[7] -= 1
                         text[8] += 1
                     if text[8] == 5:
                         pre_status = text[0]
                         text[0] = 5
-                        
-                # click game button
+
+                # click ac for gamble game
                 elif self.robot.ac_img_rect[0] <= event.pos[0] <= self.robot.ac_img_rect[0] + 200 and self.robot.ac_img_rect[1] + 50 <= event.pos[1] <= self.robot.ac_img_rect[1] + 170 and furniture[0] == 1 and WINDOW == 1:
                     print("click ac")
+                    text[1] -= 10
                     lines = []
                     with subprocess.Popen(['python','../game/gamble.py'],stdout=subprocess.PIPE) as proc:
                         lines = proc.stdout.readlines()
@@ -468,20 +482,55 @@ class Game():
                             print(int(np.floor(int(lines[i].decode('utf-8').strip('\r\n')))))
                             text[8] += int(np.floor(int(lines[i].decode('utf-8').strip('\r\n'))))
                     # text[6] += 4
+
+                # click carpet for memory game
                 elif self.robot.carpet_img_rect[0] + 300 <= event.pos[0] <= self.robot.carpet_img_rect[0] + 800 and self.robot.carpet_img_rect[1] + 130 <= event.pos[1] <= self.robot.carpet_img_rect[1] + 350 and furniture[1] == 2:
+                    text[1] -= 10
                     print("click carpet")
-                    text[7] += 50
+
+                    print("==== socre ===\n", text[3], text[4], text[5], text[6], text[7])
+                    manager = multiprocessing.Manager()
+                    return_dict = manager.dict()
+                    p = multiprocessing.Process(target=memory_game.main, args=(return_dict,))
+                    p.start()
+                    p.join()
+                    if len(return_dict.values()) == 1:
+                        win = return_dict.values()[0]
+                        if win == 1:
+                            # randomly increase the num of oilEngine, screw, 92, 95, 98
+                            text[3], text[4], text[5], text[6], text[7] = add_score(text[3], text[4], text[5], text[6], text[7])
+                    print("==== after, socre ===\n", text[3], text[4], text[5], text[6], text[7])
+
+                # click chair for shoot game 射龍門
                 elif self.robot.chair_img_rect[0] <= event.pos[0] <= self.robot.chair_img_rect[0] + 200 and self.robot.chair_img_rect[1] <= event.pos[1] <= self.robot.chair_img_rect[1] + 200 and furniture[2] == 3 and WINDOW == 1:
                     print("click chair")
+                    text[1] -= 10
+
                     lines = []
                     with subprocess.Popen(['python','../game/shoot.py'],stdout=subprocess.PIPE) as proc:
                         lines = proc.stdout.readlines()
                     if len(lines) >= 3:
                         for i in range(2,len(lines)):
                             text[8] += int(lines[i].decode('utf-8').strip('\r\n'))
+                
+                # click tv for pac-man
                 elif self.robot.tv_img_rect[0] <= event.pos[0] <= self.robot.tv_img_rect[0] + 200 and self.robot.tv_img_rect[1] + 20 <= event.pos[1] <= self.robot.tv_img_rect[1] + 150 and furniture[3] == 4 and WINDOW == 1:
                     print("click tv")
-                    text[1] -= 50
+                    text[1] -= 10
+
+                    print("==== socre ===\n", text[3], text[4], text[5], text[6], text[7])
+                    manager = multiprocessing.Manager()
+                    return_dict = manager.dict()
+                    p = multiprocessing.Process(target=pacman.pacman, args=(return_dict,))
+                    p.start()
+                    p.join()
+                    if len(return_dict.values()) == 1:
+                        win = return_dict.values()[0]
+                        if win == 1:
+                            # randomly increase the num of oilEngine, screw, 92, 95, 98
+                            text[3], text[4], text[5], text[6], text[7] = add_score(text[3], text[4], text[5], text[6], text[7])
+                    print("==== after, socre ===\n", text[3], text[4], text[5], text[6], text[7])
+
 
                 # click garbage
                 elif self.robot.garbage1_img_rect[0] <= event.pos[0] <= self.robot.garbage1_img_rect[0] + 80 and self.robot.garbage1_img_rect[1] <= event.pos[1] <= self.robot.garbage1_img_rect[1] + 80 and WINDOW == 1:
@@ -546,8 +595,8 @@ class Game():
                         if len(self.user_input) <= 20:
                             self.user_input += event.unicode
 
-            # check status
-            if text[7] >= 100 and text[6] >= 5 and text[0] <= 3:
+            # check status. # text[0] is status, text[6] is oilEngine, text[7] is screw
+            if text[7] >= 100 and text[6] >= 5 and text[0] <= 3:    
                 print("upgrade")
                 if text[0] < 3:
                     text[0] += 1
@@ -564,25 +613,25 @@ class AdVideo():
         self.ticks = ad_ticks
         self.num_ad = -1
         self.end = False
-        self.ad0_img = pygame.image.load(r"main_page/ad/ad1.jpg")
+        self.ad0_img = pygame.image.load(r"ad/ad1.jpg")
         self.ad0_img = pygame.transform.scale(self.ad0_img, (337, 600))
-        self.ad1_img = pygame.image.load(r"main_page/ad/ad1.jpg")
+        self.ad1_img = pygame.image.load(r"ad/ad1.jpg")
         self.ad1_img = pygame.transform.scale(self.ad1_img, (337, 600))
-        self.ad2_img = pygame.image.load(r"main_page/ad/ad2.jpg")
+        self.ad2_img = pygame.image.load(r"ad/ad2.jpg")
         self.ad2_img = pygame.transform.scale(self.ad2_img, (337, 600))
-        self.ad3_img = pygame.image.load(r"main_page/ad/ad3.jpg")
+        self.ad3_img = pygame.image.load(r"ad/ad3.jpg")
         self.ad3_img = pygame.transform.scale(self.ad3_img, (337, 600))
-        self.ad4_img = pygame.image.load(r"main_page/ad/ad4.jpg")
+        self.ad4_img = pygame.image.load(r"ad/ad4.jpg")
         self.ad4_img = pygame.transform.scale(self.ad4_img, (337, 600))
-        self.ad5_img = pygame.image.load(r"main_page/ad/ad5.jpg")
+        self.ad5_img = pygame.image.load(r"ad/ad5.jpg")
         self.ad5_img = pygame.transform.scale(self.ad5_img, (337, 600))
-        self.ad6_img = pygame.image.load(r"main_page/ad/ad6.jpg")
+        self.ad6_img = pygame.image.load(r"ad/ad6.jpg")
         self.ad6_img = pygame.transform.scale(self.ad6_img, (337, 600))
-        self.ad7_img = pygame.image.load(r"main_page/ad/ad7.jpg")
+        self.ad7_img = pygame.image.load(r"ad/ad7.jpg")
         self.ad7_img = pygame.transform.scale(self.ad7_img, (337, 600))
-        self.ad8_img = pygame.image.load(r"main_page/ad/ad8.jpg")
+        self.ad8_img = pygame.image.load(r"ad/ad8.jpg")
         self.ad8_img = pygame.transform.scale(self.ad8_img, (337, 600))
-        self.ad9_img = pygame.image.load(r"main_page/ad/ad9.jpg")
+        self.ad9_img = pygame.image.load(r"ad/ad9.jpg")
         self.ad9_img = pygame.transform.scale(self.ad9_img, (337, 600))
         self.ad_img_rect = (350, 0)
 

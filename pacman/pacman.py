@@ -3,7 +3,10 @@ import numpy as np
 import tcod
 import random
 from enum import Enum
+from pathlib import Path
+DIR = str(Path(__file__).resolve().parent) #+'/../memory_game'
 
+pygame.init()
 
 class Direction(Enum):
     DOWN = -90
@@ -79,7 +82,7 @@ class Wall(GameObject):
 
 class GameRenderer:
     def __init__(self, in_width: int, in_height: int):
-        pygame.init()
+        # pygame.init()
         self._width = in_width
         self._height = in_height
         self._screen = pygame.display.set_mode((in_width, in_height))
@@ -128,13 +131,19 @@ class GameRenderer:
             self.display_text(f"[Score: {self._score}]  [Lives: {self._lives}]")
 
             if self._hero is None: self.display_text("YOU DIED", (self._width / 2 - 256, self._height / 2 - 256), 100)
-            if self.get_won(): self.display_text("YOU WON", (self._width / 2 - 256, self._height / 2 - 256), 100)
+            if self.get_won(): 
+                self.display_text("YOU WON", (self._width / 2 - 256, self._height / 2 - 256), 100)
+                pygame.time.delay(1500)
             pygame.display.flip()
             self._clock.tick(in_fps)
+            if self.get_won() or self._hero is None:
+                pygame.time.delay(1500)
+                return self.get_won()
             self._screen.fill(background)
             self._handle_events()
 
         print("Game over")
+        return self.get_won()
 
     def handle_mode_switch(self):
         current_phase_timings = self._modes[self._current_phase]
@@ -287,7 +296,7 @@ class MovableObject(GameObject):
         self.last_working_direction = Direction.NONE
         self.location_queue = []
         self.next_target = None
-        self.image = pygame.image.load('images/virus_frighten.png')
+        self.image = pygame.image.load(DIR + '/images/virus_frighten.png')
 
     def get_next_location(self):
         return None if len(self.location_queue) == 0 else self.location_queue.pop(0)
@@ -338,8 +347,8 @@ class Hero(MovableObject):
     def __init__(self, in_surface, x, y, in_size: int):
         super().__init__(in_surface, x, y, in_size, (255, 255, 0), False)
         self.last_non_colliding_position = (0, 0)
-        self.open = pygame.image.load("images/paku.png")
-        self.closed = pygame.image.load("images/man.png")
+        self.open = pygame.image.load(DIR + "/images/paku.png")
+        self.closed = pygame.image.load(DIR + "/images/man.png")
         self.image = self.open
         self.mouth_open = True
 
@@ -386,7 +395,7 @@ class Hero(MovableObject):
             collides = collision_rect.colliderect(cookie.get_shape())
             if collides and cookie in game_objects:
                 game_objects.remove(cookie)
-                cookie_sound = pygame.mixer.Sound("images/cookie.ogg")
+                cookie_sound = pygame.mixer.Sound(DIR + "/images/cookie.ogg")
                 cookie_sound.set_volume(0.5)
                 cookie_sound.play()
                 self._renderer.add_score(ScoreType.COOKIE)
@@ -404,7 +413,7 @@ class Hero(MovableObject):
                 if not self._renderer.is_kokoro_active():
                     game_objects.remove(powerup)
                     pygame.mixer.music.pause()
-                    powerup_sound = pygame.mixer.Sound("images/powerup.ogg")
+                    powerup_sound = pygame.mixer.Sound(DIR + "/images/powerup.ogg")
                     powerup_sound.set_volume(1)
                     powerup_sound.play(loops=1)
                     pygame.mixer.music.unpause()
@@ -448,11 +457,11 @@ class Hero(MovableObject):
 
 
 class Ghost(MovableObject):
-    def __init__(self, in_surface, x, y, in_size: int, in_game_controller, sprite_path="images/virus_frighten.png"):
+    def __init__(self, in_surface, x, y, in_size: int, in_game_controller, sprite_path=DIR+ "/images/virus_frighten.png"):
         super().__init__(in_surface, x, y, in_size)
         self.game_controller = in_game_controller
         self.sprite_normal = pygame.image.load(sprite_path)
-        self.sprite_fright = pygame.image.load("images/virus_frighten.png")
+        self.sprite_fright = pygame.image.load(DIR + "/images/virus_frighten.png")
 
     def reached_target(self):
         if (self.x, self.y) == self.next_target:
@@ -512,7 +521,7 @@ class Ghost(MovableObject):
 class Cookie(GameObject):
     def __init__(self, in_surface, x, y):
         super().__init__(in_surface, x, y, 4, (255, 255, 0), True)
-        self.img = pygame.image.load("images/cookie.png")
+        self.img = pygame.image.load(DIR + "/images/cookie.png")
         self.img = pygame.transform.scale(self.img, (20, 20))
     def draw(self):
         self._surface.blit(self.img, (self.x, self.y))
@@ -521,7 +530,7 @@ class Cookie(GameObject):
 class Powerup(GameObject):
     def __init__(self, in_surface, x, y):
         super().__init__(in_surface, x, y, 8, (255, 255, 255), True)
-        self.img = pygame.image.load("images/powerup.png")
+        self.img = pygame.image.load(DIR + "/images/powerup.png")
         self.img = pygame.transform.scale(self.img, (20, 20))
     def draw(self):
         self._surface.blit(self.img, (self.x, self.y))
@@ -574,10 +583,10 @@ class PacmanGameController:
         self.reachable_spaces = []
         self.ghost_spawns = []
         self.ghost_colors = [
-            "images/virus1.png",
-            "images/virus2.png",
-            "images/virus3.png",
-            "images/virus4.png"
+            DIR + "/images/virus1.png",
+            DIR + "/images/virus2.png",
+            DIR + "/images/virus3.png",
+            DIR + "/images/virus4.png"
         ]
         self.size = (0, 0)
         self.convert_maze_to_numpy()
@@ -612,11 +621,47 @@ class PacmanGameController:
 
             self.numpy_maze.append(binary_row)
 
+def pacman(return_dict={'win':False}):
+    unified_size = 32
+    pygame.mixer.init()
+    pygame.mixer.music.load(DIR + "/images/background.ogg")
+    pygame.mixer.music.set_volume(0.25)
+    pygame.mixer.music.play(start=25.0)
+    pacman_game = PacmanGameController()
+    size = pacman_game.size
+    game_renderer = GameRenderer(size[0] * unified_size, size[1] * unified_size)
+
+    for y, row in enumerate(pacman_game.numpy_maze):
+        for x, column in enumerate(row):
+            if column == 0:
+                game_renderer.add_wall(Wall(game_renderer, x, y, unified_size))
+
+    for cookie_space in pacman_game.cookie_spaces:
+        translated = translate_maze_to_screen(cookie_space)
+        cookie = Cookie(game_renderer, translated[0] + unified_size / 2, translated[1] + unified_size / 2)
+        game_renderer.add_cookie(cookie)
+
+    for powerup_space in pacman_game.powerup_spaces:
+        translated = translate_maze_to_screen(powerup_space)
+        powerup = Powerup(game_renderer, translated[0] + unified_size / 2, translated[1] + unified_size / 2)
+        game_renderer.add_powerup(powerup)
+
+    for i, ghost_spawn in enumerate(pacman_game.ghost_spawns):
+        translated = translate_maze_to_screen(ghost_spawn)
+        ghost = Ghost(game_renderer, translated[0], translated[1], unified_size, pacman_game,
+                      pacman_game.ghost_colors[i % 4])
+        game_renderer.add_ghost(ghost)
+
+    pacman = Hero(game_renderer, unified_size, unified_size, unified_size)
+    game_renderer.add_hero(pacman)
+    game_renderer.set_current_mode(GhostBehaviour.CHASE)
+    return_dict['win'] = game_renderer.tick(120)
+    # return return_dict
 
 if __name__ == "__main__":
     unified_size = 32
     pygame.mixer.init()
-    pygame.mixer.music.load("images/background.ogg")
+    pygame.mixer.music.load(DIR + "/images/background.ogg")
     pygame.mixer.music.set_volume(0.25)
     pygame.mixer.music.play(start=25.0)
     pacman_game = PacmanGameController()

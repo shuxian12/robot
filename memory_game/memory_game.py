@@ -24,7 +24,6 @@ class Tile(pygame.sprite.Sprite):
         self.name = filename.split('.')[0]
         self.original_image = pygame.image.load(DIR+'/images/hololive/vtuber/' + filename)
         self.back_image = pygame.image.load(DIR+'/images/hololive/background.png')
-        # pygame.draw.rect(self.back_image, WHITE, self.back_image.get_rect())
 
         self.image = self.back_image
         self.rect = self.image.get_rect(topleft = (x, y))
@@ -85,7 +84,7 @@ class Game():
         pygame.mixer.music.play()
 
         # initialize timer
-        self.time_limit = 5.0
+        self.time_limit = 70.0
         self.timer = pygame.time.get_ticks()
         self.timer_font = pygame.font.Font(DIR+'/fonts/Comic Sans MS Bold.ttf', 24)
         self.timer_text = self.timer_font.render('Time: {:04.1f}'.format(self.time_limit), True, WHITE)
@@ -197,14 +196,6 @@ class Game():
                         self.is_video_playing = True
                         self.video_toggle = self.play
 
-            # if event.type == pygame.KEYDOWN:    # keyboard control
-            #     if event.key == pygame.K_SPACE and self.level_complete:
-            #         self.level += 1
-            #         if self.level >= 6:
-            #             self.level = 1
-            #         self.generate_level(self.level)
-
-
     def draw(self):
         screen.fill(BLACK)
 
@@ -215,9 +206,6 @@ class Game():
         # text
         title_text = title_font.render('Memory Game', True, WHITE)
         title_rect = title_text.get_rect(midtop = (WINDOW_WIDTH // 2, 10))
-
-        # level_text = content_font.render('Level ' + str(self.level), True, WHITE)
-        # level_rect = level_text.get_rect(midtop = (WINDOW_WIDTH // 2, 80))
 
         info_text = content_font.render('Find 2 of each', True, WHITE)
         info_rect = info_text.get_rect(midtop = (WINDOW_WIDTH // 2, 80))
@@ -230,14 +218,7 @@ class Game():
         else:
             screen.blit(pygame.image.frombuffer(self.img.tobytes(), self.shape, 'BGR'), (0, 120))
 
-        # if not self.level == 5:
-        #     next_text = content_font.render('Level complete. Press Space for next level', True, WHITE)
-        # else:
-        #     next_text = content_font.render('Congrats. You Won. Press Space to play again', True, WHITE)
-        # next_rect = next_text.get_rect(midbottom = (WINDOW_WIDTH // 2, WINDOW_HEIGHT - 40))
-
         screen.blit(title_text, title_rect)
-        # screen.blit(level_text, level_rect)
         screen.blit(info_text, info_rect)
         pygame.draw.rect(screen, WHITE, (WINDOW_WIDTH - 90, 0, 100, 50))
         screen.blit(self.video_toggle, self.video_toggle_rect)
