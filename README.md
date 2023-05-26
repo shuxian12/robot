@@ -7,7 +7,10 @@
 ### Main Page
 
 ### Shopping Mall
-
+* 按螺絲的影片看完回傳一個: b'screw.png\r\n'
+* 按2.3個商品回傳:b'該商品的名字.png\r\n'，且main_page判斷並出現家俱
+* 按第四個商品連接到儲值網站，回傳值尚未設定。這部分的流程可能還要討論。不確定是怎樣操作。
+* 尚未完成:1. 螺絲數量連動主畫面。2. 儲值網站連到商城。
 * Top-up website: `app.py` 
 
 ### Shopping Mall
