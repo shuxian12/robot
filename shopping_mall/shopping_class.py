@@ -156,7 +156,7 @@ class Shopping_mall():
         
 
     def click_event1_video(self):
-        
+        self.get_video()
         self.get_sound()
         window_surface.fill(BLACK)
         self.play_vedio = True
@@ -242,14 +242,10 @@ class Shopping_mall():
             self.draw_img(update_img) #不用更新圖片
             self.draw_button()
             if update_notice==1:
-                print(22)
                 self.draw_notice(goods)#看完影片買螺絲之後，要更新公告
 
    
          
-             
-        
-
 
 def main():
     pygame.init()
@@ -280,6 +276,7 @@ def main():
                     shopping_mall.click_event1_video()
                     shopping_mall.update_img=0
                     shopping_mall.good_name="screw"
+                    shopping_mall.notice_flag=1
 
                 #螺絲購買事件
                 if shopping_mall.button_x_right<= mouse_x <= shopping_mall.button_x_right+shopping_mall.button_w \
@@ -313,7 +310,7 @@ def main():
                 #如果有跳出通知
                 if shopping_mall.notice_flag==1:
                     if 330<= mouse_x <= 330+140 and 320<= mouse_y <= 320+80:
-                         print(22)
+                         print(221)
                          shopping_mall.update_img=0
                          shopping_mall.update_notice=0
                          shopping_mall.update(shopping_mall.update_img,shopping_mall.update_notice,"")
@@ -322,11 +319,11 @@ def main():
             if event.type == pygame.USEREVENT:
                 shopping_mall.play_vedio = False
                 pygame.mixer.music.stop()
-                shopping_mall.update(shopping_mall.update_img,shopping_mall.notice_flag,shopping_mall.good_name)
+                shopping_mall.update(shopping_mall.update_img,shopping_mall.update_notice,shopping_mall.good_name)
 
         
         if shopping_mall.play_vedio == True:
-            shopping_mall.update(shopping_mall.update_img,shopping_mall.notice_flag,shopping_mall.good_name)
+            shopping_mall.update(shopping_mall.update_img,shopping_mall.update_notice,shopping_mall.good_name)
                 
         pygame.display.update()
         clock.tick(22)
