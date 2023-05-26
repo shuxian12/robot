@@ -30,6 +30,7 @@ have_chair=False
 have_tv=False
 have_oilEngine=False
 have_tvChannel=False
+have_screw=False
 
 class Robot():
     def __init__(self):
@@ -258,25 +259,36 @@ class Store:
             self.output.pop(0)
             for out in self.output:
                 if out == b'ac.png\r\n':
+                    print("buy ac")
                     have_ac = True
                    
                 elif out == b'carpet.png\r\n':
+                    print("buy carpet")
                     have_carpet=True
-                    
-                elif out == b'oil.png\r\n':
-                    have_oil=True
                    
                 elif out == b'chair.png\r\n':
+                    print("buy chair")
                     have_chair=True
                    
                 elif out == b'tv.png\r\n':
+                    print("buy tv")
                     have_tv=True
-                   
-                elif out == b'oilEngine.jpg\r\n':
-                    have_oilEngine=True
                     
                 elif out == b'tvChannel.png\r\n':
+                    print("buy tvChannel")
                     have_tvChannel=True
+
+                elif out == b'oil.png\r\n':
+                    print("buy oil")
+                    have_oil=True
+                
+                elif out == b'oilEngine.jpg\r\n':
+                    print("buy oilEngine")
+                    have_oilEngine=True
+                
+                elif out == b'screw.jpg\r\n':
+                    print("buy screw")
+                    have_screw=True
 """
 class Store:
     def __init__(self):

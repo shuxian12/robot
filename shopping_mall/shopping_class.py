@@ -193,7 +193,12 @@ class Shopping_mall():
         
         #bug買東西 #看要return 甚麼參數給家具
     def click_event4_web(self):
-        self.draw_notice()
+        str_good =self.list_img[self.goods3]
+        if str_good.find(".png")!=-1:
+             str_good=str_good.replace(".png","")
+        elif str_good.find(".jpg")!=-1:
+             str_good=str_good.replace(".jpg","")
+        self.draw_notice(str_good)
         for i in self.list_img:
             if self.list_img[self.goods3]==i:
                  print(self.list_img[self.goods3])
@@ -292,6 +297,7 @@ def main():
                 #儲值事件
                 if shopping_mall.button_x_right<= mouse_x <= shopping_mall.button_x_right+shopping_mall.button_w \
                     and shopping_mall.button_y_down<= mouse_y <= shopping_mall.button_y_down+shopping_mall.button_h:
+                        shopping_mall.notice_flag=1
                         shopping_mall.click_event4_web()
 
                 #更新商品事件
