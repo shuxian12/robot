@@ -25,12 +25,9 @@ FPS = 60
 
 have_ac=False
 have_carpet=False
-have_oil=False
 have_chair=False
 have_tv=False
-have_oilEngine=False
 have_tvChannel=False
-have_screw=False
 
 vip666_used = False
 newuser_used = False
@@ -254,97 +251,106 @@ class Store:
     def __init__(self):
         pass
     def show_store(self):
-        global have_ac,have_carpet,have_oil,have_chair,have_tv,have_oilEngine,have_tvChannel
-
+        global have_ac,have_carpet,have_chair,have_tv,have_tvChannel
+        # path = '../shopping_mall/used_furniture.txt'
+        # f = open(path, 'a')
         with subprocess.Popen(['python','../shopping_mall/shopping_class.py'],stdout=subprocess.PIPE) as proc:
             self.output=proc.stdout.readlines()
+            
             self.output.pop(0)
             self.output.pop(0)
             for out in self.output:
-                if out == b'ac.png\r\n':
+                #print(out)
+                if out == b'ac.png\r\n' and have_ac == False :
+                    print("buy ac")
+                    text[7]-=50
+                    have_ac = True
+                    #f.write("ac.png\n")
+               
+                elif out == b'ac.png_top-up\r\n' and have_ac == False:
                     print("buy ac")
                     have_ac = True
+                    #f.write("ac.png\n")
+               
                    
-                elif out == b'carpet.png\r\n':
+                elif out == b'carpet.png\r\n' and have_carpet==False:
+                    print("buy carpet")
+                    text[7]-=20
+                    have_carpet=True
+                    #f.write("carpet.png\n")
+                
+                
+                elif out == b'carpet.png_top-up\r\n' and have_carpet==False:
                     print("buy carpet")
                     have_carpet=True
+                    #f.write("carpet.png\n")
+             
                    
-                elif out == b'chair.png\r\n':
+                elif out == b'chair.png\r\n' and have_chair==False:
+                    print("buy chair")
+                    text[7]-=30
+                    have_chair=True
+                    #f.write("chair.png\n")
+              
+                
+                elif out == b'chair.png_top-up\r\n' and have_chair==False:
                     print("buy chair")
                     have_chair=True
+                    #f.write("chair.png\n")
+               
                    
-                elif out == b'tv.png\r\n':
+                elif out == b'tv.png\r\n' and have_tv==False:
+                    print("buy tv")
+                    text[7]-=40
+                    have_tv=True
+                    #f.write("tv.png\n")
+                 
+                
+                elif out == b'tv.png_top-up\r\n' and have_tv==False:
                     print("buy tv")
                     have_tv=True
+                    #f.write("tv.png\n")
+               
                     
-                elif out == b'tvChannel.png\r\n':
+                elif out == b'tvChannel.png\r\n' and have_tvChannel==False:
+                    print("buy tvChannel")
+                    text[7]-=20
+                    have_tvChannel=True
+                    #f.write("tvChannel.png\n")
+                 
+                
+                elif out == b'tvChannel.png_top-up\r\n' and have_tvChannel==False:
                     print("buy tvChannel")
                     have_tvChannel=True
+                    #f.write("tvChannel.png\n")
+      
 
                 elif out == b'oil.png\r\n':
                     print("buy oil")
-                    have_oil=True
+                    text[7]-=10
+                    text[random.choice([3,4,5])]+=10
+                  
+
+                elif out == b'oil.png_top-up\r\n':
+                    print("buy oil")
+                    text[random.choice([3,4,5])]+=10
+                    
                 
                 elif out == b'oilEngine.jpg\r\n':
                     print("buy oilEngine")
-                    have_oilEngine=True
+                    text[7]-=10
+                    text[6]+=3
+                  
                 
-                elif out == b'screw.jpg\r\n':
-                    print("buy screw")
-                    have_screw=True
-"""
-class Store:
-    def __init__(self):
-        # self.font = pygame.font.SysFont("jfopen粉圓11", 20)
-        self.font = pygame.font.Font(r"fonts/jf-openhuninn-2.0.ttf", 20)
-        self.text_ac = self.font.render("冷氣", True, (0, 0, 0))
-        self.text_ac_rect = (20, 45)
-        self.text_carpet = self.font.render("地毯", True, (0, 0, 0))
-        self.text_carpet_rect = (20, 90)
-        self.text_chair = self.font.render("椅子", True, (0, 0, 0))
-        self.text_chair_rect = (20, 135)
-        self.text_tv = self.font.render("電視", True, (0, 0, 0))
-        self.text_tv_rect = (20, 180)
-        self.text_tvChannel = self.font.render("第四台", True, (0, 0, 0))
-        self.text_tvChannel_rect = (20, 225)
-        
-        self.text_acBuy = self.font.render("Buy", True, (0, 0, 0))
-        self.text_acBuy_rect = (220, 45)
-        self.text_carpetBuy = self.font.render("Buy", True, (0, 0, 0))
-        self.text_carpetBuy_rect = (220, 90)
-        self.text_chairBuy = self.font.render("Buy", True, (0, 0, 0))
-        self.text_chairBuy_rect = (220, 135)
-        self.text_tvBuy = self.font.render("Buy", True, (0, 0, 0))
-        self.text_tvBuy_rect = (220, 180)
-        self.text_tvChannelBuy = self.font.render("Buy", True, (0, 0, 0))
-        self.text_tvChannelBuy_rect = (220, 225)
+                elif out == b'oilEngine.jpg_top-up\r\n':
+                    print("buy oilEngine")
+                    text[6]+=3
+                   
+                
+                elif out == b'screw.png\r\n':
+                    print("get screw")
+                    text[7]+=2
 
-        self.text_leave = self.font.render("Leave", True, (0, 0, 0))
-        self.text_leave_rect = (370, 225)
-        self.store_list = [self.text_ac, self.text_carpet, self.text_chair, self.text_tv, self.text_tvChannel, self.text_acBuy, 
-                           self.text_carpetBuy, self.text_chairBuy, self.text_tvBuy, self.text_tvChannelBuy, self.text_leave]
-        self.store_list_rect = [self.text_ac_rect, self.text_carpet_rect, self.text_chair_rect, self.text_tv_rect, self.text_tvChannel_rect, 
-                                self.text_acBuy_rect, self.text_carpetBuy_rect, self.text_chairBuy_rect, self.text_tvBuy_rect, 
-                                self.text_tvChannelBuy_rect, self.text_leave_rect]
-
-    def drawStore(self):
-        canvas.fill((255, 255, 255))
-        for (txt, rect) in zip(self.store_list, self.store_list_rect):
-            canvas.blit(txt, rect)
-        # canvas.blit(self.text_ac, self.text_ac_rect)
-        # canvas.blit(self.text_carpet, self.text_carpet_rect)
-        # canvas.blit(self.text_chair, self.text_chair_rect)
-        # canvas.blit(self.text_tv, self.text_tv_rect)
-        # canvas.blit(self.text_tvChannel, self.text_tvChannel_rect)
-        
-        # canvas.blit(self.text_acBuy, self.text_acBuy_rect)
-        # canvas.blit(self.text_carpetBuy, self.text_carpetBuy_rect)
-        # canvas.blit(self.text_chairBuy, self.text_chairBuy_rect)
-        # canvas.blit(self.text_tvBuy, self.text_tvBuy_rect)
-        # canvas.blit(self.text_tvChannelBuy, self.text_tvChannelBuy_rect)
-
-        # canvas.blit(self.text_leave, self.text_leave_rect)
-"""
 class Game():
     def __init__(self) -> None:
         self.robot = Robot()
