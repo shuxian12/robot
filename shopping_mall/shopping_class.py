@@ -184,6 +184,7 @@ class Shopping_mall():
         # for i in self.list_img:
         #     if self.list_img[self.goods1]==i:
         print(self.list_img[self.goods1])
+
         #bug買東西
          #看要return 甚麼參數給家具
         
@@ -191,9 +192,9 @@ class Shopping_mall():
     def click_event3_buy(self):
         str_good =self.list_img[self.goods2]
         if str_good.find(".png")!=-1:
-             str_good=str_good.replace(".png","")
+            str_good=str_good.replace(".png","")
         elif str_good.find(".jpg")!=-1:
-             str_good=str_good.replace(".jpg","")
+            str_good=str_good.replace(".jpg","")
         self.draw_notice(str_good)
         # for i in self.list_img:
         #     if self.list_img[self.goods2]==i:
@@ -202,6 +203,7 @@ class Shopping_mall():
         
         #bug買東西 #看要return 甚麼參數給家具
     def click_event4_web(self):
+
         str_good =self.list_img[self.goods3]
         if str_good.find(".png")!=-1:
              str_good=str_good.replace(".png","")

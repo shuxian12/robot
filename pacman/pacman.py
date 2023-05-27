@@ -120,7 +120,7 @@ class GameRenderer:
 
     def tick(self, in_fps: int):
         background = (200, 200, 200)
-
+        self._won = True
         self.handle_mode_switch()
         pygame.time.set_timer(self._pakupaku_event, 200)  # open close mouth
         while not self._done:
@@ -133,7 +133,7 @@ class GameRenderer:
             if self._hero is None: self.display_text("YOU DIED", (self._width / 2 - 256, self._height / 2 - 256), 100)
             if self.get_won(): 
                 self.display_text("YOU WON", (self._width / 2 - 256, self._height / 2 - 256), 100)
-                pygame.time.delay(1500)
+                # pygame.time.delay(1500)
             pygame.display.flip()
             self._clock.tick(in_fps)
             if self.get_won() or self._hero is None:

@@ -19,3 +19,6 @@ website/templates/user.html
 website/.DS_Store
 website/manifest.json
 .DS_Store
+game_done/__pycache__/
+website/__pycache__/
+
