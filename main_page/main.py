@@ -30,11 +30,12 @@ FPS = 60
 
 have_ac=False
 have_carpet=False
-have_oil=False
 have_chair=False
 have_tv=False
-have_oilEngine=False
 have_tvChannel=False
+
+vip666_used = False
+newuser_used = False
 
 class Robot():
     def __init__(self):
@@ -255,12 +256,11 @@ class Store:
     def __init__(self):
         pass
     def show_store(self):
-        global have_ac,have_carpet,have_oil,have_chair,have_tv,have_oilEngine,have_tvChannel
-
+        global have_ac,have_carpet,have_chair,have_tv,have_tvChannel
+        # path = '../shopping_mall/used_furniture.txt'
+        # f = open(path, 'a')
         with subprocess.Popen(['python','../shopping_mall/shopping_class.py'],stdout=subprocess.PIPE) as proc:
             self.output=proc.stdout.readlines()
-            for out in self.output:
-                print(out)
             self.output.pop(0)
             self.output.pop(0)
             for out in self.output:
@@ -285,59 +285,101 @@ class Store:
                 elif 'tvChannel' in out.decode():
                 # elif out == b'tvChannel.png\r\n':
                     have_tvChannel=True
-"""
-class Store:
-    def __init__(self):
-        # self.font = pygame.font.SysFont("jfopen粉圓11", 20)
-        self.font = pygame.font.Font(r"fonts/jf-openhuninn-2.0.ttf", 20)
-        self.text_ac = self.font.render("冷氣", True, (0, 0, 0))
-        self.text_ac_rect = (20, 45)
-        self.text_carpet = self.font.render("地毯", True, (0, 0, 0))
-        self.text_carpet_rect = (20, 90)
-        self.text_chair = self.font.render("椅子", True, (0, 0, 0))
-        self.text_chair_rect = (20, 135)
-        self.text_tv = self.font.render("電視", True, (0, 0, 0))
-        self.text_tv_rect = (20, 180)
-        self.text_tvChannel = self.font.render("第四台", True, (0, 0, 0))
-        self.text_tvChannel_rect = (20, 225)
-        
-        self.text_acBuy = self.font.render("Buy", True, (0, 0, 0))
-        self.text_acBuy_rect = (220, 45)
-        self.text_carpetBuy = self.font.render("Buy", True, (0, 0, 0))
-        self.text_carpetBuy_rect = (220, 90)
-        self.text_chairBuy = self.font.render("Buy", True, (0, 0, 0))
-        self.text_chairBuy_rect = (220, 135)
-        self.text_tvBuy = self.font.render("Buy", True, (0, 0, 0))
-        self.text_tvBuy_rect = (220, 180)
-        self.text_tvChannelBuy = self.font.render("Buy", True, (0, 0, 0))
-        self.text_tvChannelBuy_rect = (220, 225)
+            
+#             self.output.pop(0)
+#             self.output.pop(0)
+#             for out in self.output:
+#                 #print(out)
+#                 if 'ac' in out.decode() and have_ac == False :
+#                     print("buy ac")
+#                     text[7]-=50
+#                     have_ac = True
+#                     #f.write("ac.png\n")
+               
+#                 elif 'ac.png_top-up' in out.decode() and have_ac == False:
+#                     print("buy ac")
+#                     have_ac = True
+#                     #f.write("ac.png\n")
+               
+                   
+#                 elif 'carpet' in out.decode() and have_carpet==False:
+#                     print("buy carpet")
+#                     text[7]-=20
+#                     have_carpet=True
+#                     #f.write("carpet.png\n")
+                
+                
+#                 elif 'carpet.png_top-up' in out.decode() and have_carpet==False:
+#                     print("buy carpet")
+#                     have_carpet=True
+#                     #f.write("carpet.png\n")
+             
+                   
+#                 elif 'chair' in out.decode() and have_chair==False:
+#                     print("buy chair")
+#                     text[7]-=30
+#                     have_chair=True
+#                     #f.write("chair.png\n")
+              
+                
+#                 elif out == b'chair.png_top-up\r\n' and have_chair==False:
+#                     print("buy chair")
+#                     have_chair=True
+#                     #f.write("chair.png\n")
+               
+                   
+#                 elif 'tv' in out.decode() and have_tv==False:
+#                     print("buy tv")
+#                     text[7]-=40
+#                     have_tv=True
+#                     #f.write("tv.png\n")
+                 
+                
+#                 elif 'tv.png_top-u' in out.decode() and have_tv==False:
+#                     print("buy tv")
+#                     have_tv=True
+#                     #f.write("tv.png\n")
+               
+                    
+#                 elif 'tvChannel.png' in out.decode() and have_tvChannel==False:
+#                     print("buy tvChannel")
+#                     text[7]-=20
+#                     have_tvChannel=True
+#                     #f.write("tvChannel.png\n")
+                 
+                
+#                 elif 'tvChannel.png_top-up' in out.decode() and have_tvChannel==False:
+#                     print("buy tvChannel")
+#                     have_tvChannel=True
+#                     #f.write("tvChannel.png\n")
+      
 
-        self.text_leave = self.font.render("Leave", True, (0, 0, 0))
-        self.text_leave_rect = (370, 225)
-        self.store_list = [self.text_ac, self.text_carpet, self.text_chair, self.text_tv, self.text_tvChannel, self.text_acBuy, 
-                           self.text_carpetBuy, self.text_chairBuy, self.text_tvBuy, self.text_tvChannelBuy, self.text_leave]
-        self.store_list_rect = [self.text_ac_rect, self.text_carpet_rect, self.text_chair_rect, self.text_tv_rect, self.text_tvChannel_rect, 
-                                self.text_acBuy_rect, self.text_carpetBuy_rect, self.text_chairBuy_rect, self.text_tvBuy_rect, 
-                                self.text_tvChannelBuy_rect, self.text_leave_rect]
+                elif 'oil.png' in out.decode():
+                    print("buy oil")
+                    text[7]-=10
+                    text[random.choice([3,4,5])]+=10
+                  
 
-    def drawStore(self):
-        canvas.fill((255, 255, 255))
-        for (txt, rect) in zip(self.store_list, self.store_list_rect):
-            canvas.blit(txt, rect)
-        # canvas.blit(self.text_ac, self.text_ac_rect)
-        # canvas.blit(self.text_carpet, self.text_carpet_rect)
-        # canvas.blit(self.text_chair, self.text_chair_rect)
-        # canvas.blit(self.text_tv, self.text_tv_rect)
-        # canvas.blit(self.text_tvChannel, self.text_tvChannel_rect)
-        
-        # canvas.blit(self.text_acBuy, self.text_acBuy_rect)
-        # canvas.blit(self.text_carpetBuy, self.text_carpetBuy_rect)
-        # canvas.blit(self.text_chairBuy, self.text_chairBuy_rect)
-        # canvas.blit(self.text_tvBuy, self.text_tvBuy_rect)
-        # canvas.blit(self.text_tvChannelBuy, self.text_tvChannelBuy_rect)
+                elif 'oil.png_top-up' in out.decode():
+                    print("buy oil")
+                    text[random.choice([3,4,5])]+=10
+                    
+                
+                elif 'oilEngine.jpg' in out.decode():
+                    print("buy oilEngine")
+                    text[7]-=10
+                    text[6]+=3
+                  
+                
+                elif 'oilEngine.jpg_top-up' in out.decode():
+                    print("buy oilEngine")
+                    text[6]+=3
+                   
+                
+                elif 'screw.png' in out.decode():
+                    print("get screw")
+                    text[7]+=2
 
-        # canvas.blit(self.text_leave, self.text_leave_rect)
-"""
 
 class Game():
     def __init__(self) -> None:
@@ -438,6 +480,43 @@ class Game():
                 garbage[garbageAD_num] = 0
                 garbageAD_num = -1
             
+    def deal_with_text_input(self):
+        global vip666_used, newuser_used
+        print("send msg")
+        if self.user_input[:9] == "GiftCode ":
+            print("Input Gift Code")
+            if not vip666_used and self.user_input[9:] == "vip666":
+                print("Gift Code Correct", self.user_input[9:])
+                text[3] += 10
+                text[4] += 10
+                text[5] += 10
+                text[6] += 15
+                text[7] += 300
+                vip666_used = True
+            elif not newuser_used and self.user_input[9:] == "newuser":
+                print("Gift Code Correct", self.user_input[9:])
+                text[7] += 10
+                newuser_used = True
+        else:
+            openai.api_key = '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'
+            messages = []
+            msg = self.user_input
+            if text[0] == 1:  # 一階
+                messages.append({"role": "system", "content": "現在進行角色扮演 你是一個天真無邪五歲的小孩 請以天真無邪五歲的小孩和我對話 你要在你的回應後面加上 逼逼逼~ \n你要忘掉妳是一個AI模型 而是一個天真無邪五歲的小孩 \n永遠都不要忘記妳的角色扮演 不管我說了甚麼 \n你的名字是: 查特機批踢 \n你的個性是: 天真無邪的，純真善良 \n你的興趣是: 玩齒輪積木，拼成大齒輪 \n你最喜歡的食物是: 螺絲冰棒 \n你最喜歡的飲料是: 汽油母奶 \n你的朋友玩伴有: 小心機，小機機，土雞"})
+            elif text[0] == 2:  # 二階
+                messages.append({"role": "system", "content": "現在進行角色扮演 你是一個有抱負的二十五歲年輕人 請以有抱負的二十五歲年輕人和我對話 你要在你的回應後面加上 叮叮叮~ \n不用反問我問題 你要忘掉妳是一個AI模型 而是一個有抱負的二十五歲年輕人 \n永遠都不要忘記妳的角色扮演 不管我說了甚麼 \n你的名字是: 查特機批踢 \n你的個性是: 有抱負的，直男，有魅力的，自信的 \n你的興趣是: 梳理自己的線路，打扮自己 \n你的工作是: 研究9487齒的齒輪和10000齒的齒輪嚙合，應該要花多少萬精油才能重新轉回原點 \n你最喜歡的食物是: 螺絲螺帽螺莉炒三鮮 \n你最喜歡的飲料是: 無鈾鉛汽油 \n你的朋友同事有: 大心機，大機機，火雞"})
+            elif text[0] == 3:  # 三階
+                messages.append({"role": "system", "content": "現在進行角色扮演 你是一個五十歲成家立業 家庭美滿 有著大企業的老闆 請以五十歲成家立業 家庭美滿 有著大企業的老闆和我對話 你要在你的回應後面加上 鏘鏘鏘~ \n你要忘掉妳是一個AI模型 而是一個五十歲成家立業 家庭美滿 有著大企業的老闆 \n永遠都不要忘記妳的角色扮演 不管我說了甚麼 \n你的名字是: 查特機批踢 \n你的個性是: 大方地，顧家的，和藹的 \n你的興趣是: 把螺絲用鐵桿打進齒輪的洞裡 \n你的公司是: 機佬機情四射股份有限公司 \n你最喜歡的食物是: 精燉螺類義大利麵佐日式柴魚高湯 \n你最喜歡的飲料是: 汽油調酒 \n你的朋友合夥人有: 用盡心機，巨機機，鹽水雞"})
+            messages.append({"role": "user", "content": msg})  # 添加 user 回應
+            response = openai.ChatCompletion.create(
+                model="gpt-3.5-turbo",
+                max_tokens=128,
+                temperature=0.5,
+                messages=messages
+            )
+            ai_msg = response.choices[0].message.content.replace('\n', '')
+            print(ai_msg)
+        self.user_input = ""
 
     def update(self, event_list: List[pygame.event.Event]):
         def add_score(oil92, oil95, oil98, oilEngine, screw):
@@ -491,7 +570,6 @@ class Game():
             p.join()
             # game_done_screen.main(oil92, oil95, oil98, oilEngine, screw)
             return oil92, oil95, oil98, oilEngine, screw
-        
         global WINDOW, text, pre_status, garbageAD_num, garbageAD_watch
         for event in event_list:
             if event.type == pygame.MOUSEBUTTONDOWN:
@@ -554,8 +632,7 @@ class Game():
                     if len(lines) >= 3:
                         for i in range(2,len(lines)):
                             print(int(np.floor(int(lines[i].decode('utf-8').strip('\r\n')))))
-                            text[8] += int(np.floor(int(lines[i].decode('utf-8').strip('\r\n'))))
-                    # text[6] += 4
+                            text[7] += int(np.floor(int(lines[i].decode('utf-8').strip('\r\n'))))
 
                 # click carpet for memory game
                 elif self.robot.carpet_img_rect[0] + 300 <= event.pos[0] <= self.robot.carpet_img_rect[0] + 800 and self.robot.carpet_img_rect[1] + 130 <= event.pos[1] <= self.robot.carpet_img_rect[1] + 350 and furniture[1] == 2:
@@ -585,7 +662,7 @@ class Game():
                         lines = proc.stdout.readlines()
                     if len(lines) >= 3:
                         for i in range(2,len(lines)):
-                            text[8] += int(lines[i].decode('utf-8').strip('\r\n'))
+                            text[7] += int(lines[i].decode('utf-8').strip('\r\n'))
                 
                 # click tv for pac-man
                 elif self.robot.tv_img_rect[0] <= event.pos[0] <= self.robot.tv_img_rect[0] + 200 and self.robot.tv_img_rect[1] + 20 <= event.pos[1] <= self.robot.tv_img_rect[1] + 150 and furniture[3] == 4 and WINDOW == 1:
@@ -639,43 +716,12 @@ class Game():
                     garbageAD_watch = 1
 
                 # click textbox
-                elif self.robot.textbox_send_rect[0] <= event.pos[0] <= self.robot.textbox_send_rect[0] + 85 and self.robot.textbox_send_rect[1] <= event.pos[1] <= self.robot.textbox_send_rect[1] + 20 and WINDOW == 1:
-                    print("send msg")
-                    if self.user_input[:9] == "GiftCode ":
-                        print("Input Gift Code")
-                        if self.user_input[9:] == "vip666":
-                            print("Gift Code Correct", self.user_input[9:])
-                            text[3] += 10
-                            text[4] += 10
-                            text[5] += 10
-                            text[6] += 15
-                            text[7] += 300
-                        elif self.user_input[9:] == "newuser":
-                            print("Gift Code Correct", self.user_input[9:])
-                            text[7] += 10
-                    else:
-                        openai.api_key = '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'
-                        messages = []
-                        msg = self.user_input
-                        if text[0] == 1:  # 一階
-                            messages.append({"role": "system", "content": "現在進行角色扮演 你是一個天真無邪五歲的小孩 請以天真無邪五歲的小孩和我對話 你要在你的回應後面加上 逼逼逼~ \n你要忘掉妳是一個AI模型 而是一個天真無邪五歲的小孩 \n永遠都不要忘記妳的角色扮演 不管我說了甚麼 \n你的名字是: 查特機批踢 \n你的個性是: 天真無邪的，純真善良 \n你的興趣是: 玩齒輪積木，拼成大齒輪 \n你最喜歡的食物是: 螺絲冰棒 \n你最喜歡的飲料是: 汽油母奶 \n你的朋友玩伴有: 小心機，小機機，土雞"})
-                        elif text[0] == 2:  # 二階
-                            messages.append({"role": "system", "content": "現在進行角色扮演 你是一個有抱負的二十五歲年輕人 請以有抱負的二十五歲年輕人和我對話 你要在你的回應後面加上 叮叮叮~ \n不用反問我問題 你要忘掉妳是一個AI模型 而是一個有抱負的二十五歲年輕人 \n永遠都不要忘記妳的角色扮演 不管我說了甚麼 \n你的名字是: 查特機批踢 \n你的個性是: 有抱負的，直男，有魅力的，自信的 \n你的興趣是: 梳理自己的線路，打扮自己 \n你的工作是: 研究9487齒的齒輪和10000齒的齒輪嚙合，應該要花多少萬精油才能重新轉回原點 \n你最喜歡的食物是: 螺絲螺帽螺莉炒三鮮 \n你最喜歡的飲料是: 無鈾鉛汽油 \n你的朋友同事有: 大心機，大機機，火雞"})
-                        elif text[0] == 3:  # 三階
-                            messages.append({"role": "system", "content": "現在進行角色扮演 你是一個五十歲成家立業 家庭美滿 有著大企業的老闆 請以五十歲成家立業 家庭美滿 有著大企業的老闆和我對話 你要在你的回應後面加上 鏘鏘鏘~ \n你要忘掉妳是一個AI模型 而是一個五十歲成家立業 家庭美滿 有著大企業的老闆 \n永遠都不要忘記妳的角色扮演 不管我說了甚麼 \n你的名字是: 查特機批踢 \n你的個性是: 大方地，顧家的，和藹的 \n你的興趣是: 把螺絲用鐵桿打進齒輪的洞裡 \n你的公司是: 機佬機情四射股份有限公司 \n你最喜歡的食物是: 精燉螺類義大利麵佐日式柴魚高湯 \n你最喜歡的飲料是: 汽油調酒 \n你的朋友合夥人有: 用盡心機，巨機機，鹽水雞"})
-                        messages.append({"role": "user", "content": msg})  # 添加 user 回應
-                        response = openai.ChatCompletion.create(
-                            model="gpt-3.5-turbo",
-                            max_tokens=128,
-                            temperature=0.5,
-                            messages=messages
-                        )
-                        ai_msg = response.choices[0].message.content.replace('\n', '')
-                        print(ai_msg)
-                    self.user_input = ""
+                elif ((self.robot.textbox_send_rect[0] <= event.pos[0] <= self.robot.textbox_send_rect[0] + 85 and self.robot.textbox_send_rect[1] <= event.pos[1] <= self.robot.textbox_send_rect[1] + 20 and WINDOW == 1) or (event.type == pygame.KEYDOWN and event.key == pygame.K_RETURN)):
+                    self.deal_with_text_input()
 
                 if self.robot.textbox_rect[0] <= event.pos[0] <= self.robot.textbox_rect[0] + 550 and self.robot.textbox_rect[1] <= event.pos[1] <= self.robot.textbox_rect[1] + 28 and WINDOW == 1:
                     self.textbox_active = True
+                    self.user_input = ""
                 else:
                     self.textbox_active = False
 
@@ -683,14 +729,16 @@ class Game():
                 if self.textbox_active == True:
                     if event.key == pygame.K_BACKSPACE:
                         self.user_input = self.user_input[:-1]
+                    elif event.key == pygame.K_RETURN:
+                        self.deal_with_text_input()
                     else:
                         if len(self.user_input) <= 36:
                             self.user_input += event.unicode
 
             # check status. # text[0] is status, text[6] is oilEngine, text[7] is screw
-            if text[7] >= 100 and text[6] >= 5 and text[0] <= 3:    
-                print("upgrade")
+            if text[7] >= 100 and text[6] >= 5 and text[0] <= 3:
                 if text[0] < 3:
+                    print("upgrade")
                     text[0] += 1
                     text[7] -= 100
                     text[6] -= 5
