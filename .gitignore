@@ -22,3 +22,4 @@ website/manifest.json
 game_done/__pycache__/
 website/__pycache__/
 
+website/test.py

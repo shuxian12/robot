@@ -215,7 +215,11 @@ class Shopping_mall():
         print(self.list_img[self.goods3])
                  
         #儲值
-        pass
+        import webbrowser, threading
+        def open_web():
+            webbrowser.open('http://127.0.0.1:5000')
+        thread2 = threading.Thread(target=open_web, )
+        thread2.run()
 
     def click_event5_update_goods(self):
 
@@ -259,9 +263,6 @@ class Shopping_mall():
             self.draw_button()
             if update_notice==1:
                 self.draw_notice(goods)#看完影片買螺絲之後，要更新公告
-
-   
-         
 
 def main():
     pygame.init()
