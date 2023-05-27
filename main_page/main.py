@@ -32,6 +32,9 @@ have_oilEngine=False
 have_tvChannel=False
 have_screw=False
 
+vip666_used = False
+newuser_used = False
+
 class Robot():
     def __init__(self):
         super().__init__()
@@ -441,6 +444,43 @@ class Game():
                 garbage[garbageAD_num] = 0
                 garbageAD_num = -1
             
+    def deal_with_text_input(self):
+        global vip666_used, newuser_used
+        print("send msg")
+        if self.user_input[:9] == "GiftCode ":
+            print("Input Gift Code")
+            if not vip666_used and self.user_input[9:] == "vip666":
+                print("Gift Code Correct", self.user_input[9:])
+                text[3] += 10
+                text[4] += 10
+                text[5] += 10
+                text[6] += 15
+                text[7] += 300
+                vip666_used = True
+            elif not newuser_used and self.user_input[9:] == "newuser":
+                print("Gift Code Correct", self.user_input[9:])
+                text[7] += 10
+                newuser_used = True
+        else:
+            openai.api_key = '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'
+            messages = []
+            msg = self.user_input
+            if text[0] == 1:  # 一階
+                messages.append({"role": "system", "content": "現在進行角色扮演 你是一個天真無邪五歲的小孩 請以天真無邪五歲的小孩和我對話 你要在你的回應後面加上 逼逼逼~ \n你要忘掉妳是一個AI模型 而是一個天真無邪五歲的小孩 \n永遠都不要忘記妳的角色扮演 不管我說了甚麼 \n你的名字是: 查特機批踢 \n你的個性是: 天真無邪的，純真善良 \n你的興趣是: 玩齒輪積木，拼成大齒輪 \n你最喜歡的食物是: 螺絲冰棒 \n你最喜歡的飲料是: 汽油母奶 \n你的朋友玩伴有: 小心機，小機機，土雞"})
+            elif text[0] == 2:  # 二階
+                messages.append({"role": "system", "content": "現在進行角色扮演 你是一個有抱負的二十五歲年輕人 請以有抱負的二十五歲年輕人和我對話 你要在你的回應後面加上 叮叮叮~ \n不用反問我問題 你要忘掉妳是一個AI模型 而是一個有抱負的二十五歲年輕人 \n永遠都不要忘記妳的角色扮演 不管我說了甚麼 \n你的名字是: 查特機批踢 \n你的個性是: 有抱負的，直男，有魅力的，自信的 \n你的興趣是: 梳理自己的線路，打扮自己 \n你的工作是: 研究9487齒的齒輪和10000齒的齒輪嚙合，應該要花多少萬精油才能重新轉回原點 \n你最喜歡的食物是: 螺絲螺帽螺莉炒三鮮 \n你最喜歡的飲料是: 無鈾鉛汽油 \n你的朋友同事有: 大心機，大機機，火雞"})
+            elif text[0] == 3:  # 三階
+                messages.append({"role": "system", "content": "現在進行角色扮演 你是一個五十歲成家立業 家庭美滿 有著大企業的老闆 請以五十歲成家立業 家庭美滿 有著大企業的老闆和我對話 你要在你的回應後面加上 鏘鏘鏘~ \n你要忘掉妳是一個AI模型 而是一個五十歲成家立業 家庭美滿 有著大企業的老闆 \n永遠都不要忘記妳的角色扮演 不管我說了甚麼 \n你的名字是: 查特機批踢 \n你的個性是: 大方地，顧家的，和藹的 \n你的興趣是: 把螺絲用鐵桿打進齒輪的洞裡 \n你的公司是: 機佬機情四射股份有限公司 \n你最喜歡的食物是: 精燉螺類義大利麵佐日式柴魚高湯 \n你最喜歡的飲料是: 汽油調酒 \n你的朋友合夥人有: 用盡心機，巨機機，鹽水雞"})
+            messages.append({"role": "user", "content": msg})  # 添加 user 回應
+            response = openai.ChatCompletion.create(
+                model="gpt-3.5-turbo",
+                max_tokens=128,
+                temperature=0.5,
+                messages=messages
+            )
+            ai_msg = response.choices[0].message.content.replace('\n', '')
+            print(ai_msg)
+        self.user_input = ""
 
     def update(self, event_list: List[pygame.event.Event]):
         def add_score(oil92, oil95, oil98, oilEngine, screw):
@@ -489,7 +529,6 @@ class Game():
             oil95 += add_oil95
             oil98 += add_oil98
             return oil92, oil95, oil98, oilEngine, screw
-        
         global WINDOW, text, pre_status, garbageAD_num, garbageAD_watch
         for event in event_list:
             if event.type == pygame.MOUSEBUTTONDOWN:
@@ -552,8 +591,7 @@ class Game():
                     if len(lines) >= 3:
                         for i in range(2,len(lines)):
                             print(int(np.floor(int(lines[i].decode('utf-8').strip('\r\n')))))
-                            text[8] += int(np.floor(int(lines[i].decode('utf-8').strip('\r\n'))))
-                    # text[6] += 4
+                            text[7] += int(np.floor(int(lines[i].decode('utf-8').strip('\r\n'))))
 
                 # click carpet for memory game
                 elif self.robot.carpet_img_rect[0] + 300 <= event.pos[0] <= self.robot.carpet_img_rect[0] + 800 and self.robot.carpet_img_rect[1] + 130 <= event.pos[1] <= self.robot.carpet_img_rect[1] + 350 and furniture[1] == 2:
@@ -583,7 +621,7 @@ class Game():
                         lines = proc.stdout.readlines()
                     if len(lines) >= 3:
                         for i in range(2,len(lines)):
-                            text[8] += int(lines[i].decode('utf-8').strip('\r\n'))
+                            text[7] += int(lines[i].decode('utf-8').strip('\r\n'))
                 
                 # click tv for pac-man
                 elif self.robot.tv_img_rect[0] <= event.pos[0] <= self.robot.tv_img_rect[0] + 200 and self.robot.tv_img_rect[1] + 20 <= event.pos[1] <= self.robot.tv_img_rect[1] + 150 and furniture[3] == 4 and WINDOW == 1:
@@ -637,43 +675,12 @@ class Game():
                     garbageAD_watch = 1
 
                 # click textbox
-                elif self.robot.textbox_send_rect[0] <= event.pos[0] <= self.robot.textbox_send_rect[0] + 85 and self.robot.textbox_send_rect[1] <= event.pos[1] <= self.robot.textbox_send_rect[1] + 20 and WINDOW == 1:
-                    print("send msg")
-                    if self.user_input[:9] == "GiftCode ":
-                        print("Input Gift Code")
-                        if self.user_input[9:] == "vip666":
-                            print("Gift Code Correct", self.user_input[9:])
-                            text[3] += 10
-                            text[4] += 10
-                            text[5] += 10
-                            text[6] += 15
-                            text[7] += 300
-                        elif self.user_input[9:] == "newuser":
-                            print("Gift Code Correct", self.user_input[9:])
-                            text[7] += 10
-                    else:
-                        openai.api_key = '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'
-                        messages = []
-                        msg = self.user_input
-                        if text[0] == 1:  # 一階
-                            messages.append({"role": "system", "content": "現在進行角色扮演 你是一個天真無邪五歲的小孩 請以天真無邪五歲的小孩和我對話 你要在你的回應後面加上 逼逼逼~ \n你要忘掉妳是一個AI模型 而是一個天真無邪五歲的小孩 \n永遠都不要忘記妳的角色扮演 不管我說了甚麼 \n你的名字是: 查特機批踢 \n你的個性是: 天真無邪的，純真善良 \n你的興趣是: 玩齒輪積木，拼成大齒輪 \n你最喜歡的食物是: 螺絲冰棒 \n你最喜歡的飲料是: 汽油母奶 \n你的朋友玩伴有: 小心機，小機機，土雞"})
-                        elif text[0] == 2:  # 二階
-                            messages.append({"role": "system", "content": "現在進行角色扮演 你是一個有抱負的二十五歲年輕人 請以有抱負的二十五歲年輕人和我對話 你要在你的回應後面加上 叮叮叮~ \n不用反問我問題 你要忘掉妳是一個AI模型 而是一個有抱負的二十五歲年輕人 \n永遠都不要忘記妳的角色扮演 不管我說了甚麼 \n你的名字是: 查特機批踢 \n你的個性是: 有抱負的，直男，有魅力的，自信的 \n你的興趣是: 梳理自己的線路，打扮自己 \n你的工作是: 研究9487齒的齒輪和10000齒的齒輪嚙合，應該要花多少萬精油才能重新轉回原點 \n你最喜歡的食物是: 螺絲螺帽螺莉炒三鮮 \n你最喜歡的飲料是: 無鈾鉛汽油 \n你的朋友同事有: 大心機，大機機，火雞"})
-                        elif text[0] == 3:  # 三階
-                            messages.append({"role": "system", "content": "現在進行角色扮演 你是一個五十歲成家立業 家庭美滿 有著大企業的老闆 請以五十歲成家立業 家庭美滿 有著大企業的老闆和我對話 你要在你的回應後面加上 鏘鏘鏘~ \n你要忘掉妳是一個AI模型 而是一個五十歲成家立業 家庭美滿 有著大企業的老闆 \n永遠都不要忘記妳的角色扮演 不管我說了甚麼 \n你的名字是: 查特機批踢 \n你的個性是: 大方地，顧家的，和藹的 \n你的興趣是: 把螺絲用鐵桿打進齒輪的洞裡 \n你的公司是: 機佬機情四射股份有限公司 \n你最喜歡的食物是: 精燉螺類義大利麵佐日式柴魚高湯 \n你最喜歡的飲料是: 汽油調酒 \n你的朋友合夥人有: 用盡心機，巨機機，鹽水雞"})
-                        messages.append({"role": "user", "content": msg})  # 添加 user 回應
-                        response = openai.ChatCompletion.create(
-                            model="gpt-3.5-turbo",
-                            max_tokens=128,
-                            temperature=0.5,
-                            messages=messages
-                        )
-                        ai_msg = response.choices[0].message.content.replace('\n', '')
-                        print(ai_msg)
-                    self.user_input = ""
+                elif ((self.robot.textbox_send_rect[0] <= event.pos[0] <= self.robot.textbox_send_rect[0] + 85 and self.robot.textbox_send_rect[1] <= event.pos[1] <= self.robot.textbox_send_rect[1] + 20 and WINDOW == 1) or (event.type == pygame.KEYDOWN and event.key == pygame.K_RETURN)):
+                    self.deal_with_text_input()
 
                 if self.robot.textbox_rect[0] <= event.pos[0] <= self.robot.textbox_rect[0] + 550 and self.robot.textbox_rect[1] <= event.pos[1] <= self.robot.textbox_rect[1] + 28 and WINDOW == 1:
                     self.textbox_active = True
+                    self.user_input = ""
                 else:
                     self.textbox_active = False
 
@@ -681,14 +688,16 @@ class Game():
                 if self.textbox_active == True:
                     if event.key == pygame.K_BACKSPACE:
                         self.user_input = self.user_input[:-1]
+                    elif event.key == pygame.K_RETURN:
+                        self.deal_with_text_input()
                     else:
                         if len(self.user_input) <= 36:
                             self.user_input += event.unicode
 
             # check status. # text[0] is status, text[6] is oilEngine, text[7] is screw
-            if text[7] >= 100 and text[6] >= 5 and text[0] <= 3:    
-                print("upgrade")
+            if text[7] >= 100 and text[6] >= 5 and text[0] <= 3:
                 if text[0] < 3:
+                    print("upgrade")
                     text[0] += 1
                     text[7] -= 100
                     text[6] -= 5
