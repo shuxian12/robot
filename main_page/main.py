@@ -535,10 +535,9 @@ class Game():
             oil92 += add_oil92
             oil95 += add_oil95
             oil98 += add_oil98
-            manager = multiprocessing.Manager()
             p = multiprocessing.Process(target=game_done_screen.main, args=(oil92, oil95, oil98, oilEngine, screw))
             p.start()
-            p.join()
+            p.join(), p.terminate()
             # game_done_screen.main(oil92, oil95, oil98, oilEngine, screw)
             return oil92, oil95, oil98, oilEngine, screw
         
@@ -620,9 +619,9 @@ class Game():
                     print("==== socre ===\n", text[3], text[4], text[5], text[6], text[7])
                     manager = multiprocessing.Manager()
                     return_dict = manager.dict()
-                    p = multiprocessing.Process(target=memory_game.main, args=(return_dict,))
-                    p.start()
-                    p.join()
+                    p = multiprocessing.Process(target=memory_game.main, args=(return_dict,), daemon=True)
+                    p.start(), p.join()
+                    p.terminate(), p.join()
                     if len(return_dict.values()) == 1:
                         win = return_dict.values()[0]
                         if win == 1:
@@ -653,9 +652,9 @@ class Game():
                     print("==== socre ===\n", text[3], text[4], text[5], text[6], text[7])
                     manager = multiprocessing.Manager()
                     return_dict = manager.dict()
-                    p = multiprocessing.Process(target=pacman.pacman, args=(return_dict,))
-                    p.start()
-                    p.join()
+                    p = multiprocessing.Process(target=pacman.pacman, args=(return_dict,), daemon=True)
+                    p.start(), p.join()
+                    p.terminate(), p.join()
                     if len(return_dict.values()) == 1:
                         win = return_dict.values()[0]
                         if win == 1:

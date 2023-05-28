@@ -38,11 +38,7 @@ class Screen():
             text_rect = text.get_rect()
             text_rect.center = (self.text_x, self.text_y + i * 40)
             screen.blit(text, text_rect)
-
-
-        
-        
-        
+      
 def main(oil92=12, oil95=12, oil98=4, oilEngine=3, screw=23, win=True):
     pygame.display.set_mode((800, 500))
     screen = Screen(oil92, oil95, oil98, oilEngine, screw, win)
