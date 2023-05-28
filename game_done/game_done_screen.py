@@ -22,7 +22,7 @@ class Screen():
     def update_text(self, oil92, oil95, oil98, oilEngine, screw, win):
         if win:
             self.text_title = self.font_50.render('Congratulation!  GET', True, (0, 0, 0))
-            content = f'92汽油: {oil92},  95汽油: {oil95},  98汽油: {oil98}\n機油: {oilEngine},  螺絲: {screw}'
+            content = f'獲得92汽油: {oil92},  95汽油: {oil95},  98汽油: {oil98}\n機油: {oilEngine},  螺絲: {screw}'
             # self.text = self.font_32.render(content, True, (255, 255, 255))
             self.text = content
         else:

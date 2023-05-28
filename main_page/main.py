@@ -8,6 +8,9 @@ from typing import List
 sys.path.append('..')
 from memory_game import memory_game
 from pacman import pacman
+from shoot import shoot
+from gamble import gamble
+from pull_medicine import pull_medicine
 from game_done import game_done_screen
 
 # from website import app
@@ -519,7 +522,7 @@ class Game():
         self.user_input = ""
 
     def update(self, event_list: List[pygame.event.Event]):
-        def add_score(oil92, oil95, oil98, oilEngine, screw):
+        def add_score(oil92, oil95, oil98, oilEngine, screw, add_screw_num=0):
             def add_oilEngine(): # randomly add oilEngine
                 random_num = random.randint(0,10)
                 if random_num == 0:
@@ -558,14 +561,19 @@ class Game():
                     random_98 = 0
                 return random_92, random_95, random_98
             oil, screws = add_oilEngine(), add_screw()
-            oilEngine += oil
-            screw += screws
             add_oil92, add_oil95, add_oil98 = add_oil()
-            oil92 += add_oil92
-            oil95 += add_oil95
-            oil98 += add_oil98
+            
             manager = multiprocessing.Manager()
-            p = multiprocessing.Process(target=game_done_screen.main, args=(oil92, oil95, oil98, oilEngine, screw))
+            if add_screw_num != 0:
+                screw += add_screw_num
+                p = multiprocessing.Process(target=game_done_screen.main, args=(0, 0, 0, 0, add_screw_num))
+            else:
+                screw += screws
+                oilEngine += oil
+                oil92 += add_oil92
+                oil95 += add_oil95
+                oil98 += add_oil98
+                p = multiprocessing.Process(target=game_done_screen.main, args=(add_oil92, add_oil95, add_oil98, oil, screws))
             p.start()
             p.join()
             # game_done_screen.main(oil92, oil95, oil98, oilEngine, screw)
@@ -626,6 +634,15 @@ class Game():
                 elif self.robot.ac_img_rect[0] <= event.pos[0] <= self.robot.ac_img_rect[0] + 200 and self.robot.ac_img_rect[1] + 50 <= event.pos[1] <= self.robot.ac_img_rect[1] + 170 and furniture[0] == 1 and WINDOW == 1:
                     print("click ac")
                     text[1] -= 10
+
+                    manager = multiprocessing.Manager()
+                    return_list = manager.list()
+                    p = multiprocessing.Process(target=gamble.gamble, args=(return_list,))
+                    p.start()
+                    p.join()
+                    print(return_list)
+                    if len(return_list) == 1:
+                        text[3], text[4], text[5], text[6], text[7] = add_score(text[3], text[4], text[5], text[6], text[7], return_list[0])
                     lines = []
                     with subprocess.Popen(['python','../game/gamble.py'],stdout=subprocess.PIPE) as proc:
                         lines = proc.stdout.readlines()
@@ -657,12 +674,14 @@ class Game():
                     print("click chair")
                     text[1] -= 10
 
-                    lines = []
-                    with subprocess.Popen(['python','../game/shoot.py'],stdout=subprocess.PIPE) as proc:
-                        lines = proc.stdout.readlines()
-                    if len(lines) >= 3:
-                        for i in range(2,len(lines)):
-                            text[7] += int(lines[i].decode('utf-8').strip('\r\n'))
+                    manager = multiprocessing.Manager()
+                    return_list = manager.list()
+                    p = multiprocessing.Process(target=shoot.shoot, args=(return_list,))
+                    p.start()
+                    p.join()
+                    print(return_list)
+                    if len(return_list) == 1:
+                        text[3], text[4], text[5], text[6], text[7] = add_score(text[3], text[4], text[5], text[6], text[7], return_list[0])
                 
                 # click tv for pac-man
                 elif self.robot.tv_img_rect[0] <= event.pos[0] <= self.robot.tv_img_rect[0] + 200 and self.robot.tv_img_rect[1] + 20 <= event.pos[1] <= self.robot.tv_img_rect[1] + 150 and furniture[3] == 4 and WINDOW == 1:
