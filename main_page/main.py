@@ -267,27 +267,55 @@ class Store:
             self.output.pop(0)
             self.output.pop(0)
             for out in self.output:
-                # if out == b'ac.png\r\n':
-                if 'ac' in out.decode():
+                if 'ac.png_top-up' in out.decode() and have_ac == False:
                     have_ac = True
-                elif 'carpet' in out.decode():
+                    
+                elif 'ac' in out.decode() and have_ac == False:
+                    have_ac = True
+                    text[7]-=50
+                   
+                elif 'carpet.png_top-up' in out.decode() and have_carpet==False:
                 # elif out == b'carpet.png\r\n':
                     have_carpet=True
-                elif 'oil' in out.decode():
-                # elif out == b'oil.png\r\n':
-                    have_oil=True
-                elif 'chair' in out.decode():
+                    
+                elif 'carpet' in out.decode() and have_carpet==False:
+                # elif out == b'carpet.png\r\n':
+                    have_carpet=True
+                    text[7]-=20
+
+               
+                elif 'chair.png_top-up' in out.decode() and have_chair==False:
+                # elif out == b'chair.png\r\n':
+                    
+                    have_chair=True
+                
+                elif 'chair' in out.decode() and have_chair==False:
                 # elif out == b'chair.png\r\n':
                     have_chair=True
-                elif 'tv' in out.decode():
+                    text[7]-=30
+              
+                elif 'tv.png_top-up' in out.decode() and have_tv==False:
                 # elif out == b'tv.png\r\n':
                     have_tv=True
-                elif 'oilEngine' in out.decode():
-                # elif out == b'oilEngine.jpg\r\n':
-                    have_oilEngine=True
-                elif 'tvChannel' in out.decode():
+                    
+                
+                elif 'tv' in out.decode() and have_tv==False:
+                # elif out == b'tv.png\r\n':
+                    have_tv=True
+                    text[7]-=40
+
+                
+                # elif 'oilEngine' in out.decode():
+                # # elif out == b'oilEngine.jpg\r\n':
+                #     have_oilEngine=True
+                elif 'tvChannel.png_top-up' in out.decode() and have_tvChannel==False:
                 # elif out == b'tvChannel.png\r\n':
                     have_tvChannel=True
+                   
+                elif 'tvChannel' in out.decode() and have_tvChannel==False:
+                # elif out == b'tvChannel.png\r\n':
+                    have_tvChannel=True
+                    text[7]-=20
             
 #             self.output.pop(0)
 #             self.output.pop(0)
@@ -357,30 +385,26 @@ class Store:
 #                     #f.write("tvChannel.png\n")
       
 
+                elif 'oil.png_top-up' in out.decode():
+                    
+                    text[random.choice([3,4,5])]+=10
                 elif 'oil.png' in out.decode():
-                    print("buy oil")
+                    
                     text[7]-=10
                     text[random.choice([3,4,5])]+=10
                   
 
-                elif 'oil.png_top-up' in out.decode():
-                    print("buy oil")
-                    text[random.choice([3,4,5])]+=10
-                    
+                elif 'oilEngine.jpg_top-up' in out.decode():
+                   
+                    text[6]+=3
                 
                 elif 'oilEngine.jpg' in out.decode():
-                    print("buy oilEngine")
+                    
                     text[7]-=10
                     text[6]+=3
-                  
-                
-                elif 'oilEngine.jpg_top-up' in out.decode():
-                    print("buy oilEngine")
-                    text[6]+=3
-                   
-                
+
                 elif 'screw.png' in out.decode():
-                    print("get screw")
+                   
                     text[7]+=2
 
 
