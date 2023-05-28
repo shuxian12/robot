@@ -212,7 +212,7 @@ class Shopping_mall():
         self.draw_notice(str_good)
         # for i in self.list_img:
         #     if self.list_img[self.goods3]==i:
-        print(self.list_img[self.goods3])
+        print(self.list_img[self.goods3]+"_top-up")
                  
         #儲值
         import webbrowser, threading

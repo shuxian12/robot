@@ -8,6 +8,9 @@ from typing import List
 sys.path.append('..')
 from memory_game import memory_game
 from pacman import pacman
+from shoot import shoot
+from gamble import gamble
+from pull_medicine import pull_medicine
 from game_done import game_done_screen
 
 canvas = pygame.display.set_mode((1000, 600))
@@ -258,96 +261,48 @@ class Store:
         with subprocess.Popen(['python','../shopping_mall/shopping_class.py'],stdout=subprocess.PIPE) as proc:
             self.output = proc.stdout.readlines()
             
-            # self.output.pop(0)
-            # self.output.pop(0)
-            # for out in self.output:
-            #     # if out == b'ac.png\r\n':
-            #     if 'ac' in out.decode():
-            #         have_ac = True
-            #     elif 'carpet' in out.decode():
-            #     # elif out == b'carpet.png\r\n':
-            #         have_carpet=True
-            #     elif 'oil' in out.decode():
-            #     # elif out == b'oil.png\r\n':
-            #         have_oil=True
-            #     elif 'chair' in out.decode():
-            #     # elif out == b'chair.png\r\n':
-            #         have_chair=True
-            #     elif 'tv' in out.decode():
-            #     # elif out == b'tv.png\r\n':
-            #         have_tv=True
-            #     elif 'oilEngine' in out.decode():
-            #     # elif out == b'oilEngine.jpg\r\n':
-            #         have_oilEngine=True
-            #     elif 'tvChannel' in out.decode():
-            #     # elif out == b'tvChannel.png\r\n':
-            #         have_tvChannel=True
-            
             self.output.pop(0)
             self.output.pop(0)
             for out in self.output:
-                #print(out)
-                if 'ac' in out.decode() and have_ac == False :
-                    print("buy ac")
-                    text[7]-=50
+                if 'ac.png_top-up' in out.decode() and have_ac == False:
                     have_ac = True
-                    #f.write("ac.png\n")
-                elif 'ac.png_top-up' in out.decode() and have_ac == False:
-                    print("buy ac")
+                elif 'ac' in out.decode() and have_ac == False:
                     have_ac = True
-                    #f.write("ac.png\n") 
-                elif 'carpet' in out.decode() and have_carpet==False:
-                    print("buy carpet")
-                    text[7]-=20
-                    have_carpet=True
-                    #f.write("carpet.png\n")
+                    text[7]-=50            
                 elif 'carpet.png_top-up' in out.decode() and have_carpet==False:
-                    print("buy carpet")
+                    have_carpet=True  
+                elif 'carpet' in out.decode() and have_carpet==False:
                     have_carpet=True
-                    #f.write("carpet.png\n")
-                elif 'chair' in out.decode() and have_chair==False:
-                    print("buy chair")
-                    text[7]-=30
-                    have_chair=True
-                    #f.write("chair.png\n")
-                elif out == b'chair.png_top-up\r\n' and have_chair==False:
-                    print("buy chair")
-                    have_chair=True
-                    #f.write("chair.png\n")
-                elif 'tv' in out.decode() and have_tv==False:
-                    print("buy tv")
-                    text[7]-=40
-                    have_tv=True
-                    #f.write("tv.png\n")
-                elif 'tv.png_top-u' in out.decode() and have_tv==False:
-                    print("buy tv")
-                    have_tv=True
-                    #f.write("tv.png\n") 
-                elif 'tvChannel.png' in out.decode() and have_tvChannel==False:
-                    print("buy tvChannel")
                     text[7]-=20
-                    have_tvChannel=True
-                    #f.write("tvChannel.png\n")
+                elif 'chair.png_top-up' in out.decode() and have_chair==False:
+                    have_chair=True
+                elif 'chair' in out.decode() and have_chair==False:
+                    have_chair=True
+                    text[7]-=30
+                elif 'tv.png_top-up' in out.decode() and have_tv==False:
+                    have_tv=True
+                elif 'tv' in out.decode() and have_tv==False:
+                    have_tv=True
+                    text[7]-=40
+                # elif 'oilEngine' in out.decode():
+                # # elif out == b'oilEngine.jpg\r\n':
+                #     have_oilEngine=True
                 elif 'tvChannel.png_top-up' in out.decode() and have_tvChannel==False:
-                    print("buy tvChannel")
+                    have_tvChannel=True 
+                elif 'tvChannel' in out.decode() and have_tvChannel==False:
                     have_tvChannel=True
-                    #f.write("tvChannel.png\n")
+                    text[7]-=20
+                elif 'oil.png_top-up' in out.decode():
+                    text[random.choice([3,4,5])]+=10
                 elif 'oil.png' in out.decode():
-                    print("buy oil")
                     text[7]-=10
                     text[random.choice([3,4,5])]+=10
-                elif 'oil.png_top-up' in out.decode():
-                    print("buy oil")
-                    text[random.choice([3,4,5])]+=10
+                elif 'oilEngine.jpg_top-up' in out.decode():    
+                    text[6]+=3
                 elif 'oilEngine.jpg' in out.decode():
-                    print("buy oilEngine")
                     text[7]-=10
                     text[6]+=3
-                elif 'oilEngine.jpg_top-up' in out.decode():
-                    print("buy oilEngine")
-                    text[6]+=3          
                 elif 'screw.png' in out.decode():
-                    print("get screw")
                     text[7]+=2
 
 
@@ -489,7 +444,7 @@ class Game():
         self.user_input = ""
 
     def update(self, event_list: List[pygame.event.Event]):
-        def add_score(oil92, oil95, oil98, oilEngine, screw):   # 隨機贈送分數
+        def add_score(oil92, oil95, oil98, oilEngine, screw, add_screw_num=0):
             def add_oilEngine(): # randomly add oilEngine
                 random_num = random.randint(0,10)
                 if random_num == 0:
@@ -529,13 +484,19 @@ class Game():
                 return random_92, random_95, random_98
             
             oil, screws = add_oilEngine(), add_screw()
-            oilEngine += oil
-            screw += screws
             add_oil92, add_oil95, add_oil98 = add_oil()
-            oil92 += add_oil92
-            oil95 += add_oil95
-            oil98 += add_oil98
-            p = multiprocessing.Process(target=game_done_screen.main, args=(oil92, oil95, oil98, oilEngine, screw))
+            manager = multiprocessing.Manager()
+            if add_screw_num != 0:
+                screw += add_screw_num
+                p = multiprocessing.Process(target=game_done_screen.main, args=(0, 0, 0, 0, add_screw_num))
+            else:
+                screw += screws
+                oilEngine += oil
+                oil92 += add_oil92
+                oil95 += add_oil95
+                oil98 += add_oil98
+                p = multiprocessing.Process(target=game_done_screen.main, args=(add_oil92, add_oil95, add_oil98, oil, screws))
+
             p.start()
             p.join(), p.terminate()
             # game_done_screen.main(oil92, oil95, oil98, oilEngine, screw)
@@ -603,6 +564,15 @@ class Game():
                 elif self.robot.ac_img_rect[0] <= event.pos[0] <= self.robot.ac_img_rect[0] + 200 and self.robot.ac_img_rect[1] + 50 <= event.pos[1] <= self.robot.ac_img_rect[1] + 170 and furniture[0] == 1 and WINDOW == 1:
                     print("click ac")
                     text[1] -= 10
+
+                    manager = multiprocessing.Manager()
+                    return_list = manager.list()
+                    p = multiprocessing.Process(target=gamble.gamble, args=(return_list,))
+                    p.start()
+                    p.join()
+                    print(return_list)
+                    if len(return_list) == 1:
+                        text[3], text[4], text[5], text[6], text[7] = add_score(text[3], text[4], text[5], text[6], text[7], return_list[0])
                     lines = []
                     with subprocess.Popen(['python','../game/gamble.py'],stdout=subprocess.PIPE) as proc:
                         lines = proc.stdout.readlines()
@@ -633,17 +603,24 @@ class Game():
                 elif self.robot.chair_img_rect[0] <= event.pos[0] <= self.robot.chair_img_rect[0] + 200 and self.robot.chair_img_rect[1] <= event.pos[1] <= self.robot.chair_img_rect[1] + 200 and furniture[2] == 3 and WINDOW == 1:
                     print("click chair")
                     text[1] -= 10
-
-                    lines = []
-                    with subprocess.Popen(['python','../game/shoot.py'],stdout=subprocess.PIPE) as proc:
-                        lines = proc.stdout.readlines()
-                    if len(lines) >= 3:
-                        for i in range(2,len(lines)):
-                            text[7] += int(lines[i].decode('utf-8').strip('\r\n'))
-
+#                     lines = []
+#                     with subprocess.Popen(['python','../game/shoot.py'],stdout=subprocess.PIPE) as proc:
+#                         lines = proc.stdout.readlines()
+#                     if len(lines) >= 3:
+#                         for i in range(2,len(lines)):
+#                             text[7] += int(lines[i].decode('utf-8').strip('\r\n'))
                     # 需要先將分數轉換成數字，再傳入gamble_score
                     # gamble_score(oil92, oil95, oil98, oilEngine, screw) --> 會直接顯示視窗
-                
+
+                    manager = multiprocessing.Manager()
+                    return_list = manager.list()
+                    p = multiprocessing.Process(target=shoot.shoot, args=(return_list,))
+                    p.start()
+                    p.join()
+                    print(return_list)
+                    if len(return_list) == 1:
+                        text[3], text[4], text[5], text[6], text[7] = add_score(text[3], text[4], text[5], text[6], text[7], return_list[0])
+
                 # click tv for pac-man
                 elif self.robot.tv_img_rect[0] <= event.pos[0] <= self.robot.tv_img_rect[0] + 200 and self.robot.tv_img_rect[1] + 20 <= event.pos[1] <= self.robot.tv_img_rect[1] + 150 and furniture[3] == 4 and WINDOW == 1:
                     print("click tv")
