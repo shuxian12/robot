@@ -7,7 +7,7 @@ pygame.init()
 WINDOW_WIDTH = 1280
 WINDOW_HEIGHT = 860
 screen = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
-pygame.display.set_caption('Memory Game')
+# pygame.display.set_caption('Memory Game')
 
 WHITE = (255, 255, 255)
 RED = (255, 0, 0)
@@ -84,7 +84,7 @@ class Game():
         pygame.mixer.music.play()
 
         # initialize timer
-        self.time_limit = 5.0
+        self.time_limit = 70.0
         self.timer = pygame.time.get_ticks()
         self.timer_font = pygame.font.Font(DIR+'/fonts/Comic Sans MS Bold.ttf', 24)
         self.timer_text = self.timer_font.render('Time: {:04.1f}'.format(self.time_limit), True, WHITE)
@@ -271,7 +271,7 @@ def main(return_dict={'you_win': False}):
 
     pygame.quit()
     print(running if running else 'Game Over')
-    if not return_dict: return_dict['running'] = True#running
+    if not return_dict: return_dict['running'] = running #True
     return running
 
 if __name__ == '__main__':
