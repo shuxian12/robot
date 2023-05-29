@@ -262,12 +262,17 @@ class Store:
     def show_store(self):
         global have_ac,have_carpet,have_chair,have_tv,have_tvChannel
         input_money=str(text[7])
-        with subprocess.Popen(['python','../shopping_mall/shopping_class.py',input_money],stdout=subprocess.PIPE) as proc:
+        input_ac=str(have_ac)
+        input_carpet=str(have_carpet)
+        input_chair=str(have_chair)
+        input_tv=str(have_tv)
+        with subprocess.Popen(['python','../shopping_mall/shopping_class.py',input_money,input_ac,input_carpet,input_chair,input_tv],stdout=subprocess.PIPE) as proc:
             self.output = proc.stdout.readlines()
             
             self.output.pop(0)
             self.output.pop(0)
             for out in self.output:
+                print(out)
                 if 'ac.png_top-up' in out.decode() and have_ac == False:
                     have_ac = True
                 elif 'ac' in out.decode() and have_ac == False:
@@ -296,17 +301,21 @@ class Store:
                 elif 'tvChannel' in out.decode() and have_tvChannel==False:
                     have_tvChannel=True
                     text[7]-=20
-                elif 'oil.png_top-up' in out.decode():
-                    text[random.choice([3,4,5])]+=10
-                elif 'oil.png' in out.decode():
-                    text[7]-=10
-                    text[random.choice([3,4,5])]+=10
+
                 elif 'oilEngine.jpg_top-up' in out.decode():    
                     text[6]+=3
                 elif 'oilEngine.jpg' in out.decode():
                     text[7]-=10
                     text[6]+=3
-                elif 'screw.png' in out.decode():
+                    
+                elif 'oil.png_top-up' in out.decode():
+                    text[random.choice([3,4,5])]+=10
+                elif 'oil' in out.decode():
+                    text[7]-=10
+                    text[random.choice([3,4,5])]+=10
+                
+                elif 'screw' in out.decode():
+                    print("yes")
                     text[7]+=2
 
 
