@@ -201,7 +201,9 @@ class Robot():
             sickness = True
             if self.sick() == False:
                 sickness = False
-                text[0] = pre_status+1
+                if text[0] < 3:
+                    text[0] = pre_status + 1
+                    pre_status = text[0] - 1
                 text[8] = 0
             
 
