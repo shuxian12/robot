@@ -162,7 +162,8 @@ class Robot():
                 if 719 >= event.pos[0] >= 571 and 450 >= event.pos[1] >= 352:
                     with subprocess.Popen(['python','..\pull_medicine\pull_medicine.py'],stdout=subprocess.PIPE) as proc:
                         if len(proc.stdout.readlines()) == 3:
-                            heal = random.randint(1,3)
+                            heal=2
+                            # heal = random.randint(1,3)
                     if heal == 2:
                         return False
                 else:
@@ -201,10 +202,15 @@ class Robot():
             sickness = True
             if self.sick() == False:
                 sickness = False
-                if text[0] < 3:
+                if pre_status < 3:
                     text[0] = pre_status + 1
+                    
+                    pre_status = text[0] - 1
+                elif pre_status==3:
+                    text[0]=pre_status
                     pre_status = text[0] - 1
                 text[8] = 0
+               
             
 
     def drawFurniture(self, n):
