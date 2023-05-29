@@ -602,7 +602,7 @@ class Game():
                         #         text[7] += int(np.floor(int(lines[i].decode('utf-8').strip('\r\n'))))
 
                     # click carpet for memory game
-                    elif have_carpet and self.robot.carpet_img_rect[0] + 300 <= event.pos[0] <= self.robot.carpet_img_rect[0] + 800 and self.robot.carpet_img_rect[1] + 130 <= event.pos[1] <= self.robot.carpet_img_rect[1] + 350 and furniture[1] == 2:
+                    elif have_carpet and self.robot.carpet_img_rect[0] + 300 <= event.pos[0] <= self.robot.carpet_img_rect[0] + 800 and self.robot.carpet_img_rect[1] + 130 <= event.pos[1] <= self.robot.carpet_img_rect[1] + 350 and furniture[1] == 2 and WINDOW == 1:
                         text[1] -= 10
                         print("click carpet")
 
