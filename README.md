@@ -4,13 +4,13 @@
 
 ### Install code with git clone
     
-```
+``` bash
 git clone https://github.com/shuxian12/robot.git
 ```
 
 ### Setting up the environment
 
-```
+``` bash
 cd robot
 python3 -m venv robot
 source robot/bin/activate
