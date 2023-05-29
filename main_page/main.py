@@ -793,4 +793,5 @@ def main():
         # pygame.time.delay(100)
 
 if __name__ == "__main__":
-    main()
+    with subprocess.Popen(['python','../website/app.py']):
+        main()
