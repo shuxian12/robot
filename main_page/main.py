@@ -14,7 +14,7 @@ from pull_medicine import pull_medicine
 from game_done import game_done_screen
 
 canvas = pygame.display.set_mode((1000, 600))
-text = [1, 50, 0, 100, 100, 100, 4, 100, 0]# text[8] = 被吃掉的螺絲數量??
+text = [1, 50, "", 100, 100, 100, 4, 100, 0]# text[8] = 被吃掉的螺絲數量??
 # text[0] is status, text[1] is energy, text[2] is bug, text[3] is oil92, 
 # text[4] is oil95, text[5] is oil98, text[6] is oilEngine, text[7] is screw
 furniture = [1, 2, 3, 4, 5]
@@ -97,13 +97,13 @@ class Robot():
         self.text_energy_rect = (20, 45)
         self.text_status = self.font.render("等級", True, (0, 0, 0))
         self.text_status_rect = (20, 20)
-        self.text_bug = self.font.render("bug", True, (0, 0, 0))
+        self.text_bug = self.font.render("", True, (0, 0, 0))
         self.text_bug_rect = (20, 70)
         self.num_energy = self.font.render("100", True, (0, 0, 0))
         self.num_energy_rect = (80, 45)
         self.num_status = self.font.render("1", True, (0, 0, 0))
         self.num_status_rect = (80, 20)
-        self.num_bug = self.font.render("0", True, (0, 0, 0))
+        self.num_bug = self.font.render("", True, (0, 0, 0))
         self.num_bug_rect = (80, 70)
         self.left_texts = [self.text_energy, self.text_status, self.text_bug, self.num_energy, self.num_status, self.num_bug]
         self.left_texts_rect = [self.text_energy_rect, self.text_status_rect, self.text_bug_rect, self.num_energy_rect, self.num_status_rect, self.num_bug_rect]
