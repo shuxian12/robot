@@ -1,7 +1,6 @@
 import pygame, sys, multiprocessing
 import subprocess
-import random, cv2
-import numpy as np
+import random
 import openai
 from typing import List
 # sys.path.insert(0, '../memory_game')
@@ -420,7 +419,7 @@ class Game():
                 garbageAD_num = -1
             
     def deal_with_text_input(self):
-        global vip666_used, newuser_used
+        global vip666_used, newuser_used, have_tv, have_carpet, have_chair, have_ac
         print("send msg")
         if self.user_input[:9] == "GiftCode ":
             print("Input Gift Code")
@@ -436,6 +435,12 @@ class Game():
                 print("Gift Code Correct", self.user_input[9:])
                 text[7] += 10
                 newuser_used = True
+            elif not newuser_used and self.user_input[9:] == "tk888":
+                print("Gift Code Correct", self.user_input[9:])
+                have_ac = True
+                have_carpet = True
+                have_chair = True
+                have_tv = True
         else:
             openai.api_key = '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'
             messages = []

@@ -8,12 +8,26 @@
 git clone https://github.com/shuxian12/robot.git
 ```
 
-### Setting up the environment
+### Setting up the environment (MacOS)
 
 ``` bash
 cd robot
+#若指令使用python3，輸入這行
 python3 -m venv robot
+#若指令使用python，輸入這行
+python -m venv robot
 source robot/bin/activate
+pip install -r requirements.txt
+```
+### Setting up the environment (Windows)
+
+``` bash
+cd robot
+#若指令使用python3，輸入這行
+python3 -m venv robot
+#若指令使用python，輸入這行
+python -m venv robot
+robot\Scripts\activate.bat
 pip install -r requirements.txt
 ```
 
@@ -23,7 +37,10 @@ pip install -r requirements.txt
 
 ``` bash
 cd robot/main_page.py
+#若指令使用python3，輸入這行
 python3 main.py
+#若指令使用python，輸入這行
+python main.py
 ```
 
 ## Description
