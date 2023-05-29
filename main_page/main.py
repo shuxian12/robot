@@ -188,7 +188,7 @@ class Robot():
         elif self.index_y == 0:
             self.dir_y = 0
         
-        global sickness
+        global sickness, pre_status
         if status == 1:
             canvas.blit(self.status1_img, (550 + self.index_x, 300 + self.index_y))
         elif status == 2:
@@ -202,8 +202,8 @@ class Robot():
             if self.sick() == False:
                 sickness = False
                 if text[0] < 3:
-                    text[0] = pre_status + 1
-                    pre_status = text[0] - 1
+                    pre_status = text[0]
+                    text[0] += 1
                 text[8] = 0
             
 
