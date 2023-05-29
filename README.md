@@ -1,31 +1,30 @@
-# robot
+# ROBOT
 ---
-
-## Installing
+## Installation
 
 ### Install code with git clone
     
-    ```bash
-    $ git clone https://github.com/shuxian12/robot.git
-    ```
+```
+git clone https://github.com/shuxian12/robot.git
+```
 
 ### Setting up the environment
 
-    ```bash
-    $ cd robot
-    $ python3 -m venv venv
-    $ source venv/bin/activate
-    $ pip install -r requirements.txt
-    ```
+```
+cd robot
+python3 -m venv robot
+source robot/bin/activate
+pip install -r requirements.txt
+```
 
 ## How to use
 
 ### Run the code
 
-    ```bash
-    $ cd robot/main_page.py
-    $ python3 main.py
-    ```
+``` bash
+cd robot/main_page.py
+python3 main.py
+```
 
 ## Description
 
