@@ -203,6 +203,7 @@ class Robot():
             if self.sick() == False:
                 sickness = False
                 text[0] = pre_status+1
+                text[8] = 0
             
 
     def drawFurniture(self, n):
@@ -530,7 +531,6 @@ class Game():
                         if text[3] > 0 and text[1] <= 95:
                             text[3] -= 1
                             text[1] += 5
-                            text[6] += 1
                         elif text[3] > 0 and text[1] < 100:
                             text[3] -= 1
                             text[1] = 100
@@ -709,6 +709,7 @@ class Game():
                 if text[7] >= 100 and text[6] >= 5 and text[0] <= 3:
                     if text[0] < 3:
                         print("upgrade")
+                        pre_status = text[0]
                         text[0] += 1
                         text[7] -= 100
                         text[6] -= 5
