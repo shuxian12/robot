@@ -261,9 +261,8 @@ class Store:
         pass
     def show_store(self):
         global have_ac,have_carpet,have_chair,have_tv,have_tvChannel
-        # path = '../shopping_mall/used_furniture.txt'
-        # f = open(path, 'a')
-        with subprocess.Popen(['python','../shopping_mall/shopping_class.py'],stdout=subprocess.PIPE) as proc:
+        input_money=str(text[7])
+        with subprocess.Popen(['python','../shopping_mall/shopping_class.py',input_money],stdout=subprocess.PIPE) as proc:
             self.output = proc.stdout.readlines()
             
             self.output.pop(0)
