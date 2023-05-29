@@ -51,12 +51,13 @@ def shoot(return_list):
     show_my_card = False
     bid = 0
     q = False
-    while True:    
+    while True:            
+        if q:
+            sleep(3)
+            exit()
+            
         for event in pygame.event.get():
-            # print(pygame.mouse.get_pos())
-            if q:
-                sleep(5)
-                exit()
+            # print(pygame.mouse.get_pos())                
             if event.type == pygame.QUIT:
                 exit()
             window.blit(pygame.transform.scale(pygame.image.load('../shoot/cards/background.png'),(800,600)),(0,0))
@@ -112,7 +113,7 @@ def shoot(return_list):
             if show_my_card:
                 window.blit(card_images[my_rand],(320,60))
                 pygame.draw.rect(window,(200,20,20),pygame.Rect(320,500,150,50))
-                window.blit(pygame.font.Font('../shoot/fonts/corbel.ttf',35).render('Restart',True,(20,20,20)),(340,510))
+                window.blit(pygame.font.Font('../shoot/fonts/GenSenRounded-M.ttc',35).render('遊戲結束',True,(0,0,0)),(326,510))
             clock.tick(60)
             pygame.display.flip()
     pygame.quit()

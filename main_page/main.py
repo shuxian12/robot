@@ -515,11 +515,11 @@ class Game():
             # game_done_screen.main(oil92, oil95, oil98, oilEngine, screw)
             return oil92, oil95, oil98, oilEngine, screw
         
-        def gamble_score(oil92 = 0, oil95= 0, oil98 = 0, oilEngine = 0, screw = 0): #獲得賭博遊戲分數，直接是要給的東西的數量
-            manager = multiprocessing.Manager()
-            p = multiprocessing.Process(target=game_done_screen.main, args=(oil92, oil95, oil98, oilEngine, screw))
-            p.start()
-            p.join()
+        # def gamble_score(oil92 = 0, oil95= 0, oil98 = 0, oilEngine = 0, screw = 0): #獲得賭博遊戲分數，直接是要給的東西的數量
+        #     manager = multiprocessing.Manager()
+        #     p = multiprocessing.Process(target=game_done_screen.main, args=(oil92, oil95, oil98, oilEngine, screw))
+        #     p.start()
+        #     p.join()
 
         if not sickness:
             global WINDOW, text, pre_status, garbageAD_num, garbageAD_watch

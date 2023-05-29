@@ -175,7 +175,7 @@ def gamble(return_list):
     show_dice = False
     q = False
     while True:
-        if q:
+        if q:            
             sleep(5)
             exit()
         if not show_dice:
@@ -192,6 +192,8 @@ def gamble(return_list):
             if (rand1+rand2+rand3)>=10:
                 window.blit(pygame.transform.scale(pygame.image.load(f'../gamble/骰子/1.png'),(35,50)),(147,110))
             window.blit(pygame.transform.scale(pygame.image.load(f'../gamble/骰子/{(rand1+rand2+rand3)%10}.png'),(35,50)),(182,110))
+            pygame.draw.rect(window,(255,255,255),pygame.Rect(100,250,600,150))
+            window.blit(pygame.font.Font('../shoot/fonts/GenSenRounded-M.ttc',60).render('遊戲結束',True,(0,0,0)),(290,300))
             q = True
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
