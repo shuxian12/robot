@@ -14,7 +14,7 @@ from pull_medicine import pull_medicine
 from game_done import game_done_screen
 
 canvas = pygame.display.set_mode((1000, 600))
-text = [1, 50, 0, 100, 100, 100, 4, 100, 0]# text[8] = 被吃掉的螺絲數量??
+text = [1, 50, "", 100, 100, 100, 4, 100, 0]# text[8] = 被吃掉的螺絲數量??
 # text[0] is status, text[1] is energy, text[2] is bug, text[3] is oil92, 
 # text[4] is oil95, text[5] is oil98, text[6] is oilEngine, text[7] is screw
 furniture = [1, 2, 3, 4, 5]
@@ -35,6 +35,8 @@ have_tvChannel=False
 
 vip666_used = False
 newuser_used = False
+
+sickness = False
 
 class Robot():
     def __init__(self):
@@ -97,13 +99,13 @@ class Robot():
         self.text_energy_rect = (20, 45)
         self.text_status = self.font.render("等級", True, (0, 0, 0))
         self.text_status_rect = (20, 20)
-        self.text_bug = self.font.render("bug", True, (0, 0, 0))
+        self.text_bug = self.font.render("", True, (0, 0, 0))
         self.text_bug_rect = (20, 70)
         self.num_energy = self.font.render("100", True, (0, 0, 0))
         self.num_energy_rect = (80, 45)
         self.num_status = self.font.render("1", True, (0, 0, 0))
         self.num_status_rect = (80, 20)
-        self.num_bug = self.font.render("0", True, (0, 0, 0))
+        self.num_bug = self.font.render("", True, (0, 0, 0))
         self.num_bug_rect = (80, 70)
         self.left_texts = [self.text_energy, self.text_status, self.text_bug, self.num_energy, self.num_status, self.num_bug]
         self.left_texts_rect = [self.text_energy_rect, self.text_status_rect, self.text_bug_rect, self.num_energy_rect, self.num_status_rect, self.num_bug_rect]
@@ -159,7 +161,7 @@ class Robot():
         for event in event_list:
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if 719 >= event.pos[0] >= 571 and 450 >= event.pos[1] >= 352:
-                    with subprocess.Popen(['python','..\game\pull_medicine.py'],stdout=subprocess.PIPE) as proc:
+                    with subprocess.Popen(['python','..\pull_medicine\pull_medicine.py'],stdout=subprocess.PIPE) as proc:
                         if len(proc.stdout.readlines()) == 3:
                             heal = random.randint(1,3)
                     if heal == 2:
@@ -187,6 +189,7 @@ class Robot():
         elif self.index_y == 0:
             self.dir_y = 0
         
+        global sickness
         if status == 1:
             canvas.blit(self.status1_img, (550 + self.index_x, 300 + self.index_y))
         elif status == 2:
@@ -196,7 +199,9 @@ class Robot():
         elif status == 4:
             canvas.blit(self.iron_img, (550, 300))
         elif status == 5:
+            sickness = True
             if self.sick() == False:
+                sickness = False
                 text[0] = pre_status+1
             
 
@@ -256,14 +261,18 @@ class Store:
         pass
     def show_store(self):
         global have_ac,have_carpet,have_chair,have_tv,have_tvChannel
-        # path = '../shopping_mall/used_furniture.txt'
-        # f = open(path, 'a')
-        with subprocess.Popen(['python','../shopping_mall/shopping_class.py'],stdout=subprocess.PIPE) as proc:
+        input_money=str(text[7])
+        input_ac=str(have_ac)
+        input_carpet=str(have_carpet)
+        input_chair=str(have_chair)
+        input_tv=str(have_tv)
+        with subprocess.Popen(['python','../shopping_mall/shopping_class.py',input_money,input_ac,input_carpet,input_chair,input_tv],stdout=subprocess.PIPE) as proc:
             self.output = proc.stdout.readlines()
             
             self.output.pop(0)
             self.output.pop(0)
             for out in self.output:
+                print(out)
                 if 'ac.png_top-up' in out.decode() and have_ac == False:
                     have_ac = True
                 elif 'ac' in out.decode() and have_ac == False:
@@ -292,17 +301,21 @@ class Store:
                 elif 'tvChannel' in out.decode() and have_tvChannel==False:
                     have_tvChannel=True
                     text[7]-=20
-                elif 'oil.png_top-up' in out.decode():
-                    text[random.choice([3,4,5])]+=10
-                elif 'oil.png' in out.decode():
-                    text[7]-=10
-                    text[random.choice([3,4,5])]+=10
+
                 elif 'oilEngine.jpg_top-up' in out.decode():    
                     text[6]+=3
                 elif 'oilEngine.jpg' in out.decode():
                     text[7]-=10
                     text[6]+=3
-                elif 'screw.png' in out.decode():
+                    
+                elif 'oil.png_top-up' in out.decode():
+                    text[random.choice([3,4,5])]+=10
+                elif 'oil' in out.decode():
+                    text[7]-=10
+                    text[random.choice([3,4,5])]+=10
+                
+                elif 'screw' in out.decode():
+                    print("yes")
                     text[7]+=2
 
 
@@ -496,7 +509,6 @@ class Game():
                 oil95 += add_oil95
                 oil98 += add_oil98
                 p = multiprocessing.Process(target=game_done_screen.main, args=(add_oil92, add_oil95, add_oil98, oil, screws))
-
             p.start()
             p.join(), p.terminate()
             # game_done_screen.main(oil92, oil95, oil98, oilEngine, screw)
@@ -508,201 +520,202 @@ class Game():
             p.start()
             p.join()
 
-        global WINDOW, text, pre_status, garbageAD_num, garbageAD_watch
-        for event in event_list:
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                # click oil button
-                if self.oil92.rect_x <= event.pos[0] <= self.oil92.rect_x + 30 and self.oil92.rect_y <= event.pos[1] <= self.oil92.rect_y + 30 and WINDOW == 1:
-                    print("reduce oil 92")
-                    if text[3] > 0 and text[1] <= 95:
-                        text[3] -= 1
-                        text[1] += 5
-                        text[6] += 1
-                    elif text[3] > 0 and text[1] < 100:
-                        text[3] -= 1
-                        text[1] = 100
-                    
-                elif self.oil95.rect_x <= event.pos[0] <= self.oil95.rect_x + 30 and self.oil95.rect_y <= event.pos[1] <= self.oil95.rect_y + 30 and WINDOW == 1:
-                    print("reduce oil 95")
-                    if text[4] > 0 and text[1] <= 90:
-                        text[4] -= 1
-                        text[1] += 10
-                    elif text[4] > 0 and text[1] < 100:
-                        text[4] -= 1
-                        text[1] = 100
+        if not sickness:
+            global WINDOW, text, pre_status, garbageAD_num, garbageAD_watch
+            for event in event_list:
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    # click oil button
+                    if self.oil92.rect_x <= event.pos[0] <= self.oil92.rect_x + 30 and self.oil92.rect_y <= event.pos[1] <= self.oil92.rect_y + 30 and WINDOW == 1:
+                        print("reduce oil 92")
+                        if text[3] > 0 and text[1] <= 95:
+                            text[3] -= 1
+                            text[1] += 5
+                            text[6] += 1
+                        elif text[3] > 0 and text[1] < 100:
+                            text[3] -= 1
+                            text[1] = 100
+                        
+                    elif self.oil95.rect_x <= event.pos[0] <= self.oil95.rect_x + 30 and self.oil95.rect_y <= event.pos[1] <= self.oil95.rect_y + 30 and WINDOW == 1:
+                        print("reduce oil 95")
+                        if text[4] > 0 and text[1] <= 90:
+                            text[4] -= 1
+                            text[1] += 10
+                        elif text[4] > 0 and text[1] < 100:
+                            text[4] -= 1
+                            text[1] = 100
 
-                elif self.oil98.rect_x <= event.pos[0] <= self.oil98.rect_x + 30 and self.oil98.rect_y <= event.pos[1] <= self.oil98.rect_y + 30 and WINDOW == 1:
-                    print("reduce oil 98")
-                    if text[5] > 0 and text[1] <= 85:
-                        text[5] -= 1
-                        text[1] += 15
-                    elif text[5] > 0 and text[1] < 100:
-                        text[5] -= 1
-                        text[1] = 100
+                    elif self.oil98.rect_x <= event.pos[0] <= self.oil98.rect_x + 30 and self.oil98.rect_y <= event.pos[1] <= self.oil98.rect_y + 30 and WINDOW == 1:
+                        print("reduce oil 98")
+                        if text[5] > 0 and text[1] <= 85:
+                            text[5] -= 1
+                            text[1] += 15
+                        elif text[5] > 0 and text[1] < 100:
+                            text[5] -= 1
+                            text[1] = 100
 
-                elif self.oilEngine.rect_x <= event.pos[0] <= self.oilEngine.rect_x + 100 and self.oilEngine.rect_y <= event.pos[1] <= self.oilEngine.rect_y + 100 and WINDOW == 1:
-                    print("reduce oil Engine")
-                    if text[6] > 0:
-                        text[6] -= 1
+                    elif self.oilEngine.rect_x <= event.pos[0] <= self.oilEngine.rect_x + 100 and self.oilEngine.rect_y <= event.pos[1] <= self.oilEngine.rect_y + 100 and WINDOW == 1:
+                        print("reduce oil Engine")
+                        if text[6] > 0:
+                            text[6] -= 1
+                            text[1] -= 10
+
+                    elif self.screw.rect_x <= event.pos[0] <= self.screw.rect_x + 100 and self.screw.rect_y <= event.pos[1] <= self.screw.rect_y + 100 and WINDOW == 1:
+                        print("reduce screw")
+                        if text[7] > 0 and text[8] < 5:
+                            text[7] -= 1
+                            text[8] += 1
+                        if text[8] == 5:
+                            pre_status = text[0]
+                            text[0] = 5
+
+                    #store button
+                    elif self.storeBtn.rect_x <= event.pos[0] <= self.storeBtn.rect_x + 100 and self.storeBtn.rect_y <= event.pos[1] <= self.storeBtn.rect_y + 100 and WINDOW == 1:
+                        print("click store")
+                        Store().show_store()
+                    # click game button
+                    # click ac for gamble game
+                    elif have_ac and self.robot.ac_img_rect[0] <= event.pos[0] <= self.robot.ac_img_rect[0] + 200 and self.robot.ac_img_rect[1] + 50 <= event.pos[1] <= self.robot.ac_img_rect[1] + 170 and furniture[0] == 1 and WINDOW == 1:
+                        print("click ac")
                         text[1] -= 10
 
-                elif self.screw.rect_x <= event.pos[0] <= self.screw.rect_x + 100 and self.screw.rect_y <= event.pos[1] <= self.screw.rect_y + 100 and WINDOW == 1:
-                    print("reduce screw")
-                    if text[7] > 0 and text[8] < 5:
-                        text[7] -= 1
-                        text[8] += 1
-                    if text[8] == 5:
-                        pre_status = text[0]
-                        text[0] = 5
+                        manager = multiprocessing.Manager()
+                        return_list = manager.list()
+                        p = multiprocessing.Process(target=gamble.gamble, args=(return_list,))
+                        p.start()
+                        p.join()
+                        print(return_list)
+                        if len(return_list) == 1:
+                            text[3], text[4], text[5], text[6], text[7] = add_score(text[3], text[4], text[5], text[6], text[7], return_list[0])
+                        # lines = []
+                        # with subprocess.Popen(['python','../game/gamble.py'],stdout=subprocess.PIPE) as proc:
+                        #     lines = proc.stdout.readlines()
+                        # if len(lines) >= 3:
+                        #     for i in range(2,len(lines)):
+                        #         print(int(np.floor(int(lines[i].decode('utf-8').strip('\r\n')))))
+                        #         text[7] += int(np.floor(int(lines[i].decode('utf-8').strip('\r\n'))))
 
-                #store button
-                elif self.storeBtn.rect_x <= event.pos[0] <= self.storeBtn.rect_x + 100 and self.storeBtn.rect_y <= event.pos[1] <= self.storeBtn.rect_y + 100 and WINDOW == 1:
-                    print("click store")
-                    Store().show_store()
-                # click game button
-                # click ac for gamble game
-                elif self.robot.ac_img_rect[0] <= event.pos[0] <= self.robot.ac_img_rect[0] + 200 and self.robot.ac_img_rect[1] + 50 <= event.pos[1] <= self.robot.ac_img_rect[1] + 170 and furniture[0] == 1 and WINDOW == 1:
-                    print("click ac")
-                    text[1] -= 10
+                    # click carpet for memory game
+                    elif have_carpet and self.robot.carpet_img_rect[0] + 300 <= event.pos[0] <= self.robot.carpet_img_rect[0] + 800 and self.robot.carpet_img_rect[1] + 130 <= event.pos[1] <= self.robot.carpet_img_rect[1] + 350 and furniture[1] == 2:
+                        text[1] -= 10
+                        print("click carpet")
 
-                    manager = multiprocessing.Manager()
-                    return_list = manager.list()
-                    p = multiprocessing.Process(target=gamble.gamble, args=(return_list,))
-                    p.start()
-                    p.join()
-                    print(return_list)
-                    if len(return_list) == 1:
-                        text[3], text[4], text[5], text[6], text[7] = add_score(text[3], text[4], text[5], text[6], text[7], return_list[0])
-                    lines = []
-                    with subprocess.Popen(['python','../game/gamble.py'],stdout=subprocess.PIPE) as proc:
-                        lines = proc.stdout.readlines()
-                    if len(lines) >= 3:
-                        for i in range(2,len(lines)):
-                            print(int(np.floor(int(lines[i].decode('utf-8').strip('\r\n')))))
-                            text[7] += int(np.floor(int(lines[i].decode('utf-8').strip('\r\n'))))
+                        print("==== socre ===\n", text[3], text[4], text[5], text[6], text[7])
+                        manager = multiprocessing.Manager()
+                        return_dict = manager.dict()
+                        p = multiprocessing.Process(target=memory_game.main, args=(return_dict,), daemon=True)
+                        p.start(), p.join()
+                        p.terminate(), p.join()
+                        if len(return_dict.values()) == 1:
+                            win = return_dict.values()[0]
+                            if win == 1:
+                                # randomly increase the num of oilEngine, screw, 92, 95, 98
+                                text[3], text[4], text[5], text[6], text[7] = add_score(text[3], text[4], text[5], text[6], text[7])
+                        print("==== after, socre ===\n", text[3], text[4], text[5], text[6], text[7])
 
-                # click carpet for memory game
-                elif self.robot.carpet_img_rect[0] + 300 <= event.pos[0] <= self.robot.carpet_img_rect[0] + 800 and self.robot.carpet_img_rect[1] + 130 <= event.pos[1] <= self.robot.carpet_img_rect[1] + 350 and furniture[1] == 2:
-                    text[1] -= 10
-                    print("click carpet")
+                    # click chair for shoot game 射龍門
+                    elif have_chair and self.robot.chair_img_rect[0] <= event.pos[0] <= self.robot.chair_img_rect[0] + 200 and self.robot.chair_img_rect[1] <= event.pos[1] <= self.robot.chair_img_rect[1] + 200 and furniture[2] == 3 and WINDOW == 1:
+                        print("click chair")
+                        text[1] -= 10
+    #                     lines = []
+    #                     with subprocess.Popen(['python','../game/shoot.py'],stdout=subprocess.PIPE) as proc:
+    #                         lines = proc.stdout.readlines()
+    #                     if len(lines) >= 3:
+    #                         for i in range(2,len(lines)):
+    #                             text[7] += int(lines[i].decode('utf-8').strip('\r\n'))
+                        # 需要先將分數轉換成數字，再傳入gamble_score
+                        # gamble_score(oil92, oil95, oil98, oilEngine, screw) --> 會直接顯示視窗
 
-                    print("==== socre ===\n", text[3], text[4], text[5], text[6], text[7])
-                    manager = multiprocessing.Manager()
-                    return_dict = manager.dict()
-                    p = multiprocessing.Process(target=memory_game.main, args=(return_dict,), daemon=True)
-                    p.start(), p.join()
-                    p.terminate(), p.join()
-                    if len(return_dict.values()) == 1:
-                        win = return_dict.values()[0]
-                        if win == 1:
-                            # randomly increase the num of oilEngine, screw, 92, 95, 98
-                            text[3], text[4], text[5], text[6], text[7] = add_score(text[3], text[4], text[5], text[6], text[7])
-                    print("==== after, socre ===\n", text[3], text[4], text[5], text[6], text[7])
+                        manager = multiprocessing.Manager()
+                        return_list = manager.list()
+                        p = multiprocessing.Process(target=shoot.shoot, args=(return_list,))
+                        p.start()
+                        p.join()
+                        print(return_list)
+                        if len(return_list) == 1:
+                            text[3], text[4], text[5], text[6], text[7] = add_score(text[3], text[4], text[5], text[6], text[7], return_list[0])
 
-                # click chair for shoot game 射龍門
-                elif self.robot.chair_img_rect[0] <= event.pos[0] <= self.robot.chair_img_rect[0] + 200 and self.robot.chair_img_rect[1] <= event.pos[1] <= self.robot.chair_img_rect[1] + 200 and furniture[2] == 3 and WINDOW == 1:
-                    print("click chair")
-                    text[1] -= 10
-#                     lines = []
-#                     with subprocess.Popen(['python','../game/shoot.py'],stdout=subprocess.PIPE) as proc:
-#                         lines = proc.stdout.readlines()
-#                     if len(lines) >= 3:
-#                         for i in range(2,len(lines)):
-#                             text[7] += int(lines[i].decode('utf-8').strip('\r\n'))
-                    # 需要先將分數轉換成數字，再傳入gamble_score
-                    # gamble_score(oil92, oil95, oil98, oilEngine, screw) --> 會直接顯示視窗
+                    # click tv for pac-man
+                    elif have_tv and self.robot.tv_img_rect[0] <= event.pos[0] <= self.robot.tv_img_rect[0] + 200 and self.robot.tv_img_rect[1] + 20 <= event.pos[1] <= self.robot.tv_img_rect[1] + 150 and furniture[3] == 4 and WINDOW == 1:
+                        print("click tv")
+                        text[1] -= 10
 
-                    manager = multiprocessing.Manager()
-                    return_list = manager.list()
-                    p = multiprocessing.Process(target=shoot.shoot, args=(return_list,))
-                    p.start()
-                    p.join()
-                    print(return_list)
-                    if len(return_list) == 1:
-                        text[3], text[4], text[5], text[6], text[7] = add_score(text[3], text[4], text[5], text[6], text[7], return_list[0])
-
-                # click tv for pac-man
-                elif self.robot.tv_img_rect[0] <= event.pos[0] <= self.robot.tv_img_rect[0] + 200 and self.robot.tv_img_rect[1] + 20 <= event.pos[1] <= self.robot.tv_img_rect[1] + 150 and furniture[3] == 4 and WINDOW == 1:
-                    print("click tv")
-                    text[1] -= 10
-
-                    print("==== socre ===\n", text[3], text[4], text[5], text[6], text[7])
-                    manager = multiprocessing.Manager()
-                    return_dict = manager.dict()
-                    p = multiprocessing.Process(target=pacman.pacman, args=(return_dict,), daemon=True)
-                    p.start(), p.join()
-                    p.terminate(), p.join()
-                    if len(return_dict.values()) == 1:
-                        win = return_dict.values()[0]
-                        if win == 1:
-                            # randomly increase the num of oilEngine, screw, 92, 95, 98
-                            text[3], text[4], text[5], text[6], text[7] = add_score(text[3], text[4], text[5], text[6], text[7])
-                    print("==== after, socre ===\n", text[3], text[4], text[5], text[6], text[7])
+                        print("==== socre ===\n", text[3], text[4], text[5], text[6], text[7])
+                        manager = multiprocessing.Manager()
+                        return_dict = manager.dict()
+                        p = multiprocessing.Process(target=pacman.pacman, args=(return_dict,), daemon=True)
+                        p.start(), p.join()
+                        p.terminate(), p.join()
+                        if len(return_dict.values()) == 1:
+                            win = return_dict.values()[0]
+                            if win == 1:
+                                # randomly increase the num of oilEngine, screw, 92, 95, 98
+                                text[3], text[4], text[5], text[6], text[7] = add_score(text[3], text[4], text[5], text[6], text[7])
+                        print("==== after, socre ===\n", text[3], text[4], text[5], text[6], text[7])
 
 
-                # click garbage
-                elif self.robot.garbage1_img_rect[0] <= event.pos[0] <= self.robot.garbage1_img_rect[0] + 80 and self.robot.garbage1_img_rect[1] <= event.pos[1] <= self.robot.garbage1_img_rect[1] + 80 and WINDOW == 1:
-                    print("click garbage1")
-                    WINDOW = 2
-                    garbageAD_num = 0
-                    self.adVideo.num_ad = -1
-                    garbageAD_watch = -1
-                elif self.robot.garbage2_img_rect[0] <= event.pos[0] <= self.robot.garbage2_img_rect[0] + 90 and self.robot.garbage2_img_rect[1] <= event.pos[1] <= self.robot.garbage2_img_rect[1] + 60 and WINDOW == 1:
-                    print("click garbage2")
-                    WINDOW = 2
-                    garbageAD_num = 1
-                    self.adVideo.num_ad = -1
-                    garbageAD_watch = -1
-                elif self.robot.garbage3_img_rect[0] <= event.pos[0] <= self.robot.garbage3_img_rect[0] + 80 and self.robot.garbage3_img_rect[1] <= event.pos[1] <= self.robot.garbage3_img_rect[1] + 80 and WINDOW == 1:
-                    print("click garbage3")
-                    WINDOW = 2
-                    garbageAD_num = 2
-                    self.adVideo.num_ad = -1
-                    garbageAD_watch = -1
-                elif self.robot.garbage4_img_rect[0] <= event.pos[0] <= self.robot.garbage4_img_rect[0] + 90 and self.robot.garbage4_img_rect[1] <= event.pos[1] <= self.robot.garbage4_img_rect[1] + 60 and WINDOW == 1:
-                    print("click garbage4")
-                    WINDOW = 2
-                    garbageAD_num = 3
-                    self.adVideo.num_ad = -1
-                    garbageAD_watch = -1
-                elif self.garbageAD_yes_rect[0] <= event.pos[0] <= self.garbageAD_yes_rect[0] + 150 and self.garbageAD_yes_rect[1] <= event.pos[1] <= self.garbageAD_yes_rect[1] + 50 and WINDOW == 2:
-                    print("click yes")
-                    garbageAD_watch = 0
-                elif self.garbageAD_no_rect[0] <= event.pos[0] <= self.garbageAD_no_rect[0] + 150 and self.garbageAD_no_rect[1] <= event.pos[1] <= self.garbageAD_no_rect[1] + 50 and WINDOW == 2:
-                    print("click no")
-                    garbageAD_watch = 1
+                    # click garbage
+                    elif self.robot.garbage1_img_rect[0] <= event.pos[0] <= self.robot.garbage1_img_rect[0] + 80 and self.robot.garbage1_img_rect[1] <= event.pos[1] <= self.robot.garbage1_img_rect[1] + 80 and WINDOW == 1:
+                        print("click garbage1")
+                        WINDOW = 2
+                        garbageAD_num = 0
+                        self.adVideo.num_ad = -1
+                        garbageAD_watch = -1
+                    elif self.robot.garbage2_img_rect[0] <= event.pos[0] <= self.robot.garbage2_img_rect[0] + 90 and self.robot.garbage2_img_rect[1] <= event.pos[1] <= self.robot.garbage2_img_rect[1] + 60 and WINDOW == 1:
+                        print("click garbage2")
+                        WINDOW = 2
+                        garbageAD_num = 1
+                        self.adVideo.num_ad = -1
+                        garbageAD_watch = -1
+                    elif self.robot.garbage3_img_rect[0] <= event.pos[0] <= self.robot.garbage3_img_rect[0] + 80 and self.robot.garbage3_img_rect[1] <= event.pos[1] <= self.robot.garbage3_img_rect[1] + 80 and WINDOW == 1:
+                        print("click garbage3")
+                        WINDOW = 2
+                        garbageAD_num = 2
+                        self.adVideo.num_ad = -1
+                        garbageAD_watch = -1
+                    elif self.robot.garbage4_img_rect[0] <= event.pos[0] <= self.robot.garbage4_img_rect[0] + 90 and self.robot.garbage4_img_rect[1] <= event.pos[1] <= self.robot.garbage4_img_rect[1] + 60 and WINDOW == 1:
+                        print("click garbage4")
+                        WINDOW = 2
+                        garbageAD_num = 3
+                        self.adVideo.num_ad = -1
+                        garbageAD_watch = -1
+                    elif self.garbageAD_yes_rect[0] <= event.pos[0] <= self.garbageAD_yes_rect[0] + 150 and self.garbageAD_yes_rect[1] <= event.pos[1] <= self.garbageAD_yes_rect[1] + 50 and WINDOW == 2:
+                        print("click yes")
+                        garbageAD_watch = 0
+                    elif self.garbageAD_no_rect[0] <= event.pos[0] <= self.garbageAD_no_rect[0] + 150 and self.garbageAD_no_rect[1] <= event.pos[1] <= self.garbageAD_no_rect[1] + 50 and WINDOW == 2:
+                        print("click no")
+                        garbageAD_watch = 1
 
-                # click textbox
-                elif ((self.robot.textbox_send_rect[0] <= event.pos[0] <= self.robot.textbox_send_rect[0] + 85 and self.robot.textbox_send_rect[1] <= event.pos[1] <= self.robot.textbox_send_rect[1] + 20 and WINDOW == 1) or (event.type == pygame.KEYDOWN and event.key == pygame.K_RETURN)):
-                    self.deal_with_text_input()
-
-                if self.robot.textbox_rect[0] <= event.pos[0] <= self.robot.textbox_rect[0] + 550 and self.robot.textbox_rect[1] <= event.pos[1] <= self.robot.textbox_rect[1] + 28 and WINDOW == 1:
-                    self.textbox_active = True
-                    self.user_input = ""
-                else:
-                    self.textbox_active = False
-
-            if event.type == pygame.KEYDOWN:
-                if self.textbox_active == True:
-                    if event.key == pygame.K_BACKSPACE:
-                        self.user_input = self.user_input[:-1]
-                    elif event.key == pygame.K_RETURN:
+                    # click textbox
+                    elif ((self.robot.textbox_send_rect[0] <= event.pos[0] <= self.robot.textbox_send_rect[0] + 85 and self.robot.textbox_send_rect[1] <= event.pos[1] <= self.robot.textbox_send_rect[1] + 20 and WINDOW == 1) or (event.type == pygame.KEYDOWN and event.key == pygame.K_RETURN)):
                         self.deal_with_text_input()
-                    else:
-                        if len(self.user_input) <= 36:
-                            self.user_input += event.unicode
 
-            # check status. # text[0] is status, text[6] is oilEngine, text[7] is screw
-            if text[7] >= 100 and text[6] >= 5 and text[0] <= 3:
-                if text[0] < 3:
-                    print("upgrade")
-                    text[0] += 1
-                    text[7] -= 100
-                    text[6] -= 5
-            elif text[1] == 0:          # energy == 0 -> game over
-                pre_status = text[0]
-                text[0] = 4
-                # end
+                    if self.robot.textbox_rect[0] <= event.pos[0] <= self.robot.textbox_rect[0] + 550 and self.robot.textbox_rect[1] <= event.pos[1] <= self.robot.textbox_rect[1] + 28 and WINDOW == 1:
+                        self.textbox_active = True
+                        self.user_input = ""
+                    else:
+                        self.textbox_active = False
+
+                if event.type == pygame.KEYDOWN:
+                    if self.textbox_active == True:
+                        if event.key == pygame.K_BACKSPACE:
+                            self.user_input = self.user_input[:-1]
+                        elif event.key == pygame.K_RETURN:
+                            self.deal_with_text_input()
+                        else:
+                            if len(self.user_input) <= 36:
+                                self.user_input += event.unicode
+
+                # check status. # text[0] is status, text[6] is oilEngine, text[7] is screw
+                if text[7] >= 100 and text[6] >= 5 and text[0] <= 3:
+                    if text[0] < 3:
+                        print("upgrade")
+                        text[0] += 1
+                        text[7] -= 100
+                        text[6] -= 5
+                elif text[1] == 0:          # energy == 0 -> game over
+                    pre_status = text[0]
+                    text[0] = 4
+                    # end
 
 class AdVideo():
     def __init__(self) -> None:

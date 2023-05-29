@@ -1,8 +1,8 @@
-
 import pygame
 from pygame.locals import QUIT
 import random,cv2
 import re
+import sys
 
 
 pygame.init()
@@ -15,9 +15,10 @@ window_surface = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT ))
 
 window_surface.fill(BG)
 class Shopping_mall():
-    def __init__(self):
+    def __init__(self,money,ac,carpet,chair,tv):
         
             #商品
+        self.money=money
         self.square_color = (254, 250, 224)
         self.square_width_color=(212,163,115)
         self.list_img=["ac.png","carpet.png","oil.png",
@@ -28,6 +29,9 @@ class Shopping_mall():
         self.list_button=["按鈕_廣告.png","按鈕_螺絲1.png","按鈕_儲值.png",
                           "按鈕_更新商品.png","exit.png","ok.png"]
         self.commonly_used=["screw.png","bg_4.jpg"]
+        self.furniture_state=[ac,carpet,chair,tv]
+        self.furniture_name=["ac","carpet","chair","tv"]
+        #print(self.furniture_state)
         
         
         self.flag_4=0
@@ -87,6 +91,8 @@ class Shopping_mall():
         #是否關閉通知
         self.notice_flag=0
         self.good_name=""
+
+        self.draw_money_num()
       
 
     def draw_rec(self,center_x,center_y):#圖片背景
@@ -143,8 +149,22 @@ class Shopping_mall():
         self.draw_button_1(filepath_head+self.list_button[3],self.button_update_x,self.button_update_y,self.button_update_w,self.button_update_h)
         #離開
         self.draw_button_1(filepath_head+self.list_button[4],self.button_exit_x,self.button_exit_y,self.button_exit_w,self.button_exit_h)
-
-    def draw_notice(self,goods):
+    
+    def draw_money_num(self):
+        filepath_head="../shopping_mall/picture/"
+        image = pygame.image.load(filepath_head+self.commonly_used[0])
+        image = pygame.transform.scale(image, (60, 60))
+        window_surface.blit(image, (680, 10))
+        #字
+        font = pygame.font.Font("../shopping_mall/font/kaiu.ttf", 25)
+        text = "*"+str(self.money)
+        
+        text_surface = font.render(text, True,BLACK)
+        text_rect = text_surface.get_rect()
+        text_rect.center = (760,40)
+        window_surface.blit(text_surface, text_rect)
+    
+    def draw_notice(self,goods,money_enough,return_goods):
 
         
         pygame.draw.rect(window_surface, (255,175,204), (195 ,195, 410, 210))
@@ -154,17 +174,24 @@ class Shopping_mall():
         window_surface.blit(image, (330, 320))
 
         font = pygame.font.Font("../shopping_mall/font/kaiu.ttf", 25)
-        if goods=="screw":
-            text = "你已獲得"+goods+"*2"
+        if money_enough==1:#夠錢
+            if goods=="screw":
+                text = "你已獲得"+goods+"*2"
+            else:
+                text = "你已獲得"+goods
+            print(return_goods)
+        elif money_enough==2:#已擁有
+             text="你已經買過了啦"
         else:
-             text = "你已獲得"+goods
+             text="你的錢不夠QQ 嗚嗚"
         text_surface = font.render(text, True,(255,175,204))
         text_rect = text_surface.get_rect()
         text_rect.center = (330,250)
         window_surface.blit(text_surface, text_rect)
         
 
-    def click_event1_video(self):
+    def click_event1_video(self,input):
+        self.money=self.money+input
         self.get_video()
         self.get_sound()
         window_surface.fill(BLACK)
@@ -176,50 +203,91 @@ class Shopping_mall():
     def click_event2_buy(self):
         self.update_notice=1
         str_good =self.list_img[self.goods1]
+        sale=self.list_buy_button[self.goods1].replace("button_","")
+        sale=sale.replace(".png","")
         if str_good.find(".png")!=-1:
              str_good=str_good.replace(".png","")
         elif str_good.find(".jpg")!=-1:
              str_good=str_good.replace(".jpg","")
-        self.draw_notice(str_good)
-        # for i in self.list_img:
-        #     if self.list_img[self.goods1]==i:
-        print(self.list_img[self.goods1])
-
-        #bug買東西
-         #看要return 甚麼參數給家具
+             
+        money_enough=2
+        for i in range(len(self.furniture_name)):
+            if str_good==self.furniture_name[i] and self.furniture_state[i]=='False':#確定還沒買
+                sale=int(sale)
+                if self.money>=sale:
+                    self.money=self.money-sale
+                    money_enough=1
+                    self.furniture_state[i]='True'
+                else:
+                    money_enough=0
+        if str_good=="oil" or str_good=="oilEngine":
+            sale=int(sale)
+            if self.money>=sale:
+                    self.money=self.money-sale
+                    money_enough=1
+                    
+            else:
+                    money_enough=0
+        self.draw_notice(str_good,money_enough,self.list_img[self.goods1])
         
          
     def click_event3_buy(self):
         str_good =self.list_img[self.goods2]
+        sale=self.list_buy_button[self.goods2].replace("button_","")
+        sale=sale.replace(".png","")
         if str_good.find(".png")!=-1:
             str_good=str_good.replace(".png","")
+          
         elif str_good.find(".jpg")!=-1:
             str_good=str_good.replace(".jpg","")
-        self.draw_notice(str_good)
-        # for i in self.list_img:
-        #     if self.list_img[self.goods2]==i:
-        print(self.list_img[self.goods2])
+        money_enough=2
+        for i in range(len(self.furniture_name)):
+            if str_good==self.furniture_name[i] and self.furniture_state[i]=='False':#確定還沒買
+                sale=int(sale)
+                if self.money>=sale:
+                    self.money=self.money-sale
+                    money_enough=1
+                    self.furniture_state[i]='True'
+                else:
+                    money_enough=0
+        if str_good=="oil" or str_good=="oilEngine":
+            sale=int(sale)
+            if self.money>=sale:
+                    self.money=self.money-sale
+                    money_enough=1
+                    
+            else:
+                    money_enough=0
+        self.draw_notice(str_good,money_enough,self.list_img[self.goods2])
                  
         
         #bug買東西 #看要return 甚麼參數給家具
     def click_event4_web(self):
-
+        
         str_good =self.list_img[self.goods3]
         if str_good.find(".png")!=-1:
              str_good=str_good.replace(".png","")
         elif str_good.find(".jpg")!=-1:
              str_good=str_good.replace(".jpg","")
-        self.draw_notice(str_good)
-        # for i in self.list_img:
-        #     if self.list_img[self.goods3]==i:
-        print(self.list_img[self.goods3]+"_top-up")
-                 
-        #儲值
+        
+        
         import webbrowser, threading
         def open_web():
             webbrowser.open('http://127.0.0.1:5000')
         thread2 = threading.Thread(target=open_web, )
         thread2.run()
+        money_enough=2
+        for i in range(len(self.furniture_name)):
+            if str_good==self.furniture_name[i] and self.furniture_state[i]=='False':#確定還沒買
+                money_enough=1
+                print("if 1")
+                
+                self.furniture_state[i]='True'
+                
+        if str_good=="oil" or str_good=="oilEngine":
+            money_enough=1
+            print("if 3")
+        self.draw_notice(str_good,money_enough,self.list_img[self.goods3]+"_top-up")
 
     def click_event5_update_goods(self):
 
@@ -261,13 +329,15 @@ class Shopping_mall():
             self.draw_rec(self.img_x_right,self.img_y_down)
             self.draw_img(update_img) #不用更新圖片
             self.draw_button()
+            self.draw_money_num()
             if update_notice==1:
-                self.draw_notice(goods)#看完影片買螺絲之後，要更新公告
+                
+                self.draw_notice(goods,1,goods)#看完影片買螺絲之後，要更新公告
 
-def main():
+def main(money,ac,carpet,chair,tv):
     pygame.init()
     pygame.display.set_caption('shopping_mall')
-    shopping_mall=Shopping_mall()
+    shopping_mall=Shopping_mall(money,ac,carpet,chair,tv)
     running=True
     clock = pygame.time.Clock()
     
@@ -288,9 +358,9 @@ def main():
                #影片事件
                 if shopping_mall.button_x_left<= mouse_x <= shopping_mall.button_x_left+shopping_mall.button_w \
                     and shopping_mall.button_y_up<= mouse_y <= shopping_mall.button_y_up+shopping_mall.button_h:
-                    print(shopping_mall.commonly_used[0])
+                    #print(shopping_mall.commonly_used[0])
                     shopping_mall.update_notice=1
-                    shopping_mall.click_event1_video()
+                    shopping_mall.click_event1_video(2)
                     shopping_mall.update_img=0
                     shopping_mall.good_name="screw"
                     shopping_mall.notice_flag=1
@@ -315,7 +385,7 @@ def main():
                 #更新商品事件
                 if shopping_mall.button_update_x<= mouse_x <= shopping_mall.button_update_x+shopping_mall.button_update_w \
                     and shopping_mall.button_update_y<= mouse_y <= shopping_mall.button_update_y+shopping_mall.button_update_h:
-                        shopping_mall.click_event1_video()
+                        shopping_mall.click_event1_video(0)
                         shopping_mall.update_img=1
                         shopping_mall.update_notice=0
                         shopping_mall.good_name=""
@@ -349,4 +419,9 @@ def main():
   
 
 if __name__ == '__main__':
-    main()
+    money=int(sys.argv[1])
+    input_ac=sys.argv[2]
+    input_carpet=sys.argv[3]
+    input_chair=sys.argv[4]
+    input_tv=sys.argv[5]
+    main(money,input_ac,input_carpet,input_chair,input_tv)
