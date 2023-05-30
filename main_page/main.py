@@ -21,12 +21,13 @@ furniture = [1, 2, 3, 4, 5]
 garbage = [0, 0, 0, 0]
 pre_status = 1
 WINDOW = 1
+STONE_EVENT = pygame.USEREVENT + 1
 # ticks = pygame.time.get_ticks()
 # ad_ticks = pygame.time.get_ticks()
 garbageAD_num = 0
 garbageAD_watch = -1
 FPS = 60
-
+stone = False
 have_ac=False
 have_carpet=False
 have_chair=False
@@ -190,7 +191,7 @@ class Robot():
         elif self.index_y == 0:
             self.dir_y = 0
         
-        global sickness, pre_status
+        global sickness, pre_status, stone
         if status == 1:
             canvas.blit(self.status1_img, (550 + self.index_x, 300 + self.index_y))
         elif status == 2:
@@ -199,6 +200,10 @@ class Robot():
             canvas.blit(self.status3_img, (550 + self.index_x, 200 + self.index_y))
         elif status == 4:
             canvas.blit(self.iron_img, (550, 300))
+            if not stone:
+                pygame.time.set_timer(STONE_EVENT, 5000, loops=1)
+                pygame.time.set_timer(pygame.USEREVENT, millis=17000, loops=1)
+            stone = True
         elif status == 5:
             sickness = True
             if self.sick() == False:
@@ -644,12 +649,12 @@ class Game():
                     elif have_chair and self.robot.chair_img_rect[0] <= event.pos[0] <= self.robot.chair_img_rect[0] + 200 and self.robot.chair_img_rect[1] <= event.pos[1] <= self.robot.chair_img_rect[1] + 200 and furniture[2] == 3 and WINDOW == 1:
                         print("click chair")
                         text[1] -= 10
-    #                     lines = []
-    #                     with subprocess.Popen(['python','../game/shoot.py'],stdout=subprocess.PIPE) as proc:
-    #                         lines = proc.stdout.readlines()
-    #                     if len(lines) >= 3:
-    #                         for i in range(2,len(lines)):
-    #                             text[7] += int(lines[i].decode('utf-8').strip('\r\n'))
+                        # lines = []
+                        # with subprocess.Popen(['python','../game/shoot.py'],stdout=subprocess.PIPE) as proc:
+                        #     lines = proc.stdout.readlines()
+                        # if len(lines) >= 3:
+                        #     for i in range(2,len(lines)):
+                        #         text[7] += int(lines[i].decode('utf-8').strip('\r\n'))
                         # 需要先將分數轉換成數字，再傳入gamble_score
                         # gamble_score(oil92, oil95, oil98, oilEngine, screw) --> 會直接顯示視窗
 
@@ -743,7 +748,7 @@ class Game():
                         text[6] -= 5
                     else:
                         break
-                if text[1] == 0:          # energy == 0 -> game over
+                if text[1] == 0 or text[7] < 0:          # energy == 0 -> game over
                     pre_status = text[0]
                     text[0] = 4
                     # end
@@ -752,14 +757,13 @@ class Game():
                     self.get_sound()
                     canvas.fill((0,0,0))
                     self.play_vedio = True
-                    pygame.time.set_timer(pygame.USEREVENT, millis=11000, loops=1)
+                    pygame.time.set_timer(pygame.USEREVENT, millis=13000, loops=1)
 
 class AdVideo():
     def __init__(self) -> None:
         global ad_ticks
         self.ticks = ad_ticks
         self.fps = 60
-        self.cap = cv2.VideoCapture(r"ad/ad.mov")
         self.num_ad = -1
         self.end = False
         self.ad0_img = pygame.image.load(r"ad/ad1.jpg")
@@ -788,7 +792,7 @@ class AdVideo():
         success, img = self.cap.read()
         if success:
             img = cv2.resize(img,(337, 600))
-            canvas.blit(pygame.image.frombuffer(img.tobytes(), self.shape, 'BGR'), (0, 50))
+            canvas.blit(pygame.image.frombuffer(img.tobytes(), (337, 600), 'BGR'), self.ad_img_rect)
         else:
             self.end = True
         # ad_list = [self.ad0_img, self.ad1_img, self.ad2_img, self.ad3_img, self.ad4_img, self.ad5_img, self.ad6_img, self.ad7_img, self.ad8_img, self.ad9_img]
@@ -804,8 +808,10 @@ class AdVideo():
         #     self.ticks = pygame.time.get_ticks()
     
     def get_vedio(self):
+        self.cap = cv2.VideoCapture(r"ad/ad.mov")
         self.success, self.img = self.cap.read()
-        self.shape = self.img.shape[1::-1]
+        # self.shape = self.img.shape[1::-1]
+        # print('!!!!!!!', self.shape, self.img.shape)
         
             
 
@@ -827,12 +833,19 @@ def main():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 return
-            if event.type == pygame.USEREVENT:
+            elif event.type == pygame.USEREVENT:
                 game.play_vedio = False
                 pygame.mixer.music.stop()
                 pygame.quit()
                 return
+            elif event.type == STONE_EVENT:
+                game.play_vedio = True
+                game.get_video()
+                game.get_sound()
+                canvas.fill((0,0,0))
+            
         if game.play_vedio:
+            canvas.fill((0,0,0))
             game.success, game.img = game.cap.read()
             if game.success:
                 canvas.blit(pygame.image.frombuffer(game.img.tobytes(), game.shape, 'BGR'), (4, 20))
