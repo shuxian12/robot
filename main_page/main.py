@@ -1,6 +1,6 @@
 import pygame, sys, multiprocessing, signal, cv2
 import subprocess
-import random
+import random, cv2
 import openai
 from typing import List
 # sys.path.insert(0, '../memory_game')
@@ -205,10 +205,9 @@ class Robot():
                 sickness = False
                 if pre_status < 3:
                     text[0] = pre_status + 1
-                    
                     pre_status = text[0] - 1
-                elif pre_status==3:
-                    text[0]=pre_status
+                elif pre_status == 3:
+                    text[0] = 3
                     pre_status = text[0] - 1
                 text[8] = 0
                
@@ -330,6 +329,7 @@ class Store:
 
 class Game():
     def __init__(self) -> None:
+        self.play_vedio = False
         self.robot = Robot()
         self.adVideo = AdVideo()
         # self.store = Store()
@@ -470,6 +470,18 @@ class Game():
             ai_msg = response.choices[0].message.content.replace('\n', '')
             print(ai_msg)
         self.user_input = ""
+
+    def get_video(self):
+        self.cap = cv2.VideoCapture('./end/end_video1.mp4')
+        self.success, self.img = self.cap.read()
+        self.shape = self.img.shape[1::-1]
+    
+    def get_sound(self):
+        audio_path = "./end/end_video.mp3"
+        pygame.mixer.music.load(audio_path)
+        pygame.mixer.music.set_volume(.3)
+        pygame.mixer.music.play()
+
 
     def update(self, event_list: List[pygame.event.Event]):
         def add_score(oil92, oil95, oil98, oilEngine, screw, add_screw_num=0):
@@ -711,7 +723,6 @@ class Game():
                         self.user_input = ""
                     else:
                         self.textbox_active = False
-
                 if event.type == pygame.KEYDOWN:
                     if self.textbox_active == True:
                         if event.key == pygame.K_BACKSPACE:
@@ -723,17 +734,25 @@ class Game():
                                 self.user_input += event.unicode
 
                 # check status. # text[0] is status, text[6] is oilEngine, text[7] is screw
-                if text[7] >= 100 and text[6] >= 5 and text[0] <= 3:
+                while text[7] >= 100 and text[6] >= 5 and text[0] <= 3:
                     if text[0] < 3:
                         print("upgrade")
                         pre_status = text[0]
                         text[0] += 1
                         text[7] -= 100
                         text[6] -= 5
-                elif text[1] == 0:          # energy == 0 -> game over
+                    else:
+                        break
+                if text[1] == 0:          # energy == 0 -> game over
                     pre_status = text[0]
                     text[0] = 4
                     # end
+                elif text[0] == 3 and text[7] >= 210:
+                    self.get_video()
+                    self.get_sound()
+                    canvas.fill((0,0,0))
+                    self.play_vedio = True
+                    pygame.time.set_timer(pygame.USEREVENT, millis=11000, loops=1)
 
 class AdVideo():
     def __init__(self) -> None:
@@ -808,14 +827,27 @@ def main():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 return
-            
-        # Update
-        game.update(event_list)
-        game.draw()
-        # Draw
-        pygame.display.update()
-        # Limit framerate
-        clock.tick(FPS)
+            if event.type == pygame.USEREVENT:
+                game.play_vedio = False
+                pygame.mixer.music.stop()
+                pygame.quit()
+                return
+        if game.play_vedio:
+            game.success, game.img = game.cap.read()
+            if game.success:
+                canvas.blit(pygame.image.frombuffer(game.img.tobytes(), game.shape, 'BGR'), (4, 20))
+            pygame.display.update()
+            clock.tick(22)
+        else:
+            # Update
+            game.update(event_list)
+            game.draw()
+            # Draw
+            pygame.display.update()
+            # Limit framerate
+            clock.tick(FPS)
+            # pygame.display.flip()
+            # pygame.time.delay(100)
 
 def run():
     p =  subprocess.Popen(['python','../website/app.py'])
