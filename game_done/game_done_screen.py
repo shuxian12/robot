@@ -1,9 +1,8 @@
 import pygame
 from pathlib import Path
 DIR = str(Path(__file__).resolve().parent) #+'/../memory_game'
-pygame.init()
-screen = pygame.display.set_mode((800, 500))
-class Screen():
+# print('==== game_done_screen.py 1 ====')
+class Page():
     def __init__(self, oil92, oil95, oil98, oilEngine, screw, win) -> None:
         self.background = pygame.image.load(DIR + '/images/background.png').convert_alpha()
         self.background = pygame.transform.scale(self.background, (800, 500))
@@ -40,17 +39,27 @@ class Screen():
             screen.blit(text, text_rect)
       
 def main(oil92=12, oil95=12, oil98=4, oilEngine=3, screw=23, win=True):
-    pygame.display.set_mode((800, 500))
-    screen = Screen(oil92, oil95, oil98, oilEngine, screw, win)
+    pygame.init()
+    # print('==== game_done_screen.py 3 ====')
+    FPS = 60
+    clock = pygame.time.Clock()
+    global screen
+    screen = pygame.display.set_mode((800, 500))
+    # print('==== game_done screen start ====')
     pygame.display.set_caption('Game Done')
+    page = Page(oil92, oil95, oil98, oilEngine, screw, win)
     running = True
     while running:
-        screen.draw()
+        page.draw()
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
         pygame.display.update()
+        clock.tick(FPS)
     pygame.quit()
 
 if __name__ == '__main__':
-    main()
+    pass
+    # print('==== game_done_screen.py 2 ====')
+    # screen = pygame.display.set_mode((800, 500))
+    # main()

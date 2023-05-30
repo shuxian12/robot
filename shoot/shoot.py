@@ -119,4 +119,5 @@ def shoot(return_list):
     pygame.quit()
 
 if __name__ == "__main__":
-    shoot([])
+    # shoot([])
+    pass

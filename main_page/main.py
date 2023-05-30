@@ -1,4 +1,4 @@
-import pygame, sys, multiprocessing
+import pygame, sys, multiprocessing, signal
 import subprocess
 import random
 import openai
@@ -12,7 +12,8 @@ from gamble import gamble
 from pull_medicine import pull_medicine
 from game_done import game_done_screen
 
-canvas = pygame.display.set_mode((1000, 600))
+# canvas = pygame.display.set_mode((1000, 600))
+
 text = [1, 50, "", 100, 100, 100, 4, 100, 0]# text[8] = 被吃掉的螺絲數量??
 # text[0] is status, text[1] is energy, text[2] is bug, text[3] is oil92, 
 # text[4] is oil95, text[5] is oil98, text[6] is oilEngine, text[7] is screw
@@ -20,8 +21,8 @@ furniture = [1, 2, 3, 4, 5]
 garbage = [0, 0, 0, 0]
 pre_status = 1
 WINDOW = 1
-ticks = pygame.time.get_ticks()
-ad_ticks = pygame.time.get_ticks()
+# ticks = pygame.time.get_ticks()
+# ad_ticks = pygame.time.get_ticks()
 garbageAD_num = 0
 garbageAD_watch = -1
 FPS = 60
@@ -515,6 +516,7 @@ class Game():
             manager = multiprocessing.Manager()
             if add_screw_num != 0:
                 screw += add_screw_num
+                print('==== add screw 1 ====')
                 p = multiprocessing.Process(target=game_done_screen.main, args=(0, 0, 0, 0, add_screw_num))
             else:
                 screw += screws
@@ -522,6 +524,7 @@ class Game():
                 oil92 += add_oil92
                 oil95 += add_oil95
                 oil98 += add_oil98
+                print('==== add screw 2 ====')
                 p = multiprocessing.Process(target=game_done_screen.main, args=(add_oil92, add_oil95, add_oil98, oil, screws))
             p.start()
             p.join(), p.terminate()
@@ -775,10 +778,14 @@ class AdVideo():
 
 def main():
     # init
+    global canvas, ticks, ad_ticks
     pygame.init()
-    game = Game()
+    canvas = pygame.display.set_mode((1000, 600))
     pygame.display.set_caption("Robot's Life")
     clock = pygame.time.Clock()
+    ticks = pygame.time.get_ticks()
+    ad_ticks = pygame.time.get_ticks()
+    game = Game()
     
     while True:
         # Process events
@@ -795,9 +802,15 @@ def main():
         pygame.display.update()
         # Limit framerate
         clock.tick(FPS)
-        # pygame.display.flip()
-        # pygame.time.delay(100)
+
+def run():
+    p =  subprocess.Popen(['python','../website/app.py'])
+    main()
+    p.send_signal(signal.SIGINT)
+
 
 if __name__ == "__main__":
-    with subprocess.Popen(['python','../website/app.py']):
-        main()
+    # with subprocess.Popen(['python','../website/app.py']):
+    #     main()
+    #     sys.exit()
+    run()

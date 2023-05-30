@@ -2,11 +2,10 @@ import pygame, cv2, random, os, time
 from pathlib import Path
 DIR = str(Path(__file__).resolve().parent)#+'/../memory_game'
 
-pygame.init()
+# print('==== memory_game.py 1 ====')
 
 WINDOW_WIDTH = 1280
 WINDOW_HEIGHT = 860
-screen = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
 # pygame.display.set_caption('Memory Game')
 
 WHITE = (255, 255, 255)
@@ -14,7 +13,6 @@ RED = (255, 0, 0)
 BLACK = (0, 0, 0)
 
 FPS = 60
-clock = pygame.time.Clock()
 
 
 class Tile(pygame.sprite.Sprite):
@@ -238,10 +236,13 @@ class Game():
         self.shape = self.img.shape[1::-1]
 
 def main(return_dict={'you_win': False}):
+    global screen
+    pygame.init()
     screen = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
     pygame.display.set_caption('Memory Game')
-    game = Game()
     pygame.time.set_timer(pygame.USEREVENT, millis=100)
+    game = Game()
+    clock = pygame.time.Clock()
     running = True
     while running:
         event_list = pygame.event.get()
@@ -270,26 +271,12 @@ def main(return_dict={'you_win': False}):
         clock.tick(FPS)
 
     pygame.quit()
-    print(running if running else 'Game Over')
+    print('result' + running if running else 'Game Over')
     if not return_dict: return_dict['running'] = running #True
     return running
 
 if __name__ == '__main__':
-    main()
-    # print("{:02.1f}".format(60))
-    # print("{:04.1f}".format(6))
-    # game = Game()
-    # def event():
-    #     pygame.USEREVENT = pygame.USEREVENT-1
-    #     timer_font = pygame.font.Font('fonts/Little Alien.ttf', 24)
-    #     timer_text = timer_font.render('Time: {:02d}'.format(pygame.USEREVENT), True, WHITE)
-    #     timer_rect = timer_text.get_rect(topright = (WINDOW_WIDTH - 90, 10))
-    # USEREVENT = pygame.USEREVENT-1
-    # pygame.time.set_timer(USEREVENT, millis=1000)
-    # while(True):
-    #     if pygame.event.get(USEREVENT):
-    #         pygame.USEREVENT -= 1000
-    #         print(pygame.USEREVENT)
-    #     if pygame.USEREVENT == 0:
-    #         break
+    # main()
+    pass
+
 
