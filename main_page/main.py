@@ -451,7 +451,7 @@ class Game():
                 have_chair = True
                 have_tv = True
         else:
-            openai.api_key = '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'
+            openai.api_key = 'please enter your API_KEY here'
             messages = []
             msg = self.user_input
             if text[0] == 1:  # 一階
