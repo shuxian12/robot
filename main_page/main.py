@@ -1,4 +1,4 @@
-import pygame, sys, multiprocessing, signal
+import pygame, sys, multiprocessing, signal, cv2
 import subprocess
 import random
 import openai
@@ -697,6 +697,7 @@ class Game():
                     elif self.garbageAD_yes_rect[0] <= event.pos[0] <= self.garbageAD_yes_rect[0] + 150 and self.garbageAD_yes_rect[1] <= event.pos[1] <= self.garbageAD_yes_rect[1] + 50 and WINDOW == 2:
                         print("click yes")
                         garbageAD_watch = 0
+                        self.adVideo.get_vedio()
                     elif self.garbageAD_no_rect[0] <= event.pos[0] <= self.garbageAD_no_rect[0] + 150 and self.garbageAD_no_rect[1] <= event.pos[1] <= self.garbageAD_no_rect[1] + 50 and WINDOW == 2:
                         print("click no")
                         garbageAD_watch = 1
@@ -738,6 +739,8 @@ class AdVideo():
     def __init__(self) -> None:
         global ad_ticks
         self.ticks = ad_ticks
+        self.fps = 60
+        self.cap = cv2.VideoCapture(r"ad/ad.mov")
         self.num_ad = -1
         self.end = False
         self.ad0_img = pygame.image.load(r"ad/ad1.jpg")
@@ -763,17 +766,28 @@ class AdVideo():
         self.ad_img_rect = (350, 0)
 
     def play(self):
-        ad_list = [self.ad0_img, self.ad1_img, self.ad2_img, self.ad3_img, self.ad4_img, self.ad5_img, self.ad6_img, self.ad7_img, self.ad8_img, self.ad9_img]
-        if self.num_ad >= 0:
-            ad = ad_list[self.num_ad]
-            canvas.blit(ad, self.ad_img_rect)
+        success, img = self.cap.read()
+        if success:
+            img = cv2.resize(img,(337, 600))
+            canvas.blit(pygame.image.frombuffer(img.tobytes(), self.shape, 'BGR'), (0, 50))
+        else:
+            self.end = True
+        # ad_list = [self.ad0_img, self.ad1_img, self.ad2_img, self.ad3_img, self.ad4_img, self.ad5_img, self.ad6_img, self.ad7_img, self.ad8_img, self.ad9_img]
+        # if self.num_ad >= 0:
+        #     ad = ad_list[self.num_ad]
+        #     canvas.blit(ad, self.ad_img_rect)
         
-        if pygame.time.get_ticks() - self.ticks > 800:
-            if self.num_ad < 8:
-                self.num_ad += 1
-            else:
-                self.end = True
-            self.ticks = pygame.time.get_ticks()
+        # if pygame.time.get_ticks() - self.ticks > 800:
+        #     if self.num_ad < 8:
+        #         self.num_ad += 1
+        #     else:
+        #         self.end = True
+        #     self.ticks = pygame.time.get_ticks()
+    
+    def get_vedio(self):
+        self.success, self.img = self.cap.read()
+        self.shape = self.img.shape[1::-1]
+        
             
 
 def main():

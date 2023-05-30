@@ -315,7 +315,6 @@ class Shopping_mall():
         if self.play_vedio:
             self.success, self.img = self.cap.read()
             if self.success:
-                
                 window_surface.blit(pygame.image.frombuffer(self.img.tobytes(), self.shape, 'BGR'), (0, 50))
         else:
             window_surface.fill(BG)
