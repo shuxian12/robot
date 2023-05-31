@@ -202,7 +202,7 @@ class Robot():
             canvas.blit(self.iron_img, (550, 300))
             if not stone:
                 pygame.time.set_timer(STONE_EVENT, 5000, loops=1)
-                pygame.time.set_timer(pygame.USEREVENT, millis=17000, loops=1)
+                pygame.time.set_timer(pygame.USEREVENT, millis=26000, loops=1)
             stone = True
         elif status == 5:
             sickness = True
@@ -477,12 +477,12 @@ class Game():
         self.user_input = ""
 
     def get_video(self):
-        self.cap = cv2.VideoCapture('./end/end_video1.mp4')
+        self.cap = cv2.VideoCapture('./end/end_video_2.mp4')
         self.success, self.img = self.cap.read()
         self.shape = self.img.shape[1::-1]
     
     def get_sound(self):
-        audio_path = "./end/end_video.mp3"
+        audio_path = "./end/end_music.mp3"
         pygame.mixer.music.load(audio_path)
         pygame.mixer.music.set_volume(.3)
         pygame.mixer.music.play()
@@ -757,7 +757,7 @@ class Game():
                     self.get_sound()
                     canvas.fill((0,0,0))
                     self.play_vedio = True
-                    pygame.time.set_timer(pygame.USEREVENT, millis=13000, loops=1)
+                    pygame.time.set_timer(pygame.USEREVENT, millis=26000, loops=1)
 
 class AdVideo():
     def __init__(self) -> None:
@@ -848,7 +848,8 @@ def main():
             canvas.fill((0,0,0))
             game.success, game.img = game.cap.read()
             if game.success:
-                canvas.blit(pygame.image.frombuffer(game.img.tobytes(), game.shape, 'BGR'), (4, 20))
+                game.img = cv2.resize(game.img,(1000, 600))
+                canvas.blit(pygame.image.frombuffer(game.img.tobytes(), (1000,600), 'BGR'), (0, 0))
             pygame.display.update()
             clock.tick(22)
         else:
