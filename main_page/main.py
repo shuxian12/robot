@@ -202,7 +202,7 @@ class Robot():
             canvas.blit(self.iron_img, (550, 300))
             if not stone:
                 pygame.time.set_timer(STONE_EVENT, 5000, loops=1)
-                pygame.time.set_timer(pygame.USEREVENT, millis=26000, loops=1)
+                pygame.time.set_timer(pygame.USEREVENT, millis=31000, loops=1)
             stone = True
         elif status == 5:
             sickness = True
