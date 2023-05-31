@@ -748,7 +748,7 @@ class Game():
                         text[6] -= 5
                     else:
                         break
-                if text[1] == 0 or text[7] < 0:          # energy == 0 -> game over
+                if text[1] <= 0 or text[7] < 0:          # energy == 0 -> game over
                     pre_status = text[0]
                     text[0] = 4
                     # end
