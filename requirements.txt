@@ -15,7 +15,7 @@ MarkupSafe==2.1.1
 multidict==6.0.4
 numpy==1.24.3
 openai==0.27.7
-opencv-python==4.7.0.72
+opencv-python==4.8.1.78
 pip==23.0.1
 pycparser==2.21
 pygame==2.4.0
